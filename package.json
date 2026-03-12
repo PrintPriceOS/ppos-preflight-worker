@@ -1,0 +1,21 @@
+{
+    "name": "@ppos/preflight-worker",
+    "version": "1.0.0",
+    "description": "Temporal worker for PDF preflight processing",
+    "main": "dist/worker.js",
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/worker.js",
+        "dev": "nodemon src/worker.ts"
+    },
+    "dependencies": {
+        "@temporalio/worker": "^1.9.0",
+        "@temporalio/activity": "^1.9.0",
+        "dotenv": "^16.3.1"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "typescript": "^5.0.0",
+        "nodemon": "^3.0.0"
+    }
+}
