@@ -4,6 +4,7 @@
  * Skeleton implementation for a job-based consumer.
  * Classification: RUNTIME_WORKER_ADAPTER
  */
+require('dotenv').config();
 const AnalyzeCommand = require('../ppos-preflight-engine/src/runtime/commands/analyzeCommand');
 const AutofixCommand = require('../ppos-preflight-engine/src/runtime/commands/autofixCommand');
 
