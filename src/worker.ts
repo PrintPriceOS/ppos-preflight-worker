@@ -1,4 +1,5 @@
 // ppos-preflight-worker/src/worker.ts
+import 'dotenv/config';
 import { Worker } from '@temporalio/worker';
 import * as activities from './activities/preflight';
 
