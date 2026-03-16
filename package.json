@@ -1,6 +1,6 @@
 {
   "name": "@ppos/preflight-worker",
-  "version": "1.0.0",
+  "version": "1.9.2",
   "description": "Asynchronous Execution Worker for PrintPrice OS Preflight",
   "main": "worker.js",
   "private": true,
