@@ -8,8 +8,9 @@ const JobRouter = require('./JobRouter');
 const RetryPolicy = require('./RetryPolicy');
 
 class QueueManager {
-    constructor(redisOptions) {
+    constructor(redisOptions, logger) {
         this.redisOptions = redisOptions;
+        this.logger = logger || console;
         this.workers = [];
     }
 
@@ -17,10 +18,10 @@ class QueueManager {
      * Start the worker.
      */
     start(queueName = 'preflight_async_queue') {
-        console.log(`[WORKER] Starting consumer for queue: ${queueName}`);
+        this.logger.info({ queueName }, 'Worker consumer starting...');
         
         const worker = new Worker(queueName, async (job) => {
-            console.log(`[WORKER] Job ${job.id} started. Type: ${job.name}`);
+            this.logger.info({ jobId: job.id, type: job.name }, 'Job started');
             return await JobRouter.route(job);
         }, {
             connection: this.redisOptions,
@@ -31,11 +32,11 @@ class QueueManager {
         });
 
         worker.on('completed', (job) => {
-            console.log(`[WORKER] Job ${job.id} completed.`);
+            this.logger.info({ jobId: job.id }, 'Job completed successfully');
         });
 
         worker.on('failed', (job, err) => {
-            console.error(`[WORKER] Job ${job.id} failed: ${err.message}`);
+            this.logger.error({ jobId: job?.id, error: err.message, stack: err.stack }, 'Job failed');
         });
 
         this.workers.push(worker);
