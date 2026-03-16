@@ -1,51 +1,27 @@
 /**
- * Distributed Worker Adapter
+ * PrintPrice OS — Preflight Worker (v1.9.0)
  * 
- * Skeleton implementation for a job-based consumer.
- * Classification: RUNTIME_WORKER_ADAPTER
+ * Canonical Entry Point for asynchronous job execution.
  */
 require('dotenv').config();
-const AnalyzeCommand = require('../ppos-preflight-engine/src/runtime/commands/analyzeCommand');
-const AutofixCommand = require('../ppos-preflight-engine/src/runtime/commands/autofixCommand');
+const QueueManager = require('./queue/QueueManager');
 
-class PreflightWorker {
-    /**
-     * Simulation of job processing.
-     * In a real system, this would be a handler for Redis/RabbitMQ.
-     */
-    async processJob(job) {
-        const { job_id, operation, asset_path, config, output_path } = job;
+const redisConfig = {
+    host: process.env.REDIS_HOST || '127.0.0.1',
+    port: process.env.REDIS_PORT || 6379,
+    password: process.env.REDIS_PASSWORD
+};
 
-        console.log(`[WORKER] Processing Job: ${job_id} | Op: ${operation}`);
+const manager = new QueueManager(redisConfig);
 
-        try {
-            let result;
-            if (operation === 'analyze') {
-                result = await AnalyzeCommand.run(asset_path, config);
-            } else if (operation === 'autofix') {
-                result = await AutofixCommand.run(asset_path, output_path, config);
-            } else {
-                throw new Error(`Unknown operation: ${operation}`);
-            }
+// Start the worker on the standard preflight queue
+manager.start(process.env.PPOS_QUEUE_NAME || 'preflight_async_queue');
 
-            return {
-                job_id,
-                status: 'SUCCEEDED',
-                engine_result: result,
-                wrapper_metadata: {
-                    node_id: process.env.NODE_ID || 'localhost',
-                    timestamp: new Date().toISOString()
-                }
-            };
-        } catch (err) {
-            console.error(`[WORKER] Job Failed: ${job_id} | ${err.message}`);
-            return {
-                job_id,
-                status: 'FAILED',
-                error: err.message
-            };
-        }
-    }
-}
+console.log('[WORKER] Preflight worker node active and listening.');
 
-module.exports = PreflightWorker;
+// Graceful Shutdown
+process.on('SIGTERM', async () => {
+    console.log('[WORKER] SIGTERM received. Shutting down...');
+    // Add cleanup logic here
+    process.exit(0);
+});
