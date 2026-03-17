@@ -49,9 +49,9 @@ logger.info({ queue: queueName }, 'Preflight worker node active and listening');
 
 // Graceful Shutdown
 const shutdown = async () => {
-    logger.info('Shutting down worker...');
+    logger.info('Shutting down worker node and cleaning registry...');
     healthServer.close();
-    // In a real scenario, we'd also close the BullMQ worker via manager
+    await manager.stop();
     process.exit(0);
 };
 

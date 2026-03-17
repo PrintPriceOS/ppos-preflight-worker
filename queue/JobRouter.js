@@ -9,9 +9,9 @@ const CircuitBreaker = require('../resilience/CircuitBreaker');
 
 class JobRouter {
     static async route(job) {
-        // V1.9.0 Circuit Breaker Guard
-        const entityId = job.data.asset_id || job.data.job_id;
-        if (CircuitBreaker.isOpen(entityId)) {
+        // V1.9.0 Circuit Breaker Guard (Support both camelCase and snake_case)
+        const entityId = job.data.asset_id || job.data.assetId || job.data.job_id || job.data.jobId;
+        if (entityId && CircuitBreaker.isOpen(entityId)) {
             throw new Error(`CRITICAL: Entity ${entityId} is in QUARANTINE. Operation aborted.`);
         }
 
