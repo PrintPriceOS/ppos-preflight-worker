@@ -16,7 +16,7 @@ COPY ppos-shared-infra ./ppos-shared-infra
 # Setup worker
 WORKDIR /app/ppos-preflight-worker
 COPY ppos-preflight-worker/package*.json ./
-RUN npm ci --only=production
+RUN npm install --only=production --no-audit
 
 COPY ppos-preflight-worker ./
 
