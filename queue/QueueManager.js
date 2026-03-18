@@ -28,8 +28,23 @@ class QueueManager {
         this.logger.info({ queueName, workerId: this.workerId }, 'Worker consumer starting with visibility heartbeat...');
         
         const worker = new Worker(queueName, async (job) => {
-            this.logger.info({ jobId: job.id, type: job.name, worker: this.workerId }, 'Job started');
-            return await JobRouter.route(job);
+            const childLogger = this.logger.child({ 
+                jobId: job.id, 
+                type: job.name, 
+                tenantId: job.data.tenantId || job.data.tenant_id,
+                assetId: job.data.assetId || job.data.asset_id,
+                worker: this.workerId 
+            });
+            
+            childLogger.info('Job processing started');
+            try {
+                const result = await JobRouter.route(job, childLogger);
+                childLogger.info('Job processing completed');
+                return result;
+            } catch (err) {
+                childLogger.error({ error: err.message, stack: err.stack }, 'Job processing failed');
+                throw err;
+            }
         }, {
             connection: this.redisOptions,
             settings: {

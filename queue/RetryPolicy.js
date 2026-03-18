@@ -4,10 +4,10 @@
  * Defines the backoff and retry strategy for async jobs.
  */
 module.exports = {
-    maxRetries: 5,
+    maxRetries: 10,
     backoff: {
         type: 'exponential',
-        delay: 5000 // 5s initial delay
+        delay: 30000 // 30s initial delay
     },
     
     /**
