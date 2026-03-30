@@ -17,7 +17,7 @@ class AutofixProcessor {
     static async process(data, logger = console) {
         // Phase 1 & 2: Unpack contract-governed envelope and resolve shape
         const { jobId, tenantId, input, payload, policyProfile, trace = {} } = data;
-        
+
         const fileUrl = input?.fileUrl || payload?.filePath;
         const contractMode = input?.fileUrl ? 'v2_input' : 'legacy_payload';
 
@@ -39,24 +39,24 @@ class AutofixProcessor {
         // Normalize specs/options (Support for flattened, nested V2, and legacy shapes)
         const rawSpecs = input?.specs || {};
         const normalizedPolicy = rawSpecs.policy || payload?.policy || null;
-        const normalizedOptions = 
-            rawSpecs.options || 
-            (rawSpecs.policy || rawSpecs.options ? {} : rawSpecs) || 
-            payload?.options || 
+        const normalizedOptions =
+            rawSpecs.options ||
+            (rawSpecs.policy || rawSpecs.options ? {} : rawSpecs) ||
+            payload?.options ||
             {};
 
-        logger.info({ 
-            tenantId, 
-            jobId, 
+        logger.info({
+            tenantId,
+            jobId,
             policyProfile,
             fileUrl,
             contractMode,
             requestId: trace?.requestId || data.requestId
         }, `Executing Preflight Pipeline: AUTOFIX [${contractMode}]`);
-        
+
         // 1. PDF Analysis & Repair (Engine)
         const engine = createStandardEngine();
-        
+
         // Validation guided by external policyProfile
         const result = await engine.autofixPdf(fileUrl, {
             ...(normalizedPolicy ? { policy: normalizedPolicy } : {}),
@@ -66,7 +66,7 @@ class AutofixProcessor {
             tempDir,
             tenantId
         });
-        
+
         // Phase 5: Evidence Artifacts (Shape Unified for Phase 10)
         const artifacts = {
             fixed_file: result.fixedFilePath || `${outputDir}/normalized.pdf`,
