@@ -3,9 +3,11 @@
  * 
  * Invokes the PrintPrice Engine for PDF correction.
  * Part of the Phase 3 Deterministic Execution Pipeline.
+ * v2.4.89 - Contract & Telemetry Alignment
  */
 const { createStandardEngine } = require('@ppos/preflight-engine');
 const StorageManager = require('../utils/StorageManager');
+const fs = require('fs-extra');
 
 // Canonical storage instance
 const storage = new StorageManager();
@@ -14,8 +16,9 @@ class AutofixProcessor {
     /**
      * Executes the Preflight Pipeline for Autofix/Repair.
      */
-    static async process(data, logger = console) {
+    static async process(job, logger = console) {
         // Phase 1 & 2: Unpack contract-governed envelope and resolve shape
+        const data = job?.data || {};
         const { jobId, tenantId, input, payload, policyProfile, trace = {} } = data;
 
         const fileUrl = input?.fileUrl || payload?.filePath;
@@ -54,6 +57,9 @@ class AutofixProcessor {
             requestId: trace?.requestId || data.requestId
         }, `Executing Preflight Pipeline: AUTOFIX [${contractMode}]`);
 
+        // Telemetry (v2.4.89)
+        if (job.updateProgress) await job.updateProgress(10);
+
         // 1. PDF Analysis & Repair (Engine)
         const engine = createStandardEngine();
 
@@ -67,6 +73,8 @@ class AutofixProcessor {
             tenantId
         });
 
+        if (job.updateProgress) await job.updateProgress(90);
+
         // Phase 5: Evidence Artifacts (Shape Unified for Phase 10)
         const artifacts = {
             fixed_file: result.fixedFilePath || `${outputDir}/normalized.pdf`,
@@ -74,13 +82,14 @@ class AutofixProcessor {
         };
 
         // Verification of artifacts before returning
-        const fs = require('fs-extra');
         const verifiedArtifacts = {};
         for (const [key, val] of Object.entries(artifacts)) {
             if (fs.existsSync(val)) {
                 verifiedArtifacts[key] = val;
             }
         }
+
+        if (job.updateProgress) await job.updateProgress(100);
 
         return {
             status: 'COMPLETED',
