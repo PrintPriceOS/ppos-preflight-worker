@@ -70,10 +70,10 @@ class JobRouter {
             switch (job.name) {
                 case 'ANALYZE':
                 case 'preflight_job': // Canonical name from shared-infra often
-                    result = await AnalyzeProcessor.process(job.data, logger);
+                    result = await AnalyzeProcessor.process(job, logger);
                     break;
                 case 'AUTOFIX':
-                    result = await AutofixProcessor.process(job.data, logger);
+                    result = await AutofixProcessor.process(job, logger);
                     break;
                 default:
                     throw new Error(`[JOB-ROUTER-ERROR] Unsupported job type: ${job?.name || 'UNKNOWN'}`);
