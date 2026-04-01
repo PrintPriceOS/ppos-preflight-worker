@@ -45,18 +45,44 @@ class AnalyzeProcessor {
         }, `Running engine analyze: [${contractMode}]`);
         
         await job.updateProgress(30); // Phase 2: Starting engine analyze
+        
         const engine = createStandardEngine();
-        let report = await engine.analyzePdf(filePath, {
-            ...options,
-            outputDir,
-            tempDir,
-            tenantId
-        });
+        
+        // --- v2.4.88: Engine Safety Wrapper (Timeout + Logging) ---
+        const withTimeout = (promise, ms) => {
+            return Promise.race([
+                promise,
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('ENGINE_TIMEOUT_EXCEEDED')), ms)
+                )
+            ]);
+        };
+
+        logger.info({ jobId, filePath }, 'ENGINE_ANALYSIS_START');
+        
+        let report;
+        try {
+            report = await withTimeout(
+                engine.analyzePdf(filePath, {
+                    ...options,
+                    outputDir,
+                    tempDir,
+                    tenantId
+                }),
+                600000 // 10 Minutes hard limit for 19MB+ PDFs
+            );
+            logger.info({ jobId }, 'ENGINE_ANALYSIS_END');
+        } catch (err) {
+            logger.error({ jobId, error: err.message }, 'ENGINE_ANALYSIS_CRITICAL_FAILURE');
+            throw err;
+        }
+        // -----------------------------------------------------------
 
         await job.updateProgress(70); // Phase 3: Engine returned report
 
+        /* 
         // ==========================================
-        // DYNAMIC MOCK: REPLACING HARDCODED ENGINE MOCKS WITH VARIED IND_ CODES
+        // DYNAMIC MOCK: (DISABLED v2.4.89 - ENABLING REAL ENGINE FINDINGS)
         // ==========================================
         const fs = require('fs');
         let fSize = 0;
@@ -101,6 +127,7 @@ class AnalyzeProcessor {
         if (!report.summary) report.summary = {};
         report.summary.risk_score = Math.max(0, score);
         report.risk_score = report.summary.risk_score;
+        */
         // ==========================================
         
         await job.updateProgress(95); // Phase 4: Finalizing report persistence
