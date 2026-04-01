@@ -9,9 +9,11 @@ const StorageManager = require('../utils/StorageManager');
 const storage = new StorageManager();
 
 class AnalyzeProcessor {
-    static async process(data, logger = console) {
-        // Phase 2: Unpack envelope and resolve contract shape
+    static async process(job, logger = console) {
+        const data = job?.data || {};
         const { jobId, tenantId, deploymentId, tenantIsolation, payload, input, trace = {} } = data;
+        
+        await job.updateProgress(10); // Phase 1: Ingest complete
         
         const filePath = payload?.filePath || input?.fileUrl;
         const contractMode = payload?.filePath ? 'legacy_payload' : 'v2_input';
@@ -42,6 +44,7 @@ class AnalyzeProcessor {
             requestId: trace?.requestId || data.requestId
         }, `Running engine analyze: [${contractMode}]`);
         
+        await job.updateProgress(30); // Phase 2: Starting engine analyze
         const engine = createStandardEngine();
         let report = await engine.analyzePdf(filePath, {
             ...options,
@@ -49,6 +52,8 @@ class AnalyzeProcessor {
             tempDir,
             tenantId
         });
+
+        await job.updateProgress(70); // Phase 3: Engine returned report
 
         // ==========================================
         // DYNAMIC MOCK: REPLACING HARDCODED ENGINE MOCKS WITH VARIED IND_ CODES
@@ -97,6 +102,8 @@ class AnalyzeProcessor {
         report.summary.risk_score = Math.max(0, score);
         report.risk_score = report.summary.risk_score;
         // ==========================================
+        
+        await job.updateProgress(95); // Phase 4: Finalizing report persistence
         
         return {
             status: 'COMPLETED',
