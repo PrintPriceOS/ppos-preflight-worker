@@ -69,7 +69,7 @@ class AuditLogger {
                 const dbStatus = statusMap[record.action];
                 if (dbStatus) {
                     const progress = dbStatus === 'COMPLETED' ? 100 : (dbStatus === 'FAILED' ? 0 : 10);
-                    const resultJson = record.evidence ? JSON.stringify(record.evidence) : null;
+                    const resultJson = record.result ? JSON.stringify(record.result) : (record.evidence ? JSON.stringify(record.evidence) : null);
                     const errorMsg = record.error ? `${record.error}: ${record.message}` : null;
 
                     await this.db.execute(

@@ -82,15 +82,18 @@ class JobRouter {
             const duration = Date.now() - startTime;
 
             // Phase 5: Immutable Execution Evidence (JOB_SUCCESS)
+            // v2.4.90 Patch: Data loss prevention by preserving full result and mapping engine issues
             await audit.log(context, {
                  action: 'JOB_SUCCESS',
                  resourceType: 'JOB',
                  resourceId: jobId,
                  duration_ms: duration,
+                 result: result, // Canonical result for BFF/APP contract alignment
                  evidence: {
                      input_hash: input?.fileUrl ? Buffer.from(input.fileUrl).toString('base64') : 'N/A',
                      policy_profile: policyProfile,
-                     violations: result.report?.violations || [],
+                     // Map engine outcome correctly (engine uses .issues or .findings, worker previously only checked .violations)
+                     violations: (result.report?.violations || result.report?.issues || result.report?.findings || []),
                      artifacts: result.artifacts || {}
                  }
             });
