@@ -4,7 +4,8 @@
  * Generates immutable execution evidence and logs forensic-grade telemetry.
  * Stores evidence in MySQL (canonical job registry) and optionally Object Storage.
  */
-const { db } = require('@ppos/shared-infra');
+const infra = require('@ppos/shared-infra');
+const db = infra.db || infra;
 const pino = require('pino');
 
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
@@ -44,22 +45,29 @@ class AuditLogger {
             result: record.status || (record.action === 'JOB_SUCCESS' ? 'SUCCESS' : 'PENDING')
         }, `Audit Event: ${record.action}`);
 
+        // Phase 5: Storage Layer - Split for reliability (preserving evidence vs status)
         try {
             // Store Forensic Evidence in database (Phase 5 Evidence & Audit)
-            await this.db.execute(
-                `INSERT INTO job_evidence (job_id, tenant_id, request_id, event_type, metadata, created_at)
-                 VALUES (?, ?, ?, ?, ?, NOW())`,
-                [
-                    context.jobId,
-                    context.tenantId,
-                    context.requestId,
-                    record.action,
-                    JSON.stringify(entry)
-                ]
-            );
+            if (this.db) {
+                await this.db.execute(
+                    `INSERT INTO job_evidence (job_id, tenant_id, request_id, event_type, metadata, created_at)
+                     VALUES (?, ?, ?, ?, ?, NOW())`,
+                    [
+                        context.jobId,
+                        context.tenantId,
+                        context.requestId,
+                        record.action,
+                        JSON.stringify(entry)
+                    ]
+                );
+            }
+        } catch (err) {
+            logger.warn({ error: err.message, jobId: context.jobId }, 'Audit Layer: Failed to store evidence');
+        }
 
+        try {
             // Canonical Job State Registry Update (Harden for Phase 10)
-            if (record.action.startsWith('JOB_')) {
+            if (record.action.startsWith('JOB_') && this.db) {
                 const statusMap = {
                     'JOB_STARTED': 'PROCESSING',
                     'JOB_SUCCESS': 'COMPLETED',
@@ -84,9 +92,8 @@ class AuditLogger {
                     );
                 }
             }
-
         } catch (err) {
-            logger.warn({ error: err.message, jobId: context.jobId }, 'Audit Layer: Failed to store evidence');
+            logger.error({ error: err.message, jobId: context.jobId }, 'Audit Layer: Failed to update job status');
         }
     }
 }
