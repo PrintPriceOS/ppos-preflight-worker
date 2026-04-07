@@ -2,7 +2,7 @@ const AnalyzeProcessor = require('../processors/AnalyzeProcessor');
 const AutofixProcessor = require('../processors/AutofixProcessor');
 const CircuitBreaker = require('../resilience/CircuitBreaker');
 const AuditLogger = require('../utils/AuditLogger');
-const db = require('@ppos/shared-infra/packages/data/db');
+const db = require('../../staged-libs/ppos-shared-infra/ppos-shared-infra/packages/data/db');
 
 class JobRouter {
     /**
