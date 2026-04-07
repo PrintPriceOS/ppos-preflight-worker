@@ -35,7 +35,7 @@ const MockEngine = {
 const Module = require('module');
 const originalLoad = Module._load;
 Module._load = function(request, parent, isMain) {
-    if (request === '@ppos/shared-infra/packages/data/db' || request.includes('staged-libs/ppos-shared-infra/packages/data/db')) return MockDb;
+    if (request === '@ppos/shared-infra/packages/data/db' || request.includes('staged-libs/ppos-shared-infra/app/services/db')) return MockDb;
     if (request === '@ppos/shared-infra') return { db: MockDb };
     if (request === '@ppos/preflight-engine') return MockEngine;
     if (request === 'pino') return () => ({ info: () => {}, error: () => {}, warn: () => {}, child: () => ({ info: () => {}, error: () => {} }) });
