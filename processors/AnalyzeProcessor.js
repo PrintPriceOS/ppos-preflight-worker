@@ -132,10 +132,22 @@ class AnalyzeProcessor {
         
         await job.updateProgress(95); // Phase 4: Finalizing report persistence
         
+        // v2.4.120: Certification Suffix Promotion (Worker Logic)
+        const fs = require('fs-extra');
+        const certifiedPath = require('path').join(outputDir, 'certified.pdf');
+        
+        if (!(await fs.pathExists(certifiedPath))) {
+            logger.info({ jobId, certifiedPath }, 'CERTIFY_PROMOTION_START');
+            await fs.copy(filePath, certifiedPath);
+            logger.info({ jobId }, 'CERTIFY_PROMOTION_END');
+        }
+
         return {
             status: 'COMPLETED',
             report,
-            artifacts: {},
+            artifacts: {
+                certified_pdf: 'certified.pdf'
+            },
             tenantId,
             jobId,
             processedAt: new Date().toISOString()

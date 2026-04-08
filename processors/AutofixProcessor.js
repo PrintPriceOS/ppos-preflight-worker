@@ -81,13 +81,25 @@ class AutofixProcessor {
             audit_report: `${outputDir}/fix_audit.json`
         };
 
+        // v2.4.120: Certification Suffix Promotion (Autofix Processor)
+        const certifiedPath = `${outputDir}/certified.pdf`;
+        const bestSource = result.fixedFilePath || `${outputDir}/normalized.pdf`;
+        if (await fs.pathExists(bestSource) && !(await fs.pathExists(certifiedPath))) {
+            logger.info({ jobId, source: bestSource }, 'CERTIFY_FIX_PROMOTION_START');
+            await fs.copy(bestSource, certifiedPath);
+            logger.info({ jobId }, 'CERTIFY_FIX_PROMOTION_END');
+        }
+
         // Verification of artifacts before returning
         const verifiedArtifacts = {};
         for (const [key, val] of Object.entries(artifacts)) {
-            if (fs.existsSync(val)) {
+            if (await fs.pathExists(val)) {
                 verifiedArtifacts[key] = val;
             }
         }
+        
+        // Final canonical artifact registration
+        if (await fs.pathExists(certifiedPath)) verifiedArtifacts.certified_pdf = 'certified.pdf';
 
         if (job.updateProgress) await job.updateProgress(100);
 
