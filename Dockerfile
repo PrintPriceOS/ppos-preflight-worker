@@ -16,9 +16,9 @@ COPY ppos-shared-infra ./staged-libs/ppos-shared-infra
 COPY ppos-shared-contracts ./staged-libs/ppos-shared-contracts
 
 # Pack them into immutable tarballs
-RUN cd staged-libs/ppos-preflight-engine && npm pack && mv *.tgz /app/engine.tgz
-RUN cd staged-libs/ppos-shared-infra && npm pack && mv *.tgz /app/infra.tgz
-RUN cd staged-libs/ppos-shared-contracts && npm pack && mv *.tgz /app/contracts.tgz
+RUN cd staged-libs/ppos-preflight-engine && TARBALL="$(npm pack | tail -n 1)" && mv "$TARBALL" /app/engine.tgz
+RUN cd staged-libs/ppos-shared-infra && TARBALL="$(npm pack | tail -n 1)" && mv "$TARBALL" /app/infra.tgz
+RUN cd staged-libs/ppos-shared-contracts && TARBALL="$(npm pack | tail -n 1)" && mv "$TARBALL" /app/contracts.tgz
 
 # Step 2: Bring in the worker source code from the host
 WORKDIR /app/ppos-preflight-worker

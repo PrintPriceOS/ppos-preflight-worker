@@ -2,7 +2,7 @@ const AnalyzeProcessor = require('../processors/AnalyzeProcessor');
 const AutofixProcessor = require('../processors/AutofixProcessor');
 const CircuitBreaker = require('../resilience/CircuitBreaker');
 const AuditLogger = require('../utils/AuditLogger');
-const db = require('../../staged-libs/ppos-shared-infra/app/services/db');
+const db = require('@ppos/shared-infra/packages/data/db');
 
 class JobRouter {
     /**
@@ -34,19 +34,19 @@ class JobRouter {
         }
 
         const context = {
-             jobId,
-             tenantId,
-             requestId,
-             traceparent: trace.traceparent,
-             policyProfile: policyProfile || data.policyProfile
+            jobId,
+            tenantId,
+            requestId,
+            traceparent: trace.traceparent,
+            policyProfile: policyProfile || data.policyProfile
         };
 
         // Phase 4: Full Telemetry (JOB_STARTED)
         await audit.log(context, {
-             action: 'JOB_STARTED',
-             resourceType: 'JOB',
-             resourceId: jobId,
-             status: 'PROCESSING'
+            action: 'JOB_STARTED',
+            resourceType: 'JOB',
+            resourceId: jobId,
+            status: 'PROCESSING'
         });
 
         logger.info({ requestId, route: job.name, tenantId, jobId, policyProfile }, 'Routing job through deterministic pipeline');
@@ -65,7 +65,7 @@ class JobRouter {
         const startTime = Date.now();
         try {
             let result;
-            
+
             // Phase 3: Execute Preflight Pipeline
             switch (job.name) {
                 case 'ANALYZE':
@@ -84,18 +84,18 @@ class JobRouter {
             // Phase 5: Immutable Execution Evidence (JOB_SUCCESS)
             // v2.4.90 Patch: Data loss prevention by preserving full result and mapping engine issues
             await audit.log(context, {
-                 action: 'JOB_SUCCESS',
-                 resourceType: 'JOB',
-                 resourceId: jobId,
-                 duration_ms: duration,
-                 result: result, // Canonical result for BFF/APP contract alignment
-                 evidence: {
-                     input_hash: input?.fileUrl ? Buffer.from(input.fileUrl).toString('base64') : 'N/A',
-                     policy_profile: policyProfile,
-                     // Map engine outcome correctly (engine uses .issues or .findings, worker previously only checked .violations)
-                     violations: (result.report?.violations || result.report?.issues || result.report?.findings || []),
-                     artifacts: result.artifacts || {}
-                 }
+                action: 'JOB_SUCCESS',
+                resourceType: 'JOB',
+                resourceId: jobId,
+                duration_ms: duration,
+                result: result, // Canonical result for BFF/APP contract alignment
+                evidence: {
+                    input_hash: input?.fileUrl ? Buffer.from(input.fileUrl).toString('base64') : 'N/A',
+                    policy_profile: policyProfile,
+                    // Map engine outcome correctly (engine uses .issues or .findings, worker previously only checked .violations)
+                    violations: (result.report?.violations || result.report?.issues || result.report?.findings || []),
+                    artifacts: result.artifacts || {}
+                }
             });
 
             // Usage Metric Emission
@@ -110,17 +110,17 @@ class JobRouter {
 
         } catch (err) {
             const duration = Date.now() - startTime;
-            
+
             // Track failure for circuit breaker
             CircuitBreaker.recordFailure(entityId, err);
-            
+
             // Phase 5: Failure Evidence
             await audit.log(context, {
-                 action: 'JOB_FAILED',
-                 error: err.code || 'INTERNAL_ERROR',
-                 message: err.message,
-                 duration_ms: duration,
-                 stack: err.stack
+                action: 'JOB_FAILED',
+                error: err.code || 'INTERNAL_ERROR',
+                message: err.message,
+                duration_ms: duration,
+                stack: err.stack
             });
 
             throw err;

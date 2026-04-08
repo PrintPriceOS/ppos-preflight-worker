@@ -4,7 +4,7 @@
  * Generates immutable execution evidence and logs forensic-grade telemetry.
  * Stores evidence in MySQL (canonical job registry) and optionally Object Storage.
  */
-const db = require('../../staged-libs/ppos-shared-infra/app/services/db');
+const db = require('../../staged-libs/ppos-shared-infra/packages/data/db');
 const pino = require('pino');
 
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
