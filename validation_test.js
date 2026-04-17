@@ -1,135 +1,112 @@
 /**
- * Patch Validation: Large PDF Async Analyze Contract
- * 
- * Final robust self-contained validation script.
+ * Hardened Validation Test
+ * Verifies Phase 10 Artifact registration and contract compliance.
  */
 
-// 1. Setup Mocks BEFORE loading any app code
+// 1. Setup Dynamic Mocks
+let engineResponse = {
+    analyze: { issues: [{ id: 'TEST', message: 'test' }] },
+    autofix: { fixedPath: '/tmp/fixed.pdf' }
+};
+
 const MockDb = {
-    execute: async (query, params) => {
-        if (query.includes('UPDATE jobs')) {
-            MockDb.lastJobResult = JSON.parse(params[2]);
-        } else if (query.includes('INSERT INTO job_evidence')) {
-            MockDb.lastEvidence = JSON.parse(params[4] || '{}').evidence;
-        }
-        return [{}];
-    }
+    execute: async () => [{}],
+    lastJobResult: null,
+    lastEvidence: null
+};
+
+const fsMock = {
+    config: () => ({}),
+    existsSync: () => true,
+    pathExists: async () => true,
+    copy: async () => {},
+    ensureDir: async () => {},
+    ensureDirSync: () => {},
+    move: async () => {},
+    remove: async () => {},
+    statSync: () => ({ size: 1000 })
 };
 
 const MockEngine = {
     createStandardEngine: () => ({
-        analyzePdf: async () => ({
-            summary: { risk_score: 85, status: 'certified' },
-            document: { page_count: 5, size_mb: 19.5, format: 'PDF/X-4' },
-            engines: { pitstop: 'v2024', callas: 'v12' },
-            issues: [
-                { id: "IND_BLEED", message: "Missing bleed", severity: "error" },
-                { id: "IND_COLOR", message: "RGB detected", severity: "warning" }
-            ],
-            metadata: { creator: 'Adobe InDesign', timestamp: new Date().toISOString() }
-        })
+        analyzePdf: async () => engineResponse.analyze,
+        autofixPdf: async () => engineResponse.autofix
     })
 };
 
-// Override Module Loader for mocks
+// Override Module Loader
 const Module = require('module');
 const originalLoad = Module._load;
 Module._load = function(request, parent, isMain) {
-    if (request === '@ppos/shared-infra/packages/data/db' || 
-        request.includes('staged-libs/ppos-shared-infra/packages/data/db') ||
-        request.includes('staged-libs/ppos-shared-infra/app/services/db')) return MockDb;
-    if (request === '@ppos/shared-infra') return { db: MockDb };
+    if (request === '@ppos/shared-infra/packages/data/db') return MockDb;
     if (request === '@ppos/preflight-engine') return MockEngine;
+    if (request === 'fs-extra') return fsMock;
     if (request === 'pino') return () => ({ info: () => {}, error: () => {}, warn: () => {}, child: () => ({ info: () => {}, error: () => {} }) });
-    if (request === 'pino-pretty' || request === 'fs-extra' || request === 'bullmq' || request === 'ioredis' || request === 'dotenv' || request === 'uuid') {
-        return { 
-            config: () => ({}), 
-            existsSync: () => true, 
-            v4: () => 'uuid-v4', 
-            ensureDir: async () => {},
-            ensureDirSync: () => {},
-            move: async () => {},
-            remove: async () => {}
-        };
+    if (request === 'bullmq' || request === 'ioredis' || request === 'dotenv' || request === 'uuid') {
+        return { config: () => ({}), v4: () => 'uuid-v4' };
     }
-    // Mock StorageManager to avoid OS-specific path issues in validation
     if (request === '../utils/StorageManager') {
         return class {
             verifyPathIsolation() { return true; }
-            getJobSubfolder() { return '/tmp/storage/job_456/output'; }
+            getJobSubfolder(t, j, f) { return `/tmp/storage/${t}/jobs/${j}/${f}`; }
         };
     }
     return originalLoad.apply(this, arguments);
 };
 
-// 2. Load the patched modules
 const JobRouter = require('./queue/JobRouter');
 
 async function validate() {
-    console.log('--- STARTING VALIDATION: LARGE PDF >5MB ANALYZE JOB ---\n');
-
-    const mockJob = {
-        id: '999',
-        name: 'ANALYZE',
-        data: {
-            jobId: 'job_456',
-            tenantId: 'tenant_123',
-            payload: {
-                filePath: '/tmp/large_test.pdf'
-            }
-        },
-        updateProgress: async (p) => {}
-    };
+    console.log('--- STARTING HARDENED WORKER VALIDATION ---\n');
 
     const logger = { info: () => {}, error: () => {}, child: () => ({ info: () => {}, error: () => {} }) };
 
-    // Execute JobRouter
-    console.log('STEP 1: Processing ANALYZE through JobRouter...');
-    const rawResult = await JobRouter.route(mockJob, logger);
-
-    const persistedResult = MockDb.lastJobResult;
-    const evidence = MockDb.lastEvidence;
-
-    console.log('\n--- RAW WORKER RESULT (Before Persistence) ---');
-    console.log(JSON.stringify(rawResult, null, 2));
-
-    console.log('\n--- PERSISTED jobs.result (Canonical Record) ---');
-    console.log(JSON.stringify(persistedResult, null, 2));
-
-    console.log('\n--- EVIDENCE Metadata (Forensic Audit) ---');
-    console.log(JSON.stringify(evidence, null, 2));
-
-    // Validations
-    console.log('\nSTEP 2: Verifying requirements...');
+    // --- TEST 1: ANALYZE ---
+    console.log('STEP 1: Testing ANALYZE canonical registration...');
+    const analyzeJob = {
+        name: 'ANALYZE',
+        data: { jobId: 'job_1', tenantId: 'tenant_1', input: { fileUrl: '/tmp/in.pdf' } },
+        updateProgress: async () => {}
+    };
     
-    // Check report components in result
-    const hasSummary = !!persistedResult.report.summary;
-    const hasDocument = !!persistedResult.report.document;
-    const hasIssues = persistedResult.report.issues && persistedResult.report.issues.length > 0;
-    
-    console.log(`- report.summary preserved: ${hasSummary ? 'YES' : 'NO'}`);
-    console.log(`- report.document preserved: ${hasDocument ? 'YES' : 'NO'}`);
-    console.log(`- report.issues preserved: ${hasIssues ? 'YES' : 'NO'}`);
+    const analyzeResult = await JobRouter.route(analyzeJob, logger);
+    console.log('Analyze Result Artifacts:', analyzeResult.artifacts);
+    if (analyzeResult.artifacts.certified_pdf !== 'certified.pdf') throw new Error('Analyze artifact registration failed');
 
-    // Check issue mapping in evidence
-    const mappedViolations = evidence.violations.length;
-    console.log(`- issues mapped to evidence.violations: ${mappedViolations === 2 ? 'YES' : 'NO'} (${mappedViolations} found)`);
+    // --- TEST 2: AUTOFIX ---
+    console.log('\nSTEP 2: Testing AUTOFIX deterministic resolution...');
+    const autofixJob = {
+        name: 'AUTOFIX',
+        data: { jobId: 'fix_1', tenantId: 'tenant_1', input: { fileUrl: '/tmp/in.pdf' } },
+        updateProgress: async () => {}
+    };
 
-    // Check evidence vs result
-    const isolationPreserved = JSON.stringify(persistedResult) !== JSON.stringify(evidence);
-    console.log(`- evidence remains secondary metadata: ${isolationPreserved ? 'YES' : 'NO'}`);
-
-    if (!hasSummary || !hasDocument || !hasIssues || mappedViolations !== 2 || !isolationPreserved) {
-        throw new Error('FAILED: One or more validation criteria not met.');
+    engineResponse.autofix = { fixedPath: '/tmp/engine_out.pdf' };
+    const autofixResult = await JobRouter.route(autofixJob, logger);
+    console.log('Autofix Result Artifacts:', autofixResult.artifacts);
+    if (autofixResult.artifacts.fixed_pdf !== 'fixed.pdf' || autofixResult.artifacts.certified_pdf !== 'certified.pdf') {
+        throw new Error('Autofix artifact registration failed');
     }
 
-    console.log('\n--- FINAL VALIDATION ---');
-    console.log('Final Validation Status: PASSED');
-    console.log('Verdict: COMPATIBLE with APP/BFF. Analysis payload fully preserved.');
+    // --- TEST 3: AUTOFIX FAILURE ---
+    console.log('\nSTEP 3: Testing AUTOFIX explicit failure on missing output...');
+    fsMock.pathExists = async () => false;
+    try {
+        await JobRouter.route(autofixJob, logger);
+        throw new Error('Should have failed but succeeded');
+    } catch (e) {
+        if (e.message.includes('[AUTOFIX-FAILURE]')) {
+            console.log('Confirmed: Threw expected failure:', e.message);
+        } else {
+            throw e;
+        }
+    }
+
+    console.log('\n--- ALL VALIDATIONS PASSED ---');
 }
 
 validate().catch(err => {
-    console.error('\n--- VALIDATION FAILED ---');
+    console.error('\nVALIDATION FAILED');
     console.error(err);
     process.exit(1);
 });

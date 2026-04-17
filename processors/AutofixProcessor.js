@@ -112,16 +112,12 @@ class AutofixProcessor {
 
         if (bestSource) {
             // v2.4.120: Certification Suffix Promotion
-            // If bestSource is already certified.pdf (legacy edge case), skip copy
-            if (bestSource !== certifiedPath && !(await fs.pathExists(certifiedPath))) {
-                logger.info({ jobId, source: bestSource }, 'CERTIFY_FIX_PROMOTION_START');
-                await fs.copy(bestSource, certifiedPath);
-                logger.info({ jobId }, 'CERTIFY_FIX_PROMOTION_END');
+            // Promote bestSource to canonical filenames (ensuring fresh copies for this execution)
+            if (bestSource !== certifiedPath) {
+                await fs.copy(bestSource, certifiedPath, { overwrite: true });
             }
-
-            // Ensure fixed.pdf exists for canonical autofix mapping
-            if (bestSource !== fixedPdfPath && !(await fs.pathExists(fixedPdfPath))) {
-                await fs.copy(bestSource, fixedPdfPath);
+            if (bestSource !== fixedPdfPath) {
+                await fs.copy(bestSource, fixedPdfPath, { overwrite: true });
             }
 
             verifiedArtifacts.certified_pdf = 'certified.pdf';
@@ -140,7 +136,7 @@ class AutofixProcessor {
 
         if (Object.keys(verifiedArtifacts).length === 0) {
             logger.error({ jobId }, '[WORKER][AUTOFIX][NO-OUTPUT]');
-            throw new Error(`[AUTOFIX-FAILURE] jobId=${jobId} Engine reported success but no valid output file found in result payload or legacy paths. Evidence is incomplete.`);
+            throw new Error(`[AUTOFIX-FAILURE] jobId=${jobId} Engine reported success but no valid output file found.`);
         }
 
         if (job.updateProgress) await job.updateProgress(100);

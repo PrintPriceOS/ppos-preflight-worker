@@ -134,12 +134,18 @@ class AnalyzeProcessor {
         
         // v2.4.120: Certification Suffix Promotion (Worker Logic)
         const fs = require('fs-extra');
-        const certifiedPath = require('path').join(outputDir, 'certified.pdf');
+        const path = require('path');
+        const certifiedPath = path.join(outputDir, 'certified.pdf');
         
-        if (!(await fs.pathExists(certifiedPath))) {
-            logger.info({ jobId, certifiedPath }, 'CERTIFY_PROMOTION_START');
-            await fs.copy(filePath, certifiedPath);
-            logger.info({ jobId }, 'CERTIFY_PROMOTION_END');
+        // Phase 5: Evidence Artifacts
+        if (filePath && await fs.pathExists(filePath)) {
+            if (filePath !== certifiedPath) {
+                await fs.copy(filePath, certifiedPath, { overwrite: true });
+            }
+            logger.info({ jobId, artifact: 'certified_pdf' }, '[WORKER][ANALYZE][ARTIFACT-REGISTERED]');
+        } else {
+            logger.error({ jobId, filePath }, '[WORKER][ANALYZE][NO-SOURCE]');
+            throw new Error(`[ANALYZE-FAILURE] jobId=${jobId} Source file not found for artifact promotion.`);
         }
 
         return {
