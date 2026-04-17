@@ -76,30 +76,57 @@ class AutofixProcessor {
         if (job.updateProgress) await job.updateProgress(90);
 
         // Phase 5: Evidence Artifacts (Shape Unified for Phase 10)
-        logger.info({ jobId, outputDir }, '[WORKER][AUTOFIX][OUTPUT-PATH]');
+        logger.info({ jobId, outputDir }, '[WORKER][AUTOFIX][SEARCHING-ARTIFACTS]');
 
-        const bestSource = result.fixedFilePath || `${outputDir}/normalized.pdf`;
+        let bestSource = null;
+
+        // 1. Priority: Explicit fixedPath
+        if (result.fixedPath) {
+            logger.info({ jobId, path: result.fixedPath }, '[WORKER][AUTOFIX][ENGINE-FIXED-PATH]');
+            if (await fs.pathExists(result.fixedPath)) {
+                bestSource = result.fixedPath;
+            }
+        }
+
+        // 2. Priority: Structured artifacts path
+        if (!bestSource && result.artifacts?.fixed_pdf?.path) {
+            const artifactPath = result.artifacts.fixed_pdf.path;
+            logger.info({ jobId, path: artifactPath }, '[WORKER][AUTOFIX][ENGINE-ARTIFACT-PATH]');
+            if (await fs.pathExists(artifactPath)) {
+                bestSource = artifactPath;
+            }
+        }
+
+        // 3. Fallback: Legacy path guesses (e.g., normalized.pdf)
+        if (!bestSource) {
+            const legacyPath = `${outputDir}/normalized.pdf`;
+            logger.info({ jobId, path: legacyPath }, '[WORKER][AUTOFIX][LEGACY-FALLBACK]');
+            if (await fs.pathExists(legacyPath)) {
+                bestSource = legacyPath;
+            }
+        }
+
         const certifiedPath = `${outputDir}/certified.pdf`;
         const fixedPdfPath = `${outputDir}/fixed.pdf`;
-
         const verifiedArtifacts = {};
 
-        if (await fs.pathExists(bestSource)) {
+        if (bestSource) {
             // v2.4.120: Certification Suffix Promotion
-            if (!(await fs.pathExists(certifiedPath))) {
+            // If bestSource is already certified.pdf (legacy edge case), skip copy
+            if (bestSource !== certifiedPath && !(await fs.pathExists(certifiedPath))) {
                 logger.info({ jobId, source: bestSource }, 'CERTIFY_FIX_PROMOTION_START');
                 await fs.copy(bestSource, certifiedPath);
                 logger.info({ jobId }, 'CERTIFY_FIX_PROMOTION_END');
             }
-            
+
             // Ensure fixed.pdf exists for canonical autofix mapping
-            if (!(await fs.pathExists(fixedPdfPath))) {
+            if (bestSource !== fixedPdfPath && !(await fs.pathExists(fixedPdfPath))) {
                 await fs.copy(bestSource, fixedPdfPath);
             }
 
             verifiedArtifacts.certified_pdf = 'certified.pdf';
             verifiedArtifacts.fixed_pdf = 'fixed.pdf';
-            
+
             logger.info({ jobId, artifact: 'certified_pdf' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
             logger.info({ jobId, artifact: 'fixed_pdf' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
         }
@@ -112,8 +139,8 @@ class AutofixProcessor {
         }
 
         if (Object.keys(verifiedArtifacts).length === 0) {
-            logger.error({ jobId, searchPath: bestSource }, '[WORKER][AUTOFIX][NO-OUTPUT]');
-            throw new Error(`[AUTOFIX-FAILURE] jobId=${jobId} Engine reported success but no output file found at ${bestSource}. Evidence is incomplete.`);
+            logger.error({ jobId }, '[WORKER][AUTOFIX][NO-OUTPUT]');
+            throw new Error(`[AUTOFIX-FAILURE] jobId=${jobId} Engine reported success but no valid output file found in result payload or legacy paths. Evidence is incomplete.`);
         }
 
         if (job.updateProgress) await job.updateProgress(100);
