@@ -8,6 +8,7 @@
 const { createStandardEngine } = require('@ppos/preflight-engine');
 const StorageManager = require('../utils/StorageManager');
 const fs = require('fs-extra');
+const path = require('path');
 
 // Canonical storage instance
 const storage = new StorageManager();
@@ -32,8 +33,13 @@ class AutofixProcessor {
             throw new Error(`[AUTOFIX-CONTRACT-ERROR] jobId=${jobId} Missing canonical file reference. Expected input.fileUrl (V2) or payload.filePath (legacy).`);
         }
 
-        // Verify path isolation to prevent leakage (preserving core safety)
-        storage.verifyPathIsolation(tenantId, fileUrl);
+        if (!path.isAbsolute(fileUrl)) {
+            throw new Error(`INPUT_FILE_NOT_FOUND: jobId=${jobId} fileUrl is a relative path and cannot be resolved: "${fileUrl}". The originating service must store absolute paths.`);
+        }
+
+        if (!(await fs.pathExists(fileUrl))) {
+            throw new Error(`INPUT_FILE_NOT_FOUND: jobId=${jobId} Input file not found at path: "${fileUrl}"`);
+        }
 
         // Phase 8: Isolation & Sandboxed Directories
         const outputDir = storage.getJobSubfolder(tenantId, jobId, 'output');
@@ -72,6 +78,10 @@ class AutofixProcessor {
             tempDir,
             tenantId
         });
+
+        if (result.ok === false) {
+            throw new Error(`[AUTOFIX-ENGINE-ERROR] jobId=${jobId} Engine failed: ${result.error}`);
+        }
 
         if (job.updateProgress) await job.updateProgress(90);
 
