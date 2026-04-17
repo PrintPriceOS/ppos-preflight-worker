@@ -76,30 +76,45 @@ class AutofixProcessor {
         if (job.updateProgress) await job.updateProgress(90);
 
         // Phase 5: Evidence Artifacts (Shape Unified for Phase 10)
-        const artifacts = {
-            fixed_file: result.fixedFilePath || `${outputDir}/normalized.pdf`,
-            audit_report: `${outputDir}/fix_audit.json`
-        };
+        logger.info({ jobId, outputDir }, '[WORKER][AUTOFIX][OUTPUT-PATH]');
 
-        // v2.4.120: Certification Suffix Promotion (Autofix Processor)
-        const certifiedPath = `${outputDir}/certified.pdf`;
         const bestSource = result.fixedFilePath || `${outputDir}/normalized.pdf`;
-        if (await fs.pathExists(bestSource) && !(await fs.pathExists(certifiedPath))) {
-            logger.info({ jobId, source: bestSource }, 'CERTIFY_FIX_PROMOTION_START');
-            await fs.copy(bestSource, certifiedPath);
-            logger.info({ jobId }, 'CERTIFY_FIX_PROMOTION_END');
+        const certifiedPath = `${outputDir}/certified.pdf`;
+        const fixedPdfPath = `${outputDir}/fixed.pdf`;
+
+        const verifiedArtifacts = {};
+
+        if (await fs.pathExists(bestSource)) {
+            // v2.4.120: Certification Suffix Promotion
+            if (!(await fs.pathExists(certifiedPath))) {
+                logger.info({ jobId, source: bestSource }, 'CERTIFY_FIX_PROMOTION_START');
+                await fs.copy(bestSource, certifiedPath);
+                logger.info({ jobId }, 'CERTIFY_FIX_PROMOTION_END');
+            }
+            
+            // Ensure fixed.pdf exists for canonical autofix mapping
+            if (!(await fs.pathExists(fixedPdfPath))) {
+                await fs.copy(bestSource, fixedPdfPath);
+            }
+
+            verifiedArtifacts.certified_pdf = 'certified.pdf';
+            verifiedArtifacts.fixed_pdf = 'fixed.pdf';
+            
+            logger.info({ jobId, artifact: 'certified_pdf' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
+            logger.info({ jobId, artifact: 'fixed_pdf' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
         }
 
-        // Verification of artifacts before returning
-        const verifiedArtifacts = {};
-        for (const [key, val] of Object.entries(artifacts)) {
-            if (await fs.pathExists(val)) {
-                verifiedArtifacts[key] = val;
-            }
+        // Optional: register audit report if it exists
+        const auditReportPath = `${outputDir}/fix_audit.json`;
+        if (await fs.pathExists(auditReportPath)) {
+            verifiedArtifacts.audit_report = 'fix_audit.json';
+            logger.info({ jobId, artifact: 'audit_report' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
         }
-        
-        // Final canonical artifact registration
-        if (await fs.pathExists(certifiedPath)) verifiedArtifacts.certified_pdf = 'certified.pdf';
+
+        if (Object.keys(verifiedArtifacts).length === 0) {
+            logger.error({ jobId, searchPath: bestSource }, '[WORKER][AUTOFIX][NO-OUTPUT]');
+            throw new Error(`[AUTOFIX-FAILURE] jobId=${jobId} Engine reported success but no output file found at ${bestSource}. Evidence is incomplete.`);
+        }
 
         if (job.updateProgress) await job.updateProgress(100);
 
