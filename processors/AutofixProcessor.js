@@ -13,6 +13,23 @@ const path = require('path');
 // Canonical storage instance
 const storage = new StorageManager();
 
+/**
+ * Derives a concrete fixPlan from the policy name and incoming options.
+ * PreflightEngine requires an explicit type/target; without one it falls
+ * back to copying the input unchanged ("Copied" note).
+ */
+function resolveFixPlan(policy, options = {}) {
+    if (options.type || options.target || options.forceBleed) return options;
+
+    // Offset / coated / uncoated profiles always require CMYK output
+    const isCmykPolicy = /offset|coated|uncoated|iso|pso|cmyk/i.test(policy || '');
+    if (isCmykPolicy) {
+        return { ...options, target: 'cmyk' };
+    }
+
+    return { ...options, target: 'cmyk' };
+}
+
 class AutofixProcessor {
     /**
      * Executes the Preflight Pipeline for Autofix/Repair.
@@ -69,10 +86,16 @@ class AutofixProcessor {
         // 1. PDF Analysis & Repair (Engine)
         const engine = createStandardEngine();
 
+        // Derive a concrete fix target from the policy so PreflightEngine
+        // doesn't fall back to the no-op copy path (missing type/target).
+        const fixPlan = resolveFixPlan(normalizedPolicy, normalizedOptions);
+
+        logger.info({ jobId, fixPlan, policy: normalizedPolicy }, '[WORKER][AUTOFIX][FIX-PLAN-RESOLVED]');
+
         // Validation guided by external policyProfile
         const result = await engine.autofixPdf(fileUrl, {
             ...(normalizedPolicy ? { policy: normalizedPolicy } : {}),
-            ...normalizedOptions,
+            ...fixPlan,
             policyProfile,
             outputDir,
             tempDir,
