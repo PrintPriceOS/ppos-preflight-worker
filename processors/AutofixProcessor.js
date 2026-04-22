@@ -9,6 +9,9 @@ const { createStandardEngine } = require('@ppos/preflight-engine');
 const StorageManager = require('../utils/StorageManager');
 const fs = require('fs-extra');
 const path = require('path');
+const { exec } = require('child_process');
+const util = require('util');
+const execPromise = util.promisify(exec);
 
 // Canonical storage instance
 const storage = new StorageManager();
@@ -31,6 +34,43 @@ function resolveFixPlan(policy, options = {}) {
 }
 
 class AutofixProcessor {
+    /**
+     * Attempts to repair structural PDF defects using qpdf before Ghostscript.
+     * Prevents Ghostscript "circular reference" failures on LuaTeX PDFs.
+     */
+    static async sanitizePdfForAutofix(inputPath, tempDir, logger, context = {}) {
+        const { jobId, tenantId } = context;
+        const sanitizedPath = path.join(tempDir, 'sanitized_input.pdf');
+
+        logger.info({ jobId, tenantId, inputPath, sanitizedPath }, '[WORKER][AUTOFIX][SANITIZE-START]');
+
+        try {
+            // Using qpdf for structural repair.
+            // This fixes "circular reference to indirect object" common in LuaTeX files.
+            // Note: qpdf returns exit code 3 if it fixes warnings/errors successfully.
+            await execPromise(`qpdf "${inputPath}" "${sanitizedPath}"`);
+            
+            logger.info({ jobId, sanitizedPath }, '[WORKER][AUTOFIX][SANITIZE-SUCCESS]');
+            return sanitizedPath;
+        } catch (error) {
+            // Exit code 3 means qpdf encountered issues but repaired them and produced output.
+            if (error.code === 3 && await fs.pathExists(sanitizedPath)) {
+                logger.info({ jobId, sanitizedPath }, '[WORKER][AUTOFIX][SANITIZE-SUCCESS] (repaired with warnings)');
+                return sanitizedPath;
+            }
+
+            logger.warn({ 
+                jobId, 
+                error: error.message,
+                errorCode: error.code,
+                originalInput: inputPath 
+            }, '[WORKER][AUTOFIX][SANITIZE-FAIL] Repair attempt failed. Proceeding with original file.');
+            
+            // Fallback to original input if qpdf fails
+            return inputPath;
+        }
+    }
+
     /**
      * Executes the Preflight Pipeline for Autofix/Repair.
      */
@@ -86,14 +126,19 @@ class AutofixProcessor {
         // 1. PDF Analysis & Repair (Engine)
         const engine = createStandardEngine();
 
+        // Phase 9: Pre-repair/Sanitization Stage (v2.5.0)
+        // Fix for "circular reference to indirect object" in malformed PDFs
+        const sanitizedInput = await this.sanitizePdfForAutofix(fileUrl, tempDir, logger, { jobId, tenantId });
+
         // Derive a concrete fix target from the policy so PreflightEngine
         // doesn't fall back to the no-op copy path (missing type/target).
         const fixPlan = resolveFixPlan(normalizedPolicy, normalizedOptions);
 
-        logger.info({ jobId, fixPlan, policy: normalizedPolicy }, '[WORKER][AUTOFIX][FIX-PLAN-RESOLVED]');
+        logger.info({ jobId, fixPlan, policy: normalizedPolicy, sanitized: sanitizedInput !== fileUrl }, '[WORKER][AUTOFIX][FIX-PLAN-RESOLVED]');
 
         // Validation guided by external policyProfile
-        const result = await engine.autofixPdf(fileUrl, {
+        // Use sanitized input if available
+        const result = await engine.autofixPdf(sanitizedInput, {
             ...(normalizedPolicy ? { policy: normalizedPolicy } : {}),
             ...fixPlan,
             policyProfile,
@@ -103,6 +148,7 @@ class AutofixProcessor {
         });
 
         if (result.ok === false) {
+            logger.error({ jobId, error: result.error }, '[WORKER][AUTOFIX][GS-FAIL]');
             throw new Error(`[AUTOFIX-ENGINE-ERROR] jobId=${jobId} Engine failed: ${result.error}`);
         }
 
