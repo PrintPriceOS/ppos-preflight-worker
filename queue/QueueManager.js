@@ -9,6 +9,7 @@ const IORedis = require('ioredis');
 const JobRouter = require('./JobRouter');
 const RetryPolicy = require('./RetryPolicy');
 const os = require('os');
+const ControlPlaneHeartbeat = require('../utils/ControlPlaneHeartbeat');
 
 class QueueManager {
     constructor(redisOptions, logger) {
@@ -16,9 +17,10 @@ class QueueManager {
         this.logger = logger || console;
         this.workers = [];
         this.heartbeatInterval = null;
+        this.controlPlaneHeartbeat = null;
 
-        // V1.9.3 Worker Identity
-        this.workerId = `preflight-worker-${process.env.NODE_ENV || 'dev'}-${os.hostname()}-${Math.random().toString(36).substring(7)}`;
+        // V1.9.3 Worker Identity (respect WORKER_ID env var)
+        this.workerId = process.env.WORKER_ID || `preflight-worker-${process.env.NODE_ENV || 'dev'}-${os.hostname()}-${Math.random().toString(36).substring(7)}`;
         this.redisClient = new IORedis(this.redisOptions);
 
         // Performance Tiering (v2.4.86)
@@ -80,8 +82,20 @@ class QueueManager {
 
         this.workers.push(worker);
 
-        // Start Registry Heartbeat
+        // Start Registry Heartbeat (Internal Redis)
         this._startHeartbeat(queueName);
+
+        // Start Control Plane Heartbeat (External HTTP)
+        this.controlPlaneHeartbeat = new ControlPlaneHeartbeat({
+            url: process.env.CONTROL_PLANE_URL,
+            token: process.env.PPOS_CONTROL_TOKEN,
+            workerId: this.workerId,
+            queueName,
+            concurrency: this.concurrency,
+            intervalMs: parseInt(process.env.WORKER_HEARTBEAT_INTERVAL_MS || '30000', 10)
+        }, this.logger);
+        
+        this.controlPlaneHeartbeat.start();
     }
 
     _startHeartbeat(queueName) {
@@ -112,6 +126,7 @@ class QueueManager {
     async stop() {
         this.logger.info({ workerId: this.workerId }, 'Deregistering worker node...');
         if (this.heartbeatInterval) clearInterval(this.heartbeatInterval);
+        if (this.controlPlaneHeartbeat) this.controlPlaneHeartbeat.stop();
 
         try {
             // Explicitly close BullMQ workers (v2.4.86 fix)
