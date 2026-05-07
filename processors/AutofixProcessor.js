@@ -12,6 +12,8 @@ const path = require('path');
 const { exec } = require('child_process');
 const util = require('util');
 const execPromise = util.promisify(exec);
+const ControlPlaneArtifacts = require('../utils/ControlPlaneArtifacts');
+const os = require('os');
 
 // Canonical storage instance
 const storage = new StorageManager();
@@ -189,6 +191,12 @@ class AutofixProcessor {
         const fixedPdfPath = `${outputDir}/fixed.pdf`;
         const verifiedArtifacts = {};
 
+        const artifactClient = new ControlPlaneArtifacts({
+            url: process.env.CONTROL_PLANE_URL,
+            token: process.env.PPOS_CONTROL_TOKEN,
+            workerId: process.env.WORKER_ID || `worker-${os.hostname()}`
+        }, logger);
+
         if (bestSource) {
             // v2.4.120: Certification Suffix Promotion
             // Promote bestSource to canonical filenames (ensuring fresh copies for this execution)
@@ -204,6 +212,30 @@ class AutofixProcessor {
 
             logger.info({ jobId, artifact: 'certified_pdf' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
             logger.info({ jobId, artifact: 'fixed_pdf' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
+
+            // Register with Control Plane
+            const registerArtifact = async (type, filePath, name) => {
+                try {
+                    const stats = await fs.stat(filePath);
+                    await artifactClient.register({
+                        jobId,
+                        tenantId,
+                        artifactType: type,
+                        filename: name,
+                        storageKey: filePath,
+                        sizeBytes: stats.size,
+                        mimeType: type.endsWith('pdf') ? 'application/pdf' : 'application/json',
+                        metadata: {
+                            processor: "AUTOFIX"
+                        }
+                    });
+                } catch (e) {
+                    logger.warn({ error: e.message, type }, '[WORKER][CONTROL-PLANE-ARTIFACT][WARN] Failed to prepare registration');
+                }
+            };
+
+            await registerArtifact('certified_pdf', certifiedPath, 'certified.pdf');
+            await registerArtifact('fixed_pdf', fixedPdfPath, 'fixed.pdf');
         }
 
         // Optional: register audit report if it exists
@@ -211,6 +243,21 @@ class AutofixProcessor {
         if (await fs.pathExists(auditReportPath)) {
             verifiedArtifacts.audit_report = 'fix_audit.json';
             logger.info({ jobId, artifact: 'audit_report' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
+            
+            // Register audit report with Control Plane
+            const stats = await fs.stat(auditReportPath);
+            await artifactClient.register({
+                jobId,
+                tenantId,
+                artifactType: 'audit_report',
+                filename: 'fix_audit.json',
+                storageKey: auditReportPath,
+                sizeBytes: stats.size,
+                mimeType: 'application/json',
+                metadata: {
+                    processor: "AUTOFIX"
+                }
+            });
         }
 
         if (Object.keys(verifiedArtifacts).length === 0) {

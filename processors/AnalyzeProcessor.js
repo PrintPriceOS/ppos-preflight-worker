@@ -6,6 +6,10 @@
 const { createStandardEngine } = require('@ppos/preflight-engine');
 
 const StorageManager = require('../utils/StorageManager');
+const ControlPlaneArtifacts = require('../utils/ControlPlaneArtifacts');
+const os = require('os');
+
+// Canonical storage instance
 const storage = new StorageManager();
 
 class AnalyzeProcessor {
@@ -143,6 +147,31 @@ class AnalyzeProcessor {
                 await fs.copy(filePath, certifiedPath, { overwrite: true });
             }
             logger.info({ jobId, artifact: 'certified_pdf' }, '[WORKER][ANALYZE][ARTIFACT-REGISTERED]');
+
+            // Register with Control Plane
+            const artifactClient = new ControlPlaneArtifacts({
+                url: process.env.CONTROL_PLANE_URL,
+                token: process.env.PPOS_CONTROL_TOKEN,
+                workerId: process.env.WORKER_ID || `worker-${os.hostname()}`
+            }, logger);
+
+            try {
+                const stats = await fs.stat(certifiedPath);
+                await artifactClient.register({
+                    jobId,
+                    tenantId,
+                    artifactType: 'certified_pdf',
+                    filename: 'certified.pdf',
+                    storageKey: certifiedPath,
+                    sizeBytes: stats.size,
+                    mimeType: 'application/pdf',
+                    metadata: {
+                        processor: "ANALYZE"
+                    }
+                });
+            } catch (e) {
+                logger.warn({ error: e.message }, '[WORKER][CONTROL-PLANE-ARTIFACT][WARN] Failed to prepare registration');
+            }
         } else {
             logger.error({ jobId, filePath }, '[WORKER][ANALYZE][NO-SOURCE]');
             throw new Error(`[ANALYZE-FAILURE] jobId=${jobId} Source file not found for artifact promotion.`);
