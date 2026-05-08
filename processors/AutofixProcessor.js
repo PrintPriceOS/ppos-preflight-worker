@@ -14,6 +14,7 @@ const util = require('util');
 const execPromise = util.promisify(exec);
 const ControlPlaneArtifacts = require('../utils/ControlPlaneArtifacts');
 const os = require('os');
+const { sha256File } = require('../utils/fileChecksum');
 
 // Canonical storage instance
 const storage = new StorageManager();
@@ -217,6 +218,15 @@ class AutofixProcessor {
             const registerArtifact = async (type, filePath, name) => {
                 try {
                     const stats = await fs.stat(filePath);
+                    
+                    let checksumSha256 = null;
+                    try {
+                        checksumSha256 = await sha256File(filePath);
+                        logger.info({ jobId, type, checksumSha256 }, '[WORKER][ARTIFACT][SHA256][OK]');
+                    } catch (hashError) {
+                        logger.warn({ jobId, type, error: hashError.message }, '[WORKER][ARTIFACT][SHA256][WARN]');
+                    }
+
                     await artifactClient.register({
                         jobId,
                         tenantId,
@@ -224,6 +234,7 @@ class AutofixProcessor {
                         filename: name,
                         storageKey: filePath,
                         sizeBytes: stats.size,
+                        checksumSha256,
                         mimeType: type.endsWith('pdf') ? 'application/pdf' : 'application/json',
                         metadata: {
                             processor: "AUTOFIX"
@@ -246,6 +257,15 @@ class AutofixProcessor {
             
             // Register audit report with Control Plane
             const stats = await fs.stat(auditReportPath);
+            
+            let auditChecksum = null;
+            try {
+                auditChecksum = await sha256File(auditReportPath);
+                logger.info({ jobId, type: 'audit_report', checksumSha256: auditChecksum }, '[WORKER][ARTIFACT][SHA256][OK]');
+            } catch (hashError) {
+                logger.warn({ jobId, type: 'audit_report', error: hashError.message }, '[WORKER][ARTIFACT][SHA256][WARN]');
+            }
+
             await artifactClient.register({
                 jobId,
                 tenantId,
@@ -253,6 +273,7 @@ class AutofixProcessor {
                 filename: 'fix_audit.json',
                 storageKey: auditReportPath,
                 sizeBytes: stats.size,
+                checksumSha256: auditChecksum,
                 mimeType: 'application/json',
                 metadata: {
                     processor: "AUTOFIX"

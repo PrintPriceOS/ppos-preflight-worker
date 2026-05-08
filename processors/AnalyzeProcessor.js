@@ -8,6 +8,7 @@ const { createStandardEngine } = require('@ppos/preflight-engine');
 const StorageManager = require('../utils/StorageManager');
 const ControlPlaneArtifacts = require('../utils/ControlPlaneArtifacts');
 const os = require('os');
+const { sha256File } = require('../utils/fileChecksum');
 
 // Canonical storage instance
 const storage = new StorageManager();
@@ -157,6 +158,15 @@ class AnalyzeProcessor {
 
             try {
                 const stats = await fs.stat(certifiedPath);
+                
+                let checksumSha256 = null;
+                try {
+                    checksumSha256 = await sha256File(certifiedPath);
+                    logger.info({ jobId, type: 'certified_pdf', checksumSha256 }, '[WORKER][ARTIFACT][SHA256][OK]');
+                } catch (hashError) {
+                    logger.warn({ jobId, type: 'certified_pdf', error: hashError.message }, '[WORKER][ARTIFACT][SHA256][WARN]');
+                }
+
                 await artifactClient.register({
                     jobId,
                     tenantId,
@@ -164,6 +174,7 @@ class AnalyzeProcessor {
                     filename: 'certified.pdf',
                     storageKey: certifiedPath,
                     sizeBytes: stats.size,
+                    checksumSha256,
                     mimeType: 'application/pdf',
                     metadata: {
                         processor: "ANALYZE"
