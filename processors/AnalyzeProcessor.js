@@ -83,6 +83,20 @@ class AnalyzeProcessor {
         }
         // -----------------------------------------------------------
 
+        // Hardened Check: Missing tools prevent industrial analysis from being reported as REAL_EXTRACTION
+        if (report && report.analysisIntegrity) {
+            const missing = report.analysisIntegrity.missingTools || [];
+            if (missing.length > 0 || report.analysis_type === 'DEGRADED') {
+                logger.warn({ jobId, missing }, '[WORKER][TOOLS][MISSING] Engine reported missing tools. Overriding extraction integrity markers.');
+                report.analysisIntegrity.realExtraction = false;
+                report.analysisIntegrity.degradedMode = true;
+                report.analysisIntegrity.fallbackUsed = true;
+                if (report.analysis_type === 'REAL_INDUSTRIAL') {
+                    report.analysis_type = 'DEGRADED';
+                }
+            }
+        }
+
         await job.updateProgress(70); // Phase 3: Engine returned report
 
         /* 

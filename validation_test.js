@@ -24,6 +24,7 @@ const fsMock = {
     ensureDirSync: () => {},
     move: async () => {},
     remove: async () => {},
+    stat: async () => ({ size: 500 }),
     statSync: () => ({ size: 1000 })
 };
 
@@ -41,7 +42,7 @@ Module._load = function(request, parent, isMain) {
     if (request === '@ppos/shared-infra/packages/data/db') return MockDb;
     if (request === '@ppos/preflight-engine') return MockEngine;
     if (request === 'fs-extra') return fsMock;
-    if (request === 'pino') return () => ({ info: () => {}, error: () => {}, warn: () => {}, child: () => ({ info: () => {}, error: () => {} }) });
+    if (request === 'pino') return () => ({ info: () => {}, error: () => {}, warn: () => {}, debug: () => {}, child: () => ({ info: () => {}, error: () => {}, warn: () => {}, debug: () => {} }) });
     if (request === 'bullmq' || request === 'ioredis' || request === 'dotenv' || request === 'uuid') {
         return { config: () => ({}), v4: () => 'uuid-v4' };
     }
@@ -59,7 +60,7 @@ const JobRouter = require('./queue/JobRouter');
 async function validate() {
     console.log('--- STARTING HARDENED WORKER VALIDATION ---\n');
 
-    const logger = { info: () => {}, error: () => {}, child: () => ({ info: () => {}, error: () => {} }) };
+    const logger = { info: () => {}, error: () => {}, warn: () => {}, debug: () => {}, child: () => ({ info: () => {}, error: () => {}, warn: () => {}, debug: () => {} }) };
 
     // --- TEST 1: ANALYZE ---
     console.log('STEP 1: Testing ANALYZE canonical registration...');
@@ -90,7 +91,7 @@ async function validate() {
 
     // --- TEST 3: AUTOFIX FAILURE ---
     console.log('\nSTEP 3: Testing AUTOFIX explicit failure on missing output...');
-    fsMock.pathExists = async () => false;
+    fsMock.pathExists = async (p) => p === '/tmp/in.pdf';
     try {
         await JobRouter.route(autofixJob, logger);
         throw new Error('Should have failed but succeeded');
@@ -105,7 +106,9 @@ async function validate() {
     console.log('\n--- ALL VALIDATIONS PASSED ---');
 }
 
-validate().catch(err => {
+validate().then(() => {
+    process.exit(0);
+}).catch(err => {
     console.error('\nVALIDATION FAILED');
     console.error(err);
     process.exit(1);
