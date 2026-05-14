@@ -114,6 +114,148 @@ class AutofixProcessor {
             payload?.options ||
             {};
 
+        // Extract requested fixes robustly across all potential envelope levels
+        let rawFixes = data.fixes || input?.fixes || rawSpecs?.fixes || payload?.fixes;
+        let requestedFixes = [];
+        if (Array.isArray(rawFixes)) {
+            requestedFixes = [...rawFixes];
+        } else if (typeof rawFixes === 'string') {
+            requestedFixes = [rawFixes];
+        }
+
+        if (requestedFixes.length === 0) {
+            const rf = data.requested_fixes || input?.requested_fixes || rawSpecs?.requested_fixes || payload?.requested_fixes ||
+                       data.requestedFixes || input?.requestedFixes || rawSpecs?.requestedFixes || payload?.requestedFixes;
+            if (Array.isArray(rf)) requestedFixes = [...rf];
+            else if (typeof rf === 'string') requestedFixes = [rf];
+        }
+
+        let forceBleed = data.forceBleed ?? input?.forceBleed ?? rawSpecs?.forceBleed ?? payload?.forceBleed ?? normalizedOptions?.forceBleed ?? false;
+        let targetProfile = data.targetProfile ?? input?.targetProfile ?? rawSpecs?.targetProfile ?? payload?.targetProfile ?? normalizedOptions?.targetProfile ?? null;
+        let sourceJobId = data.sourceJobId ?? input?.sourceJobId ?? rawSpecs?.sourceJobId ?? payload?.sourceJobId ?? null;
+
+        // Resolve source findings
+        let sourceFindings = null;
+        const inlineFindings = data.findings || input?.findings || rawSpecs?.findings || payload?.findings ||
+                               data.issues || input?.issues || rawSpecs?.issues || payload?.issues ||
+                               data.violations || input?.violations || rawSpecs?.violations || payload?.violations;
+        if (Array.isArray(inlineFindings)) {
+            sourceFindings = inlineFindings;
+        }
+
+        if (!sourceFindings && sourceJobId) {
+            try {
+                const possibleDirs = [
+                    storage.getJobSubfolder(tenantId, sourceJobId, 'reports'),
+                    storage.getJobSubfolder(tenantId, sourceJobId, 'output')
+                ];
+                const possibleFiles = ['analysis_report.json', 'report.json', 'result.json', 'findings.json'];
+                for (const dir of possibleDirs) {
+                    for (const file of possibleFiles) {
+                        const fullPath = path.join(dir, file);
+                        if (await fs.pathExists(fullPath)) {
+                            try {
+                                const content = await fs.readJson(fullPath);
+                                const found = content?.findings || content?.issues || content?.violations ||
+                                              content?.report?.findings || content?.report?.issues || content?.report?.violations;
+                                if (Array.isArray(found)) {
+                                    sourceFindings = found;
+                                    logger.info({ sourceJobId, file: fullPath }, '[WORKER][AUTOFIX][SOURCE-FINDINGS-DISK] Loaded source findings from disk');
+                                    break;
+                                }
+                            } catch (e) {
+                                // ignore
+                            }
+                        }
+                    }
+                    if (sourceFindings) break;
+                }
+
+                if (!sourceFindings) {
+                    try {
+                        const db = require('@ppos/shared-infra/packages/data/db');
+                        if (db && typeof db.execute === 'function') {
+                            const dbRes = await db.execute('SELECT result FROM jobs WHERE id = ? AND tenant_id = ?', [sourceJobId, tenantId]);
+                            const rows = Array.isArray(dbRes) ? (Array.isArray(dbRes[0]) ? dbRes[0] : dbRes) : [];
+                            if (rows && rows.length > 0 && rows[0].result) {
+                                let parsed = null;
+                                if (typeof rows[0].result === 'string') parsed = JSON.parse(rows[0].result);
+                                else if (typeof rows[0].result === 'object') parsed = rows[0].result;
+                                const found = parsed?.findings || parsed?.issues || parsed?.violations ||
+                                              parsed?.report?.findings || parsed?.report?.issues || parsed?.report?.violations;
+                                if (Array.isArray(found)) {
+                                    sourceFindings = found;
+                                    logger.info({ sourceJobId }, '[WORKER][AUTOFIX][SOURCE-FINDINGS-DB] Loaded source findings from database');
+                                }
+                            }
+                        }
+                    } catch (dbErr) {
+                        logger.warn({ error: dbErr.message }, '[WORKER][AUTOFIX][SOURCE-FINDINGS-DB-ERR] Could not load from DB');
+                    }
+                }
+            } catch (err) {
+                logger.warn({ error: err.message }, '[WORKER][AUTOFIX][SOURCE-FINDINGS-ERR] Error retrieving source findings');
+            }
+        }
+
+        const hasSourceFindings = sourceFindings && sourceFindings.length > 0;
+
+        // Instrumentation 1: [WORKER][AUTOFIX][PAYLOAD-IN]
+        logger.info({
+            jobId,
+            fixJobId: jobId,
+            sourceJobId,
+            requestedFixesCount: requestedFixes.length,
+            requestedFixes,
+            sourceFindingsCount: sourceFindings ? sourceFindings.length : 0,
+            engineRepairsCount: 0,
+            engineRepairs: [],
+            storedRepairsCount: 0,
+            storedRepairs: [],
+            artifacts: [],
+            artifactNames: {},
+            forceBleed,
+            targetProfile
+        }, '[WORKER][AUTOFIX][PAYLOAD-IN] Incoming autofix job payload received');
+
+        // Instrumentation 2: [WORKER][AUTOFIX][SOURCE-FINDINGS]
+        if (!hasSourceFindings) {
+            logger.warn({
+                jobId,
+                fixJobId: jobId,
+                sourceJobId,
+                requestedFixesCount: requestedFixes.length,
+                requestedFixes,
+                sourceFindingsCount: 0,
+                engineRepairsCount: 0,
+                engineRepairs: [],
+                storedRepairsCount: 0,
+                storedRepairs: [],
+                artifacts: [],
+                artifactNames: {},
+                reason: 'MISSING_SOURCE_FINDINGS_FOR_AUTOFIX',
+                forceBleed,
+                targetProfile
+            }, '[WORKER][AUTOFIX][SOURCE-FINDINGS] MISSING_SOURCE_FINDINGS_FOR_AUTOFIX: No source findings available for autofix');
+        } else {
+            logger.info({
+                jobId,
+                fixJobId: jobId,
+                sourceJobId,
+                requestedFixesCount: requestedFixes.length,
+                requestedFixes,
+                sourceFindingsCount: sourceFindings.length,
+                engineRepairsCount: 0,
+                engineRepairs: [],
+                storedRepairsCount: 0,
+                storedRepairs: [],
+                artifacts: [],
+                artifactNames: {},
+                forceBleed,
+                targetProfile
+            }, '[WORKER][AUTOFIX][SOURCE-FINDINGS] Source findings successfully resolved');
+        }
+
         logger.info({
             tenantId,
             jobId,
@@ -135,22 +277,77 @@ class AutofixProcessor {
 
         // Derive a concrete fix target from the policy so PreflightEngine
         // doesn't fall back to the no-op copy path (missing type/target).
-        const fixPlan = resolveFixPlan(normalizedPolicy, normalizedOptions);
+        const fixPlan = resolveFixPlan(normalizedPolicy, {
+            ...normalizedOptions,
+            forceBleed,
+            targetProfile,
+            fixes: requestedFixes,
+            requested_fixes: requestedFixes
+        });
 
         logger.info({ jobId, fixPlan, policy: normalizedPolicy, sanitized: sanitizedInput !== fileUrl }, '[WORKER][AUTOFIX][FIX-PLAN-RESOLVED]');
 
-        // Validation guided by external policyProfile
-        // Use sanitized input if available
-        const result = await engine.autofixPdf(sanitizedInput, {
+        const enginePayload = {
             ...(normalizedPolicy ? { policy: normalizedPolicy } : {}),
             ...fixPlan,
             policyProfile,
             outputDir,
             tempDir,
-            tenantId
-        });
+            tenantId,
+            // Guaranteed forwarded context:
+            sourceJobId: sourceJobId || null,
+            requested_fixes: requestedFixes,
+            fixes: requestedFixes,
+            forceBleed,
+            targetProfile,
+            findings: sourceFindings || []
+        };
 
-        if (result.ok === false) {
+        // Instrumentation 3: [WORKER][AUTOFIX][ENGINE-CALL]
+        logger.info({
+            jobId,
+            fixJobId: jobId,
+            sourceJobId,
+            requestedFixesCount: requestedFixes.length,
+            requestedFixes,
+            sourceFindingsCount: sourceFindings ? sourceFindings.length : 0,
+            engineRepairsCount: 0,
+            engineRepairs: [],
+            storedRepairsCount: 0,
+            storedRepairs: [],
+            artifacts: [],
+            artifactNames: {},
+            forceBleed,
+            targetProfile
+        }, '[WORKER][AUTOFIX][ENGINE-CALL] Invoking engine.autofixPdf with preserved intent');
+
+        const result = await engine.autofixPdf(sanitizedInput, enginePayload);
+
+        // Extract repairs to ensure complete preservation
+        const allRepairs = Array.isArray(result?.repairs) ? result.repairs : (Array.isArray(result?.fixes) ? result.fixes : []);
+        const appliedFixes = allRepairs.filter(r => r?.status === 'APPLIED');
+        const skippedFixes = allRepairs.filter(r => r?.status === 'SKIPPED');
+        const failedFixes = allRepairs.filter(r => r?.status === 'FAILED' || r?.status === 'UNSUPPORTED');
+
+        // Instrumentation 4: [WORKER][AUTOFIX][ENGINE-RESULT]
+        logger.info({
+            jobId,
+            fixJobId: jobId,
+            sourceJobId,
+            requestedFixesCount: requestedFixes.length,
+            requestedFixes,
+            sourceFindingsCount: sourceFindings ? sourceFindings.length : 0,
+            engineRepairsCount: allRepairs.length,
+            engineRepairs: allRepairs.map(r => ({ code: r?.code, status: r?.status })),
+            storedRepairsCount: allRepairs.length,
+            storedRepairs: allRepairs.map(r => ({ code: r?.code, status: r?.status })),
+            artifacts: [],
+            artifactNames: {},
+            forceBleed,
+            targetProfile
+        }, '[WORKER][AUTOFIX][ENGINE-RESULT] Preserved complete engine output without filtering');
+
+        if (result?.ok === false && allRepairs.length === 0 && !result?.status && !result?.fixedPath) {
             logger.error({ jobId, error: result.error }, '[WORKER][AUTOFIX][GS-FAIL]');
             throw new Error(`[AUTOFIX-ENGINE-ERROR] jobId=${jobId} Engine failed: ${result.error}`);
         }
@@ -163,7 +360,7 @@ class AutofixProcessor {
         let bestSource = null;
 
         // 1. Priority: Explicit fixedPath
-        if (result.fixedPath) {
+        if (result?.fixedPath) {
             logger.info({ jobId, path: result.fixedPath }, '[WORKER][AUTOFIX][ENGINE-FIXED-PATH]');
             if (await fs.pathExists(result.fixedPath)) {
                 bestSource = result.fixedPath;
@@ -171,7 +368,7 @@ class AutofixProcessor {
         }
 
         // 2. Priority: Structured artifacts path
-        if (!bestSource && result.artifacts?.fixed_pdf?.path) {
+        if (!bestSource && result?.artifacts?.fixed_pdf?.path) {
             const artifactPath = result.artifacts.fixed_pdf.path;
             logger.info({ jobId, path: artifactPath }, '[WORKER][AUTOFIX][ENGINE-ARTIFACT-PATH]');
             if (await fs.pathExists(artifactPath)) {
@@ -288,10 +485,44 @@ class AutofixProcessor {
 
         if (job.updateProgress) await job.updateProgress(100);
 
+        const finalArtifacts = {
+            ...verifiedArtifacts,
+            final_fixed_pdf: verifiedArtifacts.fixed_pdf || 'fixed.pdf'
+        };
+
+        // Instrumentation 5: [WORKER][AUTOFIX][RESULT-STORED]
+        logger.info({
+            jobId,
+            fixJobId: jobId,
+            sourceJobId,
+            requestedFixesCount: requestedFixes.length,
+            requestedFixes,
+            sourceFindingsCount: sourceFindings ? sourceFindings.length : 0,
+            engineRepairsCount: allRepairs.length,
+            engineRepairs: allRepairs.map(r => ({ code: r?.code, status: r?.status })),
+            storedRepairsCount: allRepairs.length,
+            storedRepairs: allRepairs.map(r => ({ code: r?.code, status: r?.status })),
+            artifacts: Object.keys(finalArtifacts),
+            artifactNames: finalArtifacts,
+            forceBleed,
+            targetProfile
+        }, '[WORKER][AUTOFIX][RESULT-STORED] Final end-to-end autofix result stored');
+
+        const finalStatus = !hasSourceFindings ? 'DEGRADED' : 'COMPLETED';
+
         return {
-            status: 'COMPLETED',
+            status: finalStatus,
+            ...(!hasSourceFindings ? { reason: 'MISSING_SOURCE_FINDINGS_FOR_AUTOFIX' } : {}),
+            type: 'AUTOFIX',
+            sourceJobId: sourceJobId || null,
+            requested_fixes: requestedFixes,
+            repairs: allRepairs,
+            fixes: allRepairs,
+            applied_fixes: appliedFixes,
+            skipped_fixes: skippedFixes,
+            failed_fixes: failedFixes,
             report: result,
-            artifacts: verifiedArtifacts,
+            artifacts: finalArtifacts,
             tenantId,
             jobId,
             processedAt: new Date().toISOString()
