@@ -4,16 +4,22 @@ const execAsync = util.promisify(exec);
 
 class ToolPreflight {
     /**
-     * Deterministic startup preflight check verifying required industrial binaries
-     * with `which` and version probes.
+     * Startup preflight check verifying required industrial binaries
+     * with capability-based readiness.
      */
     static async checkAll() {
-        const requiredTools = ['pdfinfo', 'pdfimages', 'mutool', 'gs', 'qpdf'];
-        const optionalTools = ['exiftool'];
-        const allTools = [...requiredTools, ...optionalTools];
+        // ARCHITECTURAL DECISION: 'qpdf' remains in hardRequired because it is critical
+        // for safe integrity checks, decrypting stream encryptions, repairing low-level page count structures,
+        // and standardizing document streams before processing. Without it, safe preflight is not possible.
+        const hardRequired = ['gs', 'qpdf'];
+        const degradedAllowed = ['pdfinfo', 'pdfimages', 'mutool', 'pdffonts'];
+        const optional = ['exiftool'];
+        const allTools = [...hardRequired, ...degradedAllowed, ...optional];
 
         const result = {
             ready: true,
+            degraded: false,
+            status: 'HEALTHY',
             missingTools: [],
             tools: {}
         };
@@ -25,7 +31,7 @@ class ToolPreflight {
             } else if (tool === 'exiftool') {
                 cmd = `"${path}" -ver`;
             } else {
-                // pdfinfo, pdfimages, mutool typically use -v
+                // pdfinfo, pdfimages, mutool, pdffonts typically use -v or similar
                 cmd = `"${path}" -v`;
             }
 
@@ -35,7 +41,6 @@ class ToolPreflight {
                 const firstLine = combined.split('\n').find(l => l.trim().length > 0) || 'unknown version';
                 return firstLine.trim();
             } catch (err) {
-                // Some tools (like mutool -v or pdfinfo -v) return non-zero exit codes when displaying version/usage
                 const combined = `${err.stdout || ''}\n${err.stderr || ''}`.trim();
                 const firstLine = combined.split('\n').find(l => l.trim().length > 0);
                 if (firstLine) {
@@ -45,32 +50,60 @@ class ToolPreflight {
             }
         };
 
+        // On Windows, 'which' is not available. 
+        // We will try using 'where' on Windows to locate binaries if which fails.
+        const isWindows = process.platform === 'win32';
+
         for (const tool of allTools) {
+            let available = false;
+            let binPath = null;
+            let version = null;
+            let errorMsg = null;
+
             try {
-                const { stdout } = await execAsync(`which ${tool}`, { timeout: 3000 });
-                const binPath = stdout.trim();
+                const searchCmd = isWindows ? `where ${tool}` : `which ${tool}`;
+                const { stdout } = await execAsync(searchCmd, { timeout: 3000 });
+                binPath = stdout.trim().split('\n')[0].trim(); // Get first match
                 if (binPath) {
-                    const version = await probeVersion(tool, binPath);
-                    result.tools[tool] = {
-                        available: true,
-                        path: binPath,
-                        version
-                    };
+                    version = await probeVersion(tool, binPath);
+                    available = true;
                 } else {
-                    throw new Error('Empty path returned by which');
+                    throw new Error('Empty path returned');
                 }
             } catch (err) {
+                errorMsg = err.message;
+            }
+
+            if (available) {
+                result.tools[tool] = {
+                    available: true,
+                    path: binPath,
+                    version
+                };
+            } else {
                 result.tools[tool] = {
                     available: false,
                     path: null,
                     version: null,
-                    error: err.message
+                    error: errorMsg
                 };
-                if (requiredTools.includes(tool)) {
+
+                if (hardRequired.includes(tool)) {
                     result.ready = false;
+                    result.missingTools.push(tool);
+                } else if (degradedAllowed.includes(tool)) {
+                    result.degraded = true;
                     result.missingTools.push(tool);
                 }
             }
+        }
+
+        if (!result.ready) {
+            result.status = 'UNHEALTHY';
+        } else if (result.degraded) {
+            result.status = 'DEGRADED';
+        } else {
+            result.status = 'HEALTHY';
         }
 
         return result;

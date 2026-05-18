@@ -12,14 +12,29 @@ module.exports = {
     
     /**
      * Classifies errors to decide if a retry should be skipped.
+     * Aligned with Phase 10 non-retryable contract rules.
      */
     shouldRetry(error) {
-        const fatalErrors = [
+        if (!error) return true;
+        
+        const message = error.message || '';
+        const code = error.code || '';
+        
+        const fatalPatterns = [
             'INPUT_FILE_NOT_FOUND',
+            'ANALYZE-CONTRACT-ERROR',
+            'AUTOFIX-CONTRACT-ERROR',
+            'isolation breach',
             'INVALID_PDF_STRUCTURE',
             'QUARANTINE_TRIGGERED'
         ];
         
-        return !fatalErrors.includes(error.code);
+        for (const pattern of fatalPatterns) {
+            if (message.includes(pattern) || code.includes(pattern)) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 };

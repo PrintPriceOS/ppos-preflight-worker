@@ -25,7 +25,9 @@ const fsMock = {
     move: async () => {},
     remove: async () => {},
     stat: async () => ({ size: 500 }),
-    statSync: () => ({ size: 1000 })
+    statSync: () => ({ size: 1000 }),
+    writeJson: async () => {},
+    writeJsonSync: () => {}
 };
 
 const MockEngine = {

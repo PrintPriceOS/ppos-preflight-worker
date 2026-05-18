@@ -57,6 +57,10 @@ class QueueManager {
                     childLogger.info('Job processing completed');
                     return result;
                 } catch (err) {
+                    if (!RetryPolicy.shouldRetry(err)) {
+                        childLogger.warn({ error: err.message }, 'Fatal non-retryable error detected. Discarding remaining retries.');
+                        job.opts.attempts = 1; // Direct BullMQ instruction to not retry
+                    }
                     childLogger.error({ error: err.message, stack: err.stack }, 'Job processing failed');
                     throw err;
                 }

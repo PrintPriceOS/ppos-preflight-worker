@@ -407,9 +407,11 @@ class AutofixProcessor {
 
             verifiedArtifacts.certified_pdf = 'certified.pdf';
             verifiedArtifacts.fixed_pdf = 'fixed.pdf';
+            verifiedArtifacts.final_fixed_pdf = 'fixed.pdf';
 
             logger.info({ jobId, artifact: 'certified_pdf' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
             logger.info({ jobId, artifact: 'fixed_pdf' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
+            logger.info({ jobId, artifact: 'final_fixed_pdf' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
 
             // Register with Control Plane
             const registerArtifact = async (type, filePath, name) => {
@@ -444,13 +446,16 @@ class AutofixProcessor {
 
             await registerArtifact('certified_pdf', certifiedPath, 'certified.pdf');
             await registerArtifact('fixed_pdf', fixedPdfPath, 'fixed.pdf');
+            await registerArtifact('final_fixed_pdf', fixedPdfPath, 'fixed.pdf');
         }
 
         // Optional: register audit report if it exists
         const auditReportPath = `${outputDir}/fix_audit.json`;
         if (await fs.pathExists(auditReportPath)) {
             verifiedArtifacts.audit_report = 'fix_audit.json';
+            verifiedArtifacts.fix_audit = 'fix_audit.json';
             logger.info({ jobId, artifact: 'audit_report' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
+            logger.info({ jobId, artifact: 'fix_audit' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
             
             // Register audit report with Control Plane
             const stats = await fs.stat(auditReportPath);
@@ -458,15 +463,29 @@ class AutofixProcessor {
             let auditChecksum = null;
             try {
                 auditChecksum = await sha256File(auditReportPath);
-                logger.info({ jobId, type: 'audit_report', checksumSha256: auditChecksum }, '[WORKER][ARTIFACT][SHA256][OK]');
+                logger.info({ jobId, type: 'fix_audit', checksumSha256: auditChecksum }, '[WORKER][ARTIFACT][SHA256][OK]');
             } catch (hashError) {
-                logger.warn({ jobId, type: 'audit_report', error: hashError.message }, '[WORKER][ARTIFACT][SHA256][WARN]');
+                logger.warn({ jobId, type: 'fix_audit', error: hashError.message }, '[WORKER][ARTIFACT][SHA256][WARN]');
             }
 
             await artifactClient.register({
                 jobId,
                 tenantId,
                 artifactType: 'audit_report',
+                filename: 'fix_audit.json',
+                storageKey: auditReportPath,
+                sizeBytes: stats.size,
+                checksumSha256: auditChecksum,
+                mimeType: 'application/json',
+                metadata: {
+                    processor: "AUTOFIX"
+                }
+            });
+
+            await artifactClient.register({
+                jobId,
+                tenantId,
+                artifactType: 'fix_audit',
                 filename: 'fix_audit.json',
                 storageKey: auditReportPath,
                 sizeBytes: stats.size,
@@ -487,7 +506,8 @@ class AutofixProcessor {
 
         const finalArtifacts = {
             ...verifiedArtifacts,
-            final_fixed_pdf: verifiedArtifacts.fixed_pdf || 'fixed.pdf'
+            final_fixed_pdf: verifiedArtifacts.final_fixed_pdf || verifiedArtifacts.fixed_pdf || 'fixed.pdf',
+            fix_audit: verifiedArtifacts.fix_audit || verifiedArtifacts.audit_report || 'fix_audit.json'
         };
 
         // Instrumentation 5: [WORKER][AUTOFIX][RESULT-STORED]
