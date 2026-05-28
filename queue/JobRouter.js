@@ -112,7 +112,7 @@ class JobRouter {
             // Direct DB persistence of rich result
             if (db && typeof db.execute === 'function') {
                 try {
-                    const dbStatus = (result.status || 'COMPLETED').substring(0, 30);
+                    const dbStatus = (result.status || 'COMPLETED').substring(0, 128);
                     const dbResultJson = JSON.stringify(result);
                     await db.execute(
                         "UPDATE jobs SET status = ?, result = ?, error = NULL, progress = 100, updated_at = NOW() WHERE id = ? AND tenant_id = ?",

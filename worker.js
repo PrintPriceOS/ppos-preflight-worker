@@ -49,6 +49,16 @@ async function bootstrap() {
     logger.info('Running deterministic startup preflight check for industrial binaries...');
     toolsStatus = await ToolPreflight.checkAll();
 
+    try {
+        const db = require('@ppos/shared-infra/packages/data/db');
+        if (db && typeof db.execute === 'function') {
+            await db.execute("ALTER TABLE jobs MODIFY COLUMN status VARCHAR(128)");
+            logger.info('[WORKER][DB][MIGRATION] Ensured jobs.status is VARCHAR(128)');
+        }
+    } catch (dbErr) {
+        logger.warn({ error: dbErr.message }, '[WORKER][DB][MIGRATION] Could not modify jobs.status column, continuing...');
+    }
+
     healthServer.listen(HEALTH_PORT, '0.0.0.0', () => {
         logger.info({ port: HEALTH_PORT }, 'Worker health check active');
     });
