@@ -33,7 +33,7 @@ class ControlPlaneArtifacts {
                 path: urlObj.pathname,
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': token.startsWith('Bearer ') ? token : `Bearer ${token}`,
                     'Content-Type': 'application/json',
                     'Content-Length': Buffer.byteLength(data)
                 }
