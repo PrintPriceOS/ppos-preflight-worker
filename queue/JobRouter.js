@@ -124,6 +124,94 @@ class JobRouter {
                 }
             }
 
+            // Phase 6: Sync to Control Plane Preflight Registry
+            try {
+                const ControlPlaneJobSync = require('../utils/ControlPlaneJobSync');
+                const os = require('os');
+                const syncClient = new ControlPlaneJobSync({
+                    url: process.env.CONTROL_PLANE_URL,
+                    token: process.env.PPOS_CONTROL_TOKEN,
+                    workerId: process.env.WORKER_ID || `worker-${os.hostname()}`
+                }, logger);
+
+                // Prepare final payload based on prompt spec
+                const isAnalyze = jobType === 'ANALYZE' || jobType === 'preflight_job';
+                const isAutofix = jobType === 'AUTOFIX';
+                
+                const findings = result.findings || (result.report && result.report.findings) || [];
+                const findingsCount = Array.isArray(findings) ? findings.length : 0;
+                const issues = result.issues || (result.report && result.report.issues) || [];
+                const issuesCount = Array.isArray(issues) ? issues.length : 0;
+
+                const requestedFixes = result.requested_fixes || [];
+                const appliedFixes = result.applied_fixes || [];
+                const skippedFixes = result.skipped_fixes || [];
+                const failedFixes = result.failed_fixes || [];
+
+                let productionCertified = null;
+                let requiresHumanReview = null;
+                const reviewReasons = [];
+
+                if (isAnalyze) {
+                    // Check if certification is true
+                    const hasBlockingFindings = findings.some(f => {
+                        const sev = (f.severity || '').toLowerCase();
+                        return sev === 'critical' || sev === 'error';
+                    });
+                    
+                    const classifier = result.status; // AnalyzeProcessor returns status mapped from classifier
+                    
+                    if (classifier !== 'FAILED' && classifier !== 'DOCUMENT_FAILURE' && !hasBlockingFindings) {
+                        // Look at analysisIntegrity
+                        if (result.analysisIntegrity && result.analysisIntegrity.certifiable !== false) {
+                            productionCertified = true;
+                        }
+                    }
+                    if (productionCertified === null) productionCertified = false;
+                    requiresHumanReview = findingsCount > 0 && !productionCertified;
+                } else if (isAutofix) {
+                    if (failedFixes.length > 0) {
+                        requiresHumanReview = true;
+                        reviewReasons.push('Some fixes failed to apply');
+                    }
+                    if (skippedFixes.length > 0) {
+                        requiresHumanReview = true;
+                        reviewReasons.push('Some fixes were skipped');
+                    }
+                    if (appliedFixes.length > 0 && failedFixes.length === 0 && skippedFixes.length === 0) {
+                        productionCertified = true;
+                    } else {
+                        productionCertified = false;
+                    }
+                }
+
+                const syncPayload = {
+                    jobId,
+                    sourceJobId: result.sourceJobId || data.sourceJobId || null,
+                    tenantId,
+                    type: jobType === 'preflight_job' ? 'ANALYZE' : jobType,
+                    status: result.status,
+                    source_status: data.status || result.status, // Whatever status was passed down initially
+                    final_status: result.status,
+                    findingsCount,
+                    issuesCount,
+                    requestedFixesCount: requestedFixes.length,
+                    appliedFixesCount: appliedFixes.length,
+                    skippedFixesCount: skippedFixes.length,
+                    failedFixesCount: failedFixes.length,
+                    productionCertified,
+                    requiresHumanReview,
+                    reviewReasons,
+                    artifacts: result.artifacts || {},
+                    analysisIntegrity: result.analysisIntegrity || {},
+                    updatedAt: result.processedAt || new Date().toISOString()
+                };
+
+                await syncClient.syncJobResult(syncPayload);
+            } catch (syncErr) {
+                logger.warn({ jobId, error: syncErr.message }, '[WORKER][CONTROL-PLANE-JOB-SYNC][ERROR] Unhandled error preparing sync');
+            }
+
             return result;
 
         } catch (err) {
