@@ -82,6 +82,10 @@ class AutofixProcessor {
         const data = job?.data || {};
         const { jobId, tenantId, input, payload, policyProfile, trace = {} } = data;
 
+        if (jobId && tenantId) {
+            logger.info({ jobId, tenantId }, '[PREFLIGHT-WORKER][AUTOFIX_START]');
+        }
+
         const fileUrl = input?.fileUrl || payload?.filePath;
         const contractMode = input?.fileUrl ? 'v2_input' : 'legacy_payload';
 
@@ -94,12 +98,14 @@ class AutofixProcessor {
         }
 
         if (!path.isAbsolute(fileUrl)) {
-            throw new Error(`INPUT_FILE_NOT_FOUND: jobId=${jobId} fileUrl is a relative path and cannot be resolved: "${fileUrl}". The originating service must store absolute paths.`);
+            throw new Error(`SOURCE_PDF_NOT_FOUND: jobId=${jobId} fileUrl is a relative path and cannot be resolved: "${fileUrl}". The originating service must store absolute paths.`);
         }
 
         if (!(await fs.pathExists(fileUrl))) {
-            throw new Error(`INPUT_FILE_NOT_FOUND: jobId=${jobId} Input file not found at path: "${fileUrl}"`);
+            throw new Error(`SOURCE_PDF_NOT_FOUND: jobId=${jobId} Input file not found at path: "${fileUrl}"`);
         }
+        
+        logger.info({ jobId, tenantId, fileUrl }, '[PREFLIGHT-WORKER][SOURCE_PDF_RESOLVED]');
 
         // Phase 8: Isolation & Sandboxed Directories
         const outputDir = storage.getJobSubfolder(tenantId, jobId, 'output');
@@ -329,6 +335,15 @@ class AutofixProcessor {
         const skippedFixes = allRepairs.filter(r => r?.status === 'SKIPPED');
         const failedFixes = allRepairs.filter(r => r?.status === 'FAILED' || r?.status === 'UNSUPPORTED');
 
+        logger.info({
+            jobId,
+            tenantId,
+            applied_fixes_count: appliedFixes.length,
+            skipped_fixes_count: skippedFixes.length,
+            failed_fixes_count: failedFixes.length,
+            requested_fixes: requestedFixes
+        }, '[PREFLIGHT-WORKER][FIX_APPLIED]');
+
         // Instrumentation 4: [WORKER][AUTOFIX][ENGINE-RESULT]
         logger.info({
             jobId,
@@ -385,9 +400,14 @@ class AutofixProcessor {
             }
         }
 
+        logger.info({ jobId, tenantId, outputDir }, '[PREFLIGHT-WORKER][ARTIFACT_WRITE_START]');
+
         const certifiedPath = `${outputDir}/certified.pdf`;
         const fixedPdfPath = `${outputDir}/fixed.pdf`;
         const verifiedArtifacts = {};
+        let physicalArtifactsReady = false;
+        let zeroByteArtifactCount = 0;
+        let downloadableArtifactCount = 0;
 
         const artifactClient = new ControlPlaneArtifacts({
             url: process.env.CONTROL_PLANE_URL,
@@ -395,9 +415,10 @@ class AutofixProcessor {
             workerId: process.env.WORKER_ID || `worker-${os.hostname()}`
         }, logger);
 
+        const requiresReview = failedFixes.length > 0 || result?.status === 'REVIEW_REQUIRED';
+
         if (bestSource) {
             // v2.4.120: Certification Suffix Promotion
-            // Promote bestSource to canonical filenames (ensuring fresh copies for this execution)
             if (bestSource !== certifiedPath) {
                 await fs.copy(bestSource, certifiedPath, { overwrite: true });
             }
@@ -405,26 +426,24 @@ class AutofixProcessor {
                 await fs.copy(bestSource, fixedPdfPath, { overwrite: true });
             }
 
-            verifiedArtifacts.certified_pdf = 'certified.pdf';
-            verifiedArtifacts.fixed_pdf = 'fixed.pdf';
-            verifiedArtifacts.final_fixed_pdf = 'fixed.pdf';
-
-            logger.info({ jobId, artifact: 'certified_pdf' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
-            logger.info({ jobId, artifact: 'fixed_pdf' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
-            logger.info({ jobId, artifact: 'final_fixed_pdf' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
-
             // Register with Control Plane
-            const registerArtifact = async (type, filePath, name) => {
+            const registerArtifact = async (type, filePath, name, extraMetadata = {}) => {
                 try {
                     const stats = await fs.stat(filePath);
+                    if (stats.size <= 0) {
+                        logger.warn({ jobId, type, filePath, sizeBytes: stats.size }, '[PREFLIGHT-WORKER][ZERO_BYTE_ARTIFACT_BLOCKED]');
+                        zeroByteArtifactCount++;
+                        return false;
+                    }
                     
                     let checksumSha256 = null;
                     try {
                         checksumSha256 = await sha256File(filePath);
-                        logger.info({ jobId, type, checksumSha256 }, '[WORKER][ARTIFACT][SHA256][OK]');
                     } catch (hashError) {
                         logger.warn({ jobId, type, error: hashError.message }, '[WORKER][ARTIFACT][SHA256][WARN]');
                     }
+
+                    const meta = { processor: "AUTOFIX", ...extraMetadata };
 
                     await artifactClient.register({
                         jobId,
@@ -435,79 +454,109 @@ class AutofixProcessor {
                         sizeBytes: stats.size,
                         checksumSha256,
                         mimeType: type.endsWith('pdf') ? 'application/pdf' : 'application/json',
-                        metadata: {
-                            processor: "AUTOFIX"
-                        }
+                        metadata: meta,
+                        downloadable: true
                     });
+                    
+                    logger.info({ jobId, type, filePath, sizeBytes: stats.size }, '[PREFLIGHT-WORKER][ARTIFACT_WRITE_OK]');
+                    downloadableArtifactCount++;
+                    return true;
                 } catch (e) {
-                    logger.warn({ error: e.message, type }, '[WORKER][CONTROL-PLANE-ARTIFACT][WARN] Failed to prepare registration');
+                    logger.warn({ error: e.message, type, filePath }, '[PREFLIGHT-WORKER][ARTIFACT_WRITE_FAILED]');
+                    return false;
                 }
             };
 
-            await registerArtifact('certified_pdf', certifiedPath, 'certified.pdf');
-            await registerArtifact('fixed_pdf', fixedPdfPath, 'fixed.pdf');
-            await registerArtifact('final_fixed_pdf', fixedPdfPath, 'fixed.pdf');
-        }
-
-        // Optional: register audit report if it exists
-        const auditReportPath = `${outputDir}/fix_audit.json`;
-        if (await fs.pathExists(auditReportPath)) {
-            verifiedArtifacts.audit_report = 'fix_audit.json';
-            verifiedArtifacts.fix_audit = 'fix_audit.json';
-            logger.info({ jobId, artifact: 'audit_report' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
-            logger.info({ jobId, artifact: 'fix_audit' }, '[WORKER][AUTOFIX][ARTIFACT-REGISTERED]');
-            
-            // Register audit report with Control Plane
-            const stats = await fs.stat(auditReportPath);
-            
-            let auditChecksum = null;
-            try {
-                auditChecksum = await sha256File(auditReportPath);
-                logger.info({ jobId, type: 'fix_audit', checksumSha256: auditChecksum }, '[WORKER][ARTIFACT][SHA256][OK]');
-            } catch (hashError) {
-                logger.warn({ jobId, type: 'fix_audit', error: hashError.message }, '[WORKER][ARTIFACT][SHA256][WARN]');
+            const fixedRegistered = await registerArtifact('fixed_pdf', fixedPdfPath, 'fixed.pdf', { requires_review: requiresReview });
+            if (fixedRegistered) {
+                verifiedArtifacts.fixed_pdf = 'fixed.pdf';
+                verifiedArtifacts.final_fixed_pdf = 'fixed.pdf';
+                physicalArtifactsReady = true;
+                
+                // If requires review, also alias review_pdf to the same file
+                if (requiresReview) {
+                    await registerArtifact('review_pdf', fixedPdfPath, 'fixed.pdf', { requires_review: true });
+                    verifiedArtifacts.review_pdf = 'fixed.pdf';
+                }
+                
+                await registerArtifact('certified_pdf', certifiedPath, 'certified.pdf');
+                verifiedArtifacts.certified_pdf = 'certified.pdf';
             }
-
-            await artifactClient.register({
-                jobId,
-                tenantId,
-                artifactType: 'audit_report',
-                filename: 'fix_audit.json',
-                storageKey: auditReportPath,
-                sizeBytes: stats.size,
-                checksumSha256: auditChecksum,
-                mimeType: 'application/json',
-                metadata: {
-                    processor: "AUTOFIX"
-                }
-            });
-
-            await artifactClient.register({
-                jobId,
-                tenantId,
-                artifactType: 'fix_audit',
-                filename: 'fix_audit.json',
-                storageKey: auditReportPath,
-                sizeBytes: stats.size,
-                checksumSha256: auditChecksum,
-                mimeType: 'application/json',
-                metadata: {
-                    processor: "AUTOFIX"
-                }
-            });
         }
 
-        if (Object.keys(verifiedArtifacts).length === 0) {
-            logger.error({ jobId }, '[WORKER][AUTOFIX][NO-OUTPUT]');
-            throw new Error(`[AUTOFIX-FAILURE] jobId=${jobId} Engine reported success but no valid output file found.`);
+        // Materialize fix_audit.json
+        const auditReportPath = `${outputDir}/fix_audit.json`;
+        const auditData = {
+            job_id: jobId,
+            parent_job_id: sourceJobId,
+            tenant_id: tenantId,
+            requested_fixes: requestedFixes,
+            applied_fixes: appliedFixes,
+            skipped_fixes: skippedFixes,
+            failed_fixes: failedFixes,
+            result_status: result?.status || 'COMPLETED',
+            created_at: new Date().toISOString(),
+            source_pdf_resolution: 'RESOLVED',
+            artifact_error: physicalArtifactsReady ? null : 'NO_FIXED_PDF_BYTES_PRODUCED'
+        };
+        await fs.writeJson(auditReportPath, auditData, { spaces: 2 });
+        
+        try {
+            const stats = await fs.stat(auditReportPath);
+            if (stats.size > 0) {
+                let auditChecksum = null;
+                try { auditChecksum = await sha256File(auditReportPath); } catch(e){}
+                
+                await artifactClient.register({
+                    jobId, tenantId, artifactType: 'fix_audit', filename: 'fix_audit.json',
+                    storageKey: auditReportPath, sizeBytes: stats.size, checksumSha256: auditChecksum,
+                    mimeType: 'application/json', metadata: { processor: "AUTOFIX" }, downloadable: true
+                });
+                logger.info({ jobId, type: 'fix_audit', filePath: auditReportPath, sizeBytes: stats.size }, '[PREFLIGHT-WORKER][ARTIFACT_WRITE_OK]');
+                verifiedArtifacts.fix_audit = 'fix_audit.json';
+                downloadableArtifactCount++;
+            } else {
+                logger.warn({ jobId, type: 'fix_audit', filePath: auditReportPath, sizeBytes: stats.size }, '[PREFLIGHT-WORKER][ZERO_BYTE_ARTIFACT_BLOCKED]');
+                zeroByteArtifactCount++;
+            }
+        } catch (e) {
+            logger.warn({ error: e.message, type: 'fix_audit' }, '[PREFLIGHT-WORKER][ARTIFACT_WRITE_FAILED]');
         }
 
         if (job.updateProgress) await job.updateProgress(100);
 
+        logger.info({
+            jobId, tenantId, 
+            artifact_count: Object.keys(verifiedArtifacts).length,
+            downloadable_artifact_count: downloadableArtifactCount,
+            zero_byte_artifact_count: zeroByteArtifactCount
+        }, '[PREFLIGHT-WORKER][AUTOFIX_COMPLETE]');
+
+        if (!physicalArtifactsReady) {
+            logger.warn({ jobId }, '[WORKER][AUTOFIX][NO-OUTPUT-BYTES]');
+            return {
+                status: 'FAILED',
+                type: 'AUTOFIX',
+                sourceJobId: sourceJobId || null,
+                requested_fixes: requestedFixes,
+                repairs: allRepairs,
+                fixes: allRepairs,
+                applied_fixes: appliedFixes,
+                skipped_fixes: skippedFixes,
+                failed_fixes: failedFixes,
+                report: result,
+                artifacts: [],
+                physical_artifacts_ready: false,
+                artifact_error: 'NO_FIXED_PDF_BYTES_PRODUCED',
+                tenantId,
+                jobId,
+                processedAt: new Date().toISOString()
+            };
+        }
+
         const finalArtifacts = {
             ...verifiedArtifacts,
-            final_fixed_pdf: verifiedArtifacts.final_fixed_pdf || verifiedArtifacts.fixed_pdf || 'fixed.pdf',
-            fix_audit: verifiedArtifacts.fix_audit || verifiedArtifacts.audit_report || 'fix_audit.json'
+            final_fixed_pdf: verifiedArtifacts.final_fixed_pdf || verifiedArtifacts.fixed_pdf || 'fixed.pdf'
         };
 
         // Instrumentation 5: [WORKER][AUTOFIX][RESULT-STORED]
