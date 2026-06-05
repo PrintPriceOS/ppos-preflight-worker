@@ -659,6 +659,163 @@ class AutofixProcessor {
             });
         }
 
+        // Standards Certification Governance (Phase 55B)
+        const standardsCapabilitiesList = [
+            'VALIDATE_PDFX', 'VALIDATE_PDFA', 'GENERATE_PDFX', 'CONVERT_TO_PDFX', 
+            'CONVERT_TO_PDFA', 'STRIP_INVALID_PDFX_METADATA', 'STRIP_INVALID_PDFA_METADATA', 
+            'NORMALIZE_STANDARD_METADATA', 'INJECT_PDFX_OUTPUTINTENT', 'REPAIR_PDFX_OUTPUTINTENT', 
+            'MARK_STANDARD_UNCERTIFIED', 'REVOKE_FALSE_CERTIFICATION', 'GENERATE_STANDARD_VALIDATION_REPORT'
+        ];
+        
+        const standardsFindingsList = [
+            'PDFX_MISSING', 'PDFX_INVALID', 'PDFX_CLAIMED_BUT_NOT_VALIDATED', 
+            'PDFX_METADATA_CONFLICT', 'PDFA_METADATA_CONFLICT', 'PDF_STANDARD_UNKNOWN', 
+            'OUTPUTINTENT_PRESENT_NOT_PDFX', 'OUTPUTINTENT_MISSING_FOR_STANDARD', 
+            'OUTPUTINTENT_INVALID_FOR_STANDARD', 'PDFX_OUTPUTINTENT_CONFLICT', 
+            'STANDARD_VALIDATOR_UNAVAILABLE', 'STANDARD_VALIDATION_FAILED', 
+            'STANDARD_VALIDATION_REQUIRED', 'CERTIFIED_PDF_NOT_STANDARD_CERTIFIED', 
+            'PRODUCTION_CERTIFIED_WITHOUT_STANDARD_VALIDATION', 'PDFX_TRANSPARENCY_CONFLICT', 
+            'PDFX_FONT_CONFLICT', 'PDFX_COLOR_CONFLICT', 'PDFX_IMAGE_CONFLICT'
+        ];
+        
+        const reviewRequiredStandardsFindings = [
+            'PDFX_CLAIMED_BUT_NOT_VALIDATED', 'PDFX_INVALID', 'STANDARD_VALIDATOR_UNAVAILABLE', 
+            'STANDARD_VALIDATION_FAILED', 'STANDARD_VALIDATION_REQUIRED', 
+            'CERTIFIED_PDF_NOT_STANDARD_CERTIFIED', 'PRODUCTION_CERTIFIED_WITHOUT_STANDARD_VALIDATION'
+        ];
+
+        // 1. Move unsupported standards capabilities from applied to skipped
+        const wronglyAppliedStandardsFixes = appliedFixes.filter(f => 
+            standardsCapabilitiesList.includes(f.fix_id || f.code) && 
+            (f.validator_available === false || f.implemented === false || !f.validation_performed)
+        );
+        if (wronglyAppliedStandardsFixes.length > 0) {
+            wronglyAppliedStandardsFixes.forEach(f => {
+                f.status = 'SKIPPED';
+                f.reason = 'UNSUPPORTED_STANDARDS_CERTIFICATION_CAPABILITY_WAS_REPORTED_AS_APPLIED';
+                f.message = 'Capability is not fully supported or is high-risk.';
+                f.requires_human_review = true;
+                f.production_safe = false;
+                f.moved_from_applied_to_skipped = true;
+                skippedFixes.push(f);
+            });
+            appliedFixes = appliedFixes.filter(f => !wronglyAppliedStandardsFixes.includes(f));
+        }
+
+        // 2. Move findings out of applied fixes
+        const wronglyAppliedStandardsFindings = appliedFixes.filter(f => standardsFindingsList.includes(f.fix_id || f.code));
+        if (wronglyAppliedStandardsFindings.length > 0) {
+            wronglyAppliedStandardsFindings.forEach(f => {
+                const id = f.fix_id || f.code;
+                reviewRequiredReasons.push(id);
+                // Also add an object shape if needed, but array of strings is standard
+            });
+            appliedFixes = appliedFixes.filter(f => !wronglyAppliedStandardsFindings.includes(f));
+        }
+
+        const standardsFindings = (sourceFindings || []).filter(f => standardsFindingsList.includes(f.id || f.code));
+        
+        let standardsGovernanceHasRisks = false;
+        let standardsReviewReasons = [];
+        let standardCertified = false;
+        let certifiedPdfAllowedStandards = true;
+        
+        pdfxComplianceClaimed = result?.pdfx_compliance_claimed || data?.pdfx_compliance_claimed || false;
+        let pdfaComplianceClaimed = result?.pdfa_compliance_claimed || data?.pdfa_compliance_claimed || false;
+        let standardClaimed = result?.standard_claimed || data?.standard_claimed || null;
+        let complianceClaimAllowed = result?.compliance_claim_allowed || data?.compliance_claim_allowed || false;
+        
+        let validatorName = result?.validator_name || data?.validator_name || null;
+        let validatorVersion = result?.validator_version || data?.validator_version || null;
+        let validationPerformed = result?.validation_performed || data?.validation_performed || false;
+        let validationPassed = result?.validation_passed || data?.validation_passed || false;
+        let standardDetected = result?.standard_detected || data?.standard_detected || null;
+        let validationReportAvailable = result?.validation_report_available || data?.validation_report_available || false;
+        let validatorRequired = true;
+        let validatorAvailable = false;
+        let outputintentOnly = false;
+        let outputintentDoesNotProvePdfx = true;
+        let unsupportedStandardsFixes = [];
+
+        standardsFindings.forEach(f => {
+            const id = f.id || f.code;
+            if (reviewRequiredStandardsFindings.includes(id)) {
+                standardsGovernanceHasRisks = true;
+                if (!standardsReviewReasons.includes(id)) standardsReviewReasons.push(id);
+                standardCertified = false;
+                certifiedPdfAllowedStandards = false;
+            }
+            if (id === 'PDFX_MISSING') {
+                standardCertified = false;
+                pdfxComplianceClaimed = false;
+            }
+        });
+
+        // 3. Check for Inject Output Intent
+        const hasInjectOutputIntentStandards = appliedFixes.some(f => ['INJECT_OUTPUT_INTENT', 'INJECT_PDFX_OUTPUTINTENT'].includes(f.fix_id || f.code));
+        if (hasInjectOutputIntentStandards) {
+            outputintentOnly = true;
+            pdfxComplianceClaimed = false;
+            standardCertified = false;
+            complianceClaimAllowed = false;
+            outputintentDoesNotProvePdfx = true;
+        }
+
+        // 4. Overclaim protection
+        let hasValidatorEvidence = !!(validatorName && validatorVersion && validationPerformed && validationPassed && standardDetected && validationReportAvailable);
+        
+        const validatePdfxApplied = appliedFixes.find(f => (f.fix_id || f.code) === 'VALIDATE_PDFX');
+        if (validatePdfxApplied) {
+            if (validatePdfxApplied.validation_passed && validatePdfxApplied.validation_performed && validatePdfxApplied.validator_name) {
+                hasValidatorEvidence = true;
+                validationPassed = true;
+                validationPerformed = true;
+                validatorName = validatePdfxApplied.validator_name;
+                validatorVersion = validatePdfxApplied.validator_version;
+                standardDetected = validatePdfxApplied.standard_detected;
+                validationReportAvailable = validatePdfxApplied.validation_report_available;
+                validatorAvailable = true;
+                complianceClaimAllowed = true;
+            }
+        }
+
+        if ((pdfxComplianceClaimed || pdfaComplianceClaimed || standardCertified || complianceClaimAllowed || (standardClaimed && standardClaimed.startsWith('PDF/'))) && !hasValidatorEvidence) {
+            pdfxComplianceClaimed = false;
+            pdfaComplianceClaimed = false;
+            standardCertified = false;
+            complianceClaimAllowed = false;
+            standardClaimed = null;
+            standardsGovernanceHasRisks = true;
+            if (!standardsReviewReasons.includes('STANDARD_CLAIM_WITHOUT_VALIDATOR_EVIDENCE')) standardsReviewReasons.push('STANDARD_CLAIM_WITHOUT_VALIDATOR_EVIDENCE');
+            certifiedPdfAllowedStandards = false;
+        }
+
+        if (hasValidatorEvidence && !standardsGovernanceHasRisks) {
+            standardCertified = true;
+            pdfxComplianceClaimed = true;
+            complianceClaimAllowed = true;
+        }
+
+        const requestedUnsupportedStandardsFixes = skippedFixes.filter(f => standardsCapabilitiesList.includes(f.fix_id || f.code));
+        if (requestedUnsupportedStandardsFixes.length > 0) {
+            validatorRequired = true;
+            validatorAvailable = false;
+            complianceClaimAllowed = false;
+            standardCertified = false;
+            pdfxComplianceClaimed = false;
+            pdfaComplianceClaimed = false;
+            unsupportedStandardsFixes = requestedUnsupportedStandardsFixes.map(f => f.fix_id || f.code);
+        }
+
+        if (standardsGovernanceHasRisks) {
+            requiresReviewPolicy = true;
+            productionCertified = false;
+            standardsReviewReasons.forEach(r => {
+                if (!reviewRequiredReasons.includes(r)) reviewRequiredReasons.push(r);
+            });
+        }
+
+
         logger.info({
             jobId,
             tenantId,
@@ -857,6 +1014,27 @@ class AutofixProcessor {
                 certified_pdf: createCertifiedPdf && physicalArtifactsReady,
                 delta_report: true
             },
+            standards_certification_governance: {
+                review_required: standardsGovernanceHasRisks,
+                production_certified: !standardsGovernanceHasRisks && productionCertified,
+                certified_pdf_allowed: !standardsGovernanceHasRisks && createCertifiedPdf && physicalArtifactsReady,
+                standard_certified: standardCertified,
+                pdfx_compliance_claimed: pdfxComplianceClaimed,
+                pdfa_compliance_claimed: pdfaComplianceClaimed,
+                standard_claimed: standardClaimed,
+                validator_required: validatorRequired,
+                validator_available: validatorAvailable,
+                validation_performed: validationPerformed,
+                validation_passed: validationPassed,
+                validator_name: validatorName,
+                validator_version: validatorVersion,
+                validation_report_available: validationReportAvailable,
+                compliance_claim_allowed: complianceClaimAllowed,
+                outputintent_only: outputintentOnly,
+                outputintent_does_not_prove_pdfx: outputintentDoesNotProvePdfx,
+                unsupported_standards_fixes: unsupportedStandardsFixes,
+                review_required_reasons: standardsReviewReasons
+            },
             toolchain: toolchain,
             created_at: new Date().toISOString()
         };
@@ -941,6 +1119,27 @@ class AutofixProcessor {
                 rasterized_vector_risk: rasterizedVectorRisk,
                 image_object_damaged: imageObjectDamaged,
                 image_rewrite_performed: appliedVisualImageRewriteFix.length > 0
+            },
+            standards_certification_governance: {
+                review_required: standardsGovernanceHasRisks,
+                production_certified: !standardsGovernanceHasRisks && productionCertified,
+                certified_pdf_allowed: !standardsGovernanceHasRisks && createCertifiedPdf && physicalArtifactsReady,
+                standard_certified: standardCertified,
+                pdfx_compliance_claimed: pdfxComplianceClaimed,
+                pdfa_compliance_claimed: pdfaComplianceClaimed,
+                standard_claimed: standardClaimed,
+                validator_required: validatorRequired,
+                validator_available: validatorAvailable,
+                validation_performed: validationPerformed,
+                validation_passed: validationPassed,
+                validator_name: validatorName,
+                validator_version: validatorVersion,
+                validation_report_available: validationReportAvailable,
+                compliance_claim_allowed: complianceClaimAllowed,
+                outputintent_only: outputintentOnly,
+                outputintent_does_not_prove_pdfx: outputintentDoesNotProvePdfx,
+                unsupported_standards_fixes: unsupportedStandardsFixes,
+                review_required_reasons: standardsReviewReasons
             }
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });

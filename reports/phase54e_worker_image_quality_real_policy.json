@@ -1,0 +1,457 @@
+[
+  {
+    "fixture": "low_res_image.pdf",
+    "input_mode": "REAL_ENGINE_OUTPUT",
+    "validation_mode": "REAL_PDF",
+    "real_pdf_execution_verified": true,
+    "engine_real_detection": false,
+    "worker_real_policy_applied": true,
+    "service_real_hydration": false,
+    "control_plane_human_report": false,
+    "fixture_gap": false,
+    "detector_gap": true,
+    "deferred": false,
+    "review_required": false,
+    "production_certified": false,
+    "certified_pdf_allowed": true,
+    "primary_artifact_type": "NONE",
+    "pass": true,
+    "notes": [
+      "Engine did not detect expected finding (detector_gap)"
+    ],
+    "worker_audit": {
+      "version": "2.0",
+      "job_id": "test-worker-1780700985167",
+      "parent_job_id": null,
+      "source_pdf": "C:\\Users\\KIKE\\AppData\\Local\\Temp\\test-worker-1780700985167\\dummy.pdf",
+      "engine_version": "2.5.0",
+      "policy_mode": "EXPERIMENTAL",
+      "requested_fixes": [
+        "UPSCALE_LOW_RES_IMAGES",
+        "DOWNSAMPLE_EXCESSIVE_RESOLUTION",
+        "RECOMPRESS_IMAGES",
+        "REPLACE_LOW_RES_IMAGES",
+        "REPAIR_JPEG_ARTIFACTS",
+        "NORMALIZE_IMAGE_COLORSPACE",
+        "REMOVE_IMAGE_ALPHA",
+        "REPAIR_DAMAGED_IMAGE_OBJECT",
+        "VECTORIZE_BITMAP_TEXT",
+        "RESTORE_RASTERIZED_VECTOR"
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "fix_results": [],
+      "review_required": false,
+      "review_required_reasons": [],
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": true,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "toolchain": {
+        "qpdf": {
+          "available": false,
+          "version": null
+        },
+        "ghostscript": {
+          "available": true,
+          "version": "10.06.0"
+        }
+      },
+      "created_at": "2026-06-05T23:09:45.482Z"
+    }
+  },
+  {
+    "fixture": "excessive_resolution_image.pdf",
+    "input_mode": "REAL_ENGINE_OUTPUT",
+    "validation_mode": "REAL_PDF",
+    "real_pdf_execution_verified": true,
+    "engine_real_detection": false,
+    "worker_real_policy_applied": true,
+    "service_real_hydration": false,
+    "control_plane_human_report": false,
+    "fixture_gap": false,
+    "detector_gap": true,
+    "deferred": false,
+    "review_required": false,
+    "production_certified": false,
+    "certified_pdf_allowed": true,
+    "primary_artifact_type": "NONE",
+    "pass": true,
+    "notes": [
+      "Engine did not detect expected finding (detector_gap)"
+    ],
+    "worker_audit": {
+      "version": "2.0",
+      "job_id": "test-worker-1780700985495",
+      "parent_job_id": null,
+      "source_pdf": "C:\\Users\\KIKE\\AppData\\Local\\Temp\\test-worker-1780700985495\\dummy.pdf",
+      "engine_version": "2.5.0",
+      "policy_mode": "EXPERIMENTAL",
+      "requested_fixes": [
+        "UPSCALE_LOW_RES_IMAGES",
+        "DOWNSAMPLE_EXCESSIVE_RESOLUTION",
+        "RECOMPRESS_IMAGES",
+        "REPLACE_LOW_RES_IMAGES",
+        "REPAIR_JPEG_ARTIFACTS",
+        "NORMALIZE_IMAGE_COLORSPACE",
+        "REMOVE_IMAGE_ALPHA",
+        "REPAIR_DAMAGED_IMAGE_OBJECT",
+        "VECTORIZE_BITMAP_TEXT",
+        "RESTORE_RASTERIZED_VECTOR"
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "fix_results": [],
+      "review_required": false,
+      "review_required_reasons": [],
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": true,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "toolchain": {
+        "qpdf": {
+          "available": false,
+          "version": null
+        },
+        "ghostscript": {
+          "available": true,
+          "version": "10.06.0"
+        }
+      },
+      "created_at": "2026-06-05T23:09:45.735Z"
+    }
+  },
+  {
+    "fixture": "jpeg_artifacts_image.pdf",
+    "input_mode": "REAL_ENGINE_OUTPUT",
+    "validation_mode": "REAL_PDF",
+    "real_pdf_execution_verified": true,
+    "engine_real_detection": false,
+    "worker_real_policy_applied": true,
+    "service_real_hydration": false,
+    "control_plane_human_report": false,
+    "fixture_gap": true,
+    "detector_gap": false,
+    "deferred": true,
+    "review_required": false,
+    "production_certified": false,
+    "certified_pdf_allowed": true,
+    "primary_artifact_type": "NONE",
+    "pass": true,
+    "notes": [
+      "Could not generate fixture with pdf-lib"
+    ],
+    "worker_audit": {
+      "version": "2.0",
+      "job_id": "test-worker-1780700985744",
+      "parent_job_id": null,
+      "source_pdf": "C:\\Users\\KIKE\\AppData\\Local\\Temp\\test-worker-1780700985744\\dummy.pdf",
+      "engine_version": "2.5.0",
+      "policy_mode": "EXPERIMENTAL",
+      "requested_fixes": [
+        "UPSCALE_LOW_RES_IMAGES",
+        "DOWNSAMPLE_EXCESSIVE_RESOLUTION",
+        "RECOMPRESS_IMAGES",
+        "REPLACE_LOW_RES_IMAGES",
+        "REPAIR_JPEG_ARTIFACTS",
+        "NORMALIZE_IMAGE_COLORSPACE",
+        "REMOVE_IMAGE_ALPHA",
+        "REPAIR_DAMAGED_IMAGE_OBJECT",
+        "VECTORIZE_BITMAP_TEXT",
+        "RESTORE_RASTERIZED_VECTOR"
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "fix_results": [],
+      "review_required": false,
+      "review_required_reasons": [],
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": true,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "toolchain": {
+        "qpdf": {
+          "available": false,
+          "version": null
+        },
+        "ghostscript": {
+          "available": true,
+          "version": "10.06.0"
+        }
+      },
+      "created_at": "2026-06-05T23:09:45.985Z"
+    }
+  },
+  {
+    "fixture": "bitmap_text_image.pdf",
+    "input_mode": "REAL_ENGINE_OUTPUT",
+    "validation_mode": "REAL_PDF",
+    "real_pdf_execution_verified": true,
+    "engine_real_detection": false,
+    "worker_real_policy_applied": true,
+    "service_real_hydration": false,
+    "control_plane_human_report": false,
+    "fixture_gap": false,
+    "detector_gap": true,
+    "deferred": false,
+    "review_required": false,
+    "production_certified": false,
+    "certified_pdf_allowed": true,
+    "primary_artifact_type": "NONE",
+    "pass": true,
+    "notes": [
+      "Engine did not detect expected finding (detector_gap)"
+    ],
+    "worker_audit": {
+      "version": "2.0",
+      "job_id": "test-worker-1780700985997",
+      "parent_job_id": null,
+      "source_pdf": "C:\\Users\\KIKE\\AppData\\Local\\Temp\\test-worker-1780700985997\\dummy.pdf",
+      "engine_version": "2.5.0",
+      "policy_mode": "EXPERIMENTAL",
+      "requested_fixes": [
+        "UPSCALE_LOW_RES_IMAGES",
+        "DOWNSAMPLE_EXCESSIVE_RESOLUTION",
+        "RECOMPRESS_IMAGES",
+        "REPLACE_LOW_RES_IMAGES",
+        "REPAIR_JPEG_ARTIFACTS",
+        "NORMALIZE_IMAGE_COLORSPACE",
+        "REMOVE_IMAGE_ALPHA",
+        "REPAIR_DAMAGED_IMAGE_OBJECT",
+        "VECTORIZE_BITMAP_TEXT",
+        "RESTORE_RASTERIZED_VECTOR"
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "fix_results": [],
+      "review_required": false,
+      "review_required_reasons": [],
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": true,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "toolchain": {
+        "qpdf": {
+          "available": false,
+          "version": null
+        },
+        "ghostscript": {
+          "available": true,
+          "version": "10.06.0"
+        }
+      },
+      "created_at": "2026-06-05T23:09:46.233Z"
+    }
+  },
+  {
+    "fixture": "rasterized_vector_image.pdf",
+    "input_mode": "REAL_ENGINE_OUTPUT",
+    "validation_mode": "REAL_PDF",
+    "real_pdf_execution_verified": true,
+    "engine_real_detection": false,
+    "worker_real_policy_applied": true,
+    "service_real_hydration": false,
+    "control_plane_human_report": false,
+    "fixture_gap": false,
+    "detector_gap": true,
+    "deferred": false,
+    "review_required": false,
+    "production_certified": false,
+    "certified_pdf_allowed": true,
+    "primary_artifact_type": "NONE",
+    "pass": true,
+    "notes": [
+      "Engine did not detect expected finding (detector_gap)"
+    ],
+    "worker_audit": {
+      "version": "2.0",
+      "job_id": "test-worker-1780700986242",
+      "parent_job_id": null,
+      "source_pdf": "C:\\Users\\KIKE\\AppData\\Local\\Temp\\test-worker-1780700986242\\dummy.pdf",
+      "engine_version": "2.5.0",
+      "policy_mode": "EXPERIMENTAL",
+      "requested_fixes": [
+        "UPSCALE_LOW_RES_IMAGES",
+        "DOWNSAMPLE_EXCESSIVE_RESOLUTION",
+        "RECOMPRESS_IMAGES",
+        "REPLACE_LOW_RES_IMAGES",
+        "REPAIR_JPEG_ARTIFACTS",
+        "NORMALIZE_IMAGE_COLORSPACE",
+        "REMOVE_IMAGE_ALPHA",
+        "REPAIR_DAMAGED_IMAGE_OBJECT",
+        "VECTORIZE_BITMAP_TEXT",
+        "RESTORE_RASTERIZED_VECTOR"
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "fix_results": [],
+      "review_required": false,
+      "review_required_reasons": [],
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": true,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "toolchain": {
+        "qpdf": {
+          "available": false,
+          "version": null
+        },
+        "ghostscript": {
+          "available": true,
+          "version": "10.06.0"
+        }
+      },
+      "created_at": "2026-06-05T23:09:46.480Z"
+    }
+  },
+  {
+    "fixture": "image_alpha.pdf",
+    "input_mode": "REAL_ENGINE_OUTPUT",
+    "validation_mode": "REAL_PDF",
+    "real_pdf_execution_verified": true,
+    "engine_real_detection": false,
+    "worker_real_policy_applied": true,
+    "service_real_hydration": false,
+    "control_plane_human_report": false,
+    "fixture_gap": false,
+    "detector_gap": true,
+    "deferred": false,
+    "review_required": false,
+    "production_certified": false,
+    "certified_pdf_allowed": true,
+    "primary_artifact_type": "NONE",
+    "pass": true,
+    "notes": [
+      "Engine did not detect expected finding (detector_gap)"
+    ],
+    "worker_audit": {
+      "version": "2.0",
+      "job_id": "test-worker-1780700986488",
+      "parent_job_id": null,
+      "source_pdf": "C:\\Users\\KIKE\\AppData\\Local\\Temp\\test-worker-1780700986488\\dummy.pdf",
+      "engine_version": "2.5.0",
+      "policy_mode": "EXPERIMENTAL",
+      "requested_fixes": [
+        "UPSCALE_LOW_RES_IMAGES",
+        "DOWNSAMPLE_EXCESSIVE_RESOLUTION",
+        "RECOMPRESS_IMAGES",
+        "REPLACE_LOW_RES_IMAGES",
+        "REPAIR_JPEG_ARTIFACTS",
+        "NORMALIZE_IMAGE_COLORSPACE",
+        "REMOVE_IMAGE_ALPHA",
+        "REPAIR_DAMAGED_IMAGE_OBJECT",
+        "VECTORIZE_BITMAP_TEXT",
+        "RESTORE_RASTERIZED_VECTOR"
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "fix_results": [],
+      "review_required": false,
+      "review_required_reasons": [],
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": true,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "toolchain": {
+        "qpdf": {
+          "available": false,
+          "version": null
+        },
+        "ghostscript": {
+          "available": true,
+          "version": "10.06.0"
+        }
+      },
+      "created_at": "2026-06-05T23:09:46.735Z"
+    }
+  },
+  {
+    "fixture": "damaged_image_object.pdf",
+    "input_mode": "REAL_ENGINE_OUTPUT",
+    "validation_mode": "REAL_PDF",
+    "real_pdf_execution_verified": true,
+    "engine_real_detection": false,
+    "worker_real_policy_applied": true,
+    "service_real_hydration": false,
+    "control_plane_human_report": false,
+    "fixture_gap": false,
+    "detector_gap": true,
+    "deferred": false,
+    "review_required": false,
+    "production_certified": false,
+    "certified_pdf_allowed": true,
+    "primary_artifact_type": "NONE",
+    "pass": true,
+    "notes": [
+      "Engine did not detect expected finding (detector_gap)"
+    ],
+    "worker_audit": {
+      "version": "2.0",
+      "job_id": "test-worker-1780700986743",
+      "parent_job_id": null,
+      "source_pdf": "C:\\Users\\KIKE\\AppData\\Local\\Temp\\test-worker-1780700986743\\dummy.pdf",
+      "engine_version": "2.5.0",
+      "policy_mode": "EXPERIMENTAL",
+      "requested_fixes": [
+        "UPSCALE_LOW_RES_IMAGES",
+        "DOWNSAMPLE_EXCESSIVE_RESOLUTION",
+        "RECOMPRESS_IMAGES",
+        "REPLACE_LOW_RES_IMAGES",
+        "REPAIR_JPEG_ARTIFACTS",
+        "NORMALIZE_IMAGE_COLORSPACE",
+        "REMOVE_IMAGE_ALPHA",
+        "REPAIR_DAMAGED_IMAGE_OBJECT",
+        "VECTORIZE_BITMAP_TEXT",
+        "RESTORE_RASTERIZED_VECTOR"
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "fix_results": [],
+      "review_required": false,
+      "review_required_reasons": [],
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": true,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "toolchain": {
+        "qpdf": {
+          "available": false,
+          "version": null
+        },
+        "ghostscript": {
+          "available": true,
+          "version": "10.06.0"
+        }
+      },
+      "created_at": "2026-06-05T23:09:46.991Z"
+    }
+  }
+]
