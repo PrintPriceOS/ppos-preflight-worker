@@ -372,7 +372,90 @@ class AutofixProcessor {
         }
 
         const hasCriticalFailed = failedFixes.some(f => f.risk_level === 'CRITICAL');
-        const requiresReviewPolicy = reviewRequired || appliedFixes.some(f => f.risk_level === 'HIGH' || f.risk_level === 'CRITICAL' || f.requires_human_review);
+        let requiresReviewPolicy = reviewRequired || appliedFixes.some(f => f.risk_level === 'HIGH' || f.risk_level === 'CRITICAL' || f.requires_human_review);
+        
+        // Font Governance (Phase 51A)
+        const fontFindings = (sourceFindings || []).filter(f => 
+            ['NON_EMBEDDED_FONTS', 'TYPE3_FONTS', 'MISSING_GLYPHS', 'FONT_SUBSTITUTION_RISK'].includes(f.id || f.code)
+        );
+        
+        if (fontFindings.length > 0) {
+            requiresReviewPolicy = true;
+            fontFindings.forEach(ff => {
+                const id = ff.id || ff.code;
+                if (!reviewRequiredReasons.includes(id)) {
+                    reviewRequiredReasons.push(id);
+                }
+            });
+        }
+
+        // Color Governance (Phase 52B)
+        const unsupportedColorFixesList = ['NORMALIZE_ICC_PROFILE', 'REDUCE_TAC', 'MAP_RICH_BLACK_TEXT_TO_K_ONLY', 'MAP_REGISTRATION_COLOR_TO_BLACK'];
+        const colorFindingsList = ['EXCESSIVE_TAC', 'RICH_BLACK_TEXT', 'REGISTRATION_COLOR_MISUSE', 'ICC_MISMATCH', 'MIXED_RGB_CMYK', 'RGB_DEVICE_COLOR', 'RGB_IMAGES', 'MISSING_OUTPUT_INTENT', 'INVALID_OUTPUT_INTENT'];
+        const reviewRequiredColorFindings = ['EXCESSIVE_TAC', 'RICH_BLACK_TEXT', 'REGISTRATION_COLOR_MISUSE', 'ICC_MISMATCH', 'MIXED_RGB_CMYK'];
+
+        const wronglyAppliedColorFixes = appliedFixes.filter(f => unsupportedColorFixesList.includes(f.fix_id || f.code));
+        if (wronglyAppliedColorFixes.length > 0) {
+            wronglyAppliedColorFixes.forEach(f => {
+                f.status = 'SKIPPED';
+                f.reason = 'UNSUPPORTED_COLOR_FIX_WAS_REPORTED_AS_APPLIED';
+                f.message = 'Capability is not fully supported or is high-risk.';
+                f.requires_human_review = true;
+                f.production_safe = false;
+                f.moved_from_applied_to_skipped = true;
+                skippedFixes.push(f);
+            });
+            appliedFixes = appliedFixes.filter(f => !unsupportedColorFixesList.includes(f.fix_id || f.code));
+        }
+
+        const wronglyAppliedFindings = appliedFixes.filter(f => colorFindingsList.includes(f.fix_id || f.code));
+        if (wronglyAppliedFindings.length > 0) {
+            appliedFixes = appliedFixes.filter(f => !colorFindingsList.includes(f.fix_id || f.code));
+        }
+
+        const colorFindings = (sourceFindings || []).filter(f => colorFindingsList.includes(f.id || f.code));
+        const hasConvertCmyk = appliedFixes.some(f => f.fix_id === 'CONVERT_CMYK' || f.code === 'CONVERT_CMYK');
+        const hasInjectOutputIntent = appliedFixes.some(f => f.fix_id === 'INJECT_OUTPUT_INTENT' || f.code === 'INJECT_OUTPUT_INTENT');
+        
+        let colorGovernanceHasRisks = false;
+        let colorReviewReasons = [];
+
+        colorFindings.forEach(cf => {
+            const id = cf.id || cf.code;
+            if (reviewRequiredColorFindings.includes(id)) {
+                colorGovernanceHasRisks = true;
+                if (!colorReviewReasons.includes(id)) colorReviewReasons.push(id);
+            }
+            if (['RGB_DEVICE_COLOR', 'RGB_IMAGES'].includes(id)) {
+                if (!hasConvertCmyk) {
+                    colorGovernanceHasRisks = true;
+                    if (!colorReviewReasons.includes(id)) colorReviewReasons.push(id);
+                }
+            }
+        });
+
+        if (hasConvertCmyk) {
+            colorGovernanceHasRisks = true;
+            if (!colorReviewReasons.includes('CONVERT_CMYK')) colorReviewReasons.push('CONVERT_CMYK');
+        }
+
+        const requestedUnsupportedColorFixes = skippedFixes.filter(f => unsupportedColorFixesList.includes(f.fix_id || f.code));
+        if (requestedUnsupportedColorFixes.length > 0) {
+            colorGovernanceHasRisks = true;
+            requestedUnsupportedColorFixes.forEach(f => {
+                const id = f.fix_id || f.code;
+                if (!colorReviewReasons.includes(id)) colorReviewReasons.push(id);
+            });
+        }
+
+        if (colorGovernanceHasRisks) {
+            requiresReviewPolicy = true;
+            productionCertified = false;
+            colorReviewReasons.forEach(r => {
+                if (!reviewRequiredReasons.includes(r)) reviewRequiredReasons.push(r);
+            });
+        }
+        
         if (requiresReviewPolicy) {
             productionCertified = false;
         }
@@ -615,11 +698,19 @@ class AutofixProcessor {
         const deltaData = {
             job_id: jobId,
             changes: appliedFixes.map(f => f.fix_id || f.code),
-            boxes_changed: [],
+            boxes_changed: appliedFixes.filter(f => ['REBUILD_TRIMBOX', 'APPLY_BLEED'].includes(f.fix_id || f.code)).map(f => f.fix_id || f.code),
             color_converted: appliedFixes.some(f => f.fix_id === 'CONVERT_CMYK' || f.code === 'CONVERT_CMYK'),
-            interactive_removed: appliedFixes.some(f => f.fix_id === 'FLATTEN_INTERACTIVE' || f.code === 'FLATTEN_INTERACTIVE'),
+            interactive_removed: appliedFixes.some(f => ['FLATTEN_INTERACTIVE', 'STRIP_JAVASCRIPT', 'FLATTEN_ANNOTATIONS', 'FLATTEN_FORMS'].includes(f.fix_id || f.code)),
             skipped_fixes: skippedFixes.map(f => ({ fix_id: f.fix_id || f.code, reason: f.reason })),
-            visual_review_required: requiresReviewPolicy
+            visual_review_required: requiresReviewPolicy,
+            color_governance: {
+                highest_color_risk: colorGovernanceHasRisks ? 'HIGH' : 'LOW',
+                destructive_color_fix_applied: hasConvertCmyk,
+                unsupported_color_fixes: requestedUnsupportedColorFixes.map(f => f.fix_id || f.code),
+                review_required_color_reasons: colorReviewReasons,
+                production_certified: productionCertified,
+                certified_pdf_allowed: createCertifiedPdf && physicalArtifactsReady
+            }
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });
         try {
