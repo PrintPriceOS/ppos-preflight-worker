@@ -553,6 +553,112 @@ class AutofixProcessor {
             productionCertified = false;
         }
 
+        // Image Quality Governance (Phase 54B)
+        const unsupportedImageFixesList = ['UPSCALE_LOW_RES_IMAGES', 'DOWNSAMPLE_EXCESSIVE_RESOLUTION', 'RECOMPRESS_IMAGES', 'REPLACE_LOW_RES_IMAGES', 'REPAIR_JPEG_ARTIFACTS', 'NORMALIZE_IMAGE_COLORSPACE', 'REMOVE_IMAGE_ALPHA', 'REPAIR_DAMAGED_IMAGE_OBJECT', 'VECTORIZE_BITMAP_TEXT', 'RESTORE_RASTERIZED_VECTOR'];
+        const imageFindingsList = ['LOW_RES_IMAGES', 'EXCESSIVE_RESOLUTION', 'JPEG_ARTIFACTS', 'IMAGE_COMPRESSION_RISK', 'IMAGE_DOWNSAMPLING_RISK', 'IMAGE_UPSCALING_RISK', 'IMAGE_REPLACEMENT_REQUIRED', 'BITMAP_TEXT_RISK', 'RASTERIZED_VECTOR_RISK', 'IMAGE_COLORSPACE_RISK', 'IMAGE_ALPHA_RISK', 'IMAGE_OBJECT_DAMAGED'];
+        const criticalImageFindings = ['LOW_RES_IMAGES', 'JPEG_ARTIFACTS', 'IMAGE_REPLACEMENT_REQUIRED', 'BITMAP_TEXT_RISK', 'RASTERIZED_VECTOR_RISK', 'IMAGE_OBJECT_DAMAGED'];
+
+        // 1. Move unsupported fixes from applied to skipped
+        const wronglyAppliedImageFixes = appliedFixes.filter(f => unsupportedImageFixesList.includes(f.fix_id || f.code) && f.implemented === false);
+        if (wronglyAppliedImageFixes.length > 0) {
+            wronglyAppliedImageFixes.forEach(f => {
+                f.status = 'SKIPPED';
+                f.reason = 'UNSUPPORTED_IMAGE_QUALITY_FIX_WAS_REPORTED_AS_APPLIED';
+                f.message = 'Capability is not fully supported or is high-risk.';
+                f.requires_human_review = true;
+                f.production_safe = false;
+                f.moved_from_applied_to_skipped = true;
+                skippedFixes.push(f);
+            });
+            appliedFixes = appliedFixes.filter(f => !(unsupportedImageFixesList.includes(f.fix_id || f.code) && f.implemented === false));
+        }
+
+        // 2. Move findings out of applied fixes
+        const wronglyAppliedImageFindings = appliedFixes.filter(f => imageFindingsList.includes(f.fix_id || f.code));
+        if (wronglyAppliedImageFindings.length > 0) {
+            wronglyAppliedImageFindings.forEach(f => {
+                const id = f.fix_id || f.code;
+                reviewRequiredReasons.push({
+                    id: id,
+                    code: id,
+                    moved_from_applied_to_review_reason: true,
+                    reason: 'FINDING_WAS_REPORTED_AS_APPLIED_FIX'
+                });
+            });
+            appliedFixes = appliedFixes.filter(f => !imageFindingsList.includes(f.fix_id || f.code));
+        }
+
+        const imageFindings = (sourceFindings || []).filter(f => imageFindingsList.includes(f.id || f.code));
+        
+        let imageGovernanceHasRisks = false;
+        let imageReviewReasons = [];
+        
+        let highestImageRisk = 'LOW';
+        const updateImageRisk = (level) => {
+            if (level === 'CRITICAL') highestImageRisk = 'CRITICAL';
+            if (level === 'HIGH' && highestImageRisk !== 'CRITICAL') highestImageRisk = 'HIGH';
+        };
+
+        let lowResImagesPresent = false;
+        let excessiveResolutionPresent = false;
+        let jpegArtifactsPresent = false;
+        let imageReplacementRequired = false;
+        let bitmapTextRisk = false;
+        let rasterizedVectorRisk = false;
+        let imageObjectDamaged = false;
+
+        imageFindings.forEach(f => {
+            const id = f.id || f.code;
+            if (criticalImageFindings.includes(id)) {
+                imageGovernanceHasRisks = true;
+                if (!imageReviewReasons.includes(id)) imageReviewReasons.push(id);
+                updateImageRisk('CRITICAL');
+            }
+            if (id === 'EXCESSIVE_RESOLUTION') {
+                excessiveResolutionPresent = true;
+                updateImageRisk('HIGH');
+                if (requestedFixes.includes('DOWNSAMPLE_EXCESSIVE_RESOLUTION') || requestedFixes.includes('RECOMPRESS_IMAGES')) {
+                    imageGovernanceHasRisks = true;
+                    if (!imageReviewReasons.includes(id)) imageReviewReasons.push(id);
+                }
+            }
+            if (id === 'IMAGE_COLORSPACE_RISK') {
+                updateImageRisk('HIGH');
+                imageGovernanceHasRisks = true;
+                if (!imageReviewReasons.includes(id)) imageReviewReasons.push(id);
+            }
+            if (id === 'LOW_RES_IMAGES') lowResImagesPresent = true;
+            if (id === 'JPEG_ARTIFACTS') jpegArtifactsPresent = true;
+            if (id === 'IMAGE_REPLACEMENT_REQUIRED') imageReplacementRequired = true;
+            if (id === 'BITMAP_TEXT_RISK') bitmapTextRisk = true;
+            if (id === 'RASTERIZED_VECTOR_RISK') rasterizedVectorRisk = true;
+            if (id === 'IMAGE_OBJECT_DAMAGED') imageObjectDamaged = true;
+            if (['IMAGE_COMPRESSION_RISK', 'IMAGE_DOWNSAMPLING_RISK', 'IMAGE_UPSCALING_RISK', 'IMAGE_ALPHA_RISK'].includes(id)) {
+                updateImageRisk('HIGH');
+            }
+        });
+
+        const requestedUnsupportedImageFixes = skippedFixes.filter(f => unsupportedImageFixesList.includes(f.fix_id || f.code));
+
+        const appliedVisualImageRewriteFix = appliedFixes.filter(f => unsupportedImageFixesList.includes(f.fix_id || f.code));
+        if (appliedVisualImageRewriteFix.length > 0) {
+            imageGovernanceHasRisks = true;
+            appliedVisualImageRewriteFix.forEach(f => {
+                f.visually_sensitive = true;
+                f.destructive = true;
+                const id = f.fix_id || f.code;
+                if (!imageReviewReasons.includes(id)) imageReviewReasons.push(id);
+            });
+        }
+
+        if (imageGovernanceHasRisks) {
+            requiresReviewPolicy = true;
+            productionCertified = false;
+            imageReviewReasons.forEach(r => {
+                if (!reviewRequiredReasons.includes(r)) reviewRequiredReasons.push(r);
+            });
+        }
+
         logger.info({
             jobId,
             tenantId,
@@ -818,6 +924,23 @@ class AutofixProcessor {
                 blend_modes_present: blendModesPresent,
                 rasterization_risk: rasterizationRisk,
                 pdfx_compliance_claimed: pdfxComplianceClaimed
+            },
+            image_quality_governance: {
+                review_required: imageGovernanceHasRisks,
+                production_certified: !imageGovernanceHasRisks && productionCertified,
+                certified_pdf_allowed: !imageGovernanceHasRisks && createCertifiedPdf && physicalArtifactsReady,
+                highest_image_quality_risk: highestImageRisk === 'LOW' ? null : highestImageRisk,
+                visual_image_rewrite_applied: appliedVisualImageRewriteFix.length > 0,
+                unsupported_image_quality_fixes: requestedUnsupportedImageFixes.map(f => f.fix_id || f.code),
+                review_required_reasons: imageReviewReasons,
+                low_res_images_present: lowResImagesPresent,
+                excessive_resolution_present: excessiveResolutionPresent,
+                jpeg_artifacts_present: jpegArtifactsPresent,
+                image_replacement_required: imageReplacementRequired,
+                bitmap_text_risk: bitmapTextRisk,
+                rasterized_vector_risk: rasterizedVectorRisk,
+                image_object_damaged: imageObjectDamaged,
+                image_rewrite_performed: appliedVisualImageRewriteFix.length > 0
             }
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });

@@ -1,0 +1,479 @@
+{
+  "phase": "54B",
+  "name": "Worker Image Quality Artifact Policy",
+  "timestamp": "2026-06-05T22:38:43.483Z",
+  "scenarios": [
+    {
+      "scenario": "1. LOW_RES_IMAGES finding.",
+      "requested_fixes": [],
+      "findings": [
+        {
+          "id": "LOW_RES_IMAGES"
+        }
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "image_quality_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "highest_image_quality_risk": "CRITICAL",
+        "visual_image_rewrite_applied": false,
+        "unsupported_image_quality_fixes": [],
+        "review_required_reasons": [
+          "LOW_RES_IMAGES"
+        ],
+        "low_res_images_present": true,
+        "excessive_resolution_present": false,
+        "jpeg_artifacts_present": false,
+        "image_replacement_required": false,
+        "bitmap_text_risk": false,
+        "rasterized_vector_risk": false,
+        "image_object_damaged": false,
+        "image_rewrite_performed": false
+      },
+      "review_required": true,
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pass": true
+    },
+    {
+      "scenario": "2. JPEG_ARTIFACTS finding.",
+      "requested_fixes": [],
+      "findings": [
+        {
+          "id": "JPEG_ARTIFACTS"
+        }
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "image_quality_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "highest_image_quality_risk": "CRITICAL",
+        "visual_image_rewrite_applied": false,
+        "unsupported_image_quality_fixes": [],
+        "review_required_reasons": [
+          "JPEG_ARTIFACTS"
+        ],
+        "low_res_images_present": false,
+        "excessive_resolution_present": false,
+        "jpeg_artifacts_present": true,
+        "image_replacement_required": false,
+        "bitmap_text_risk": false,
+        "rasterized_vector_risk": false,
+        "image_object_damaged": false,
+        "image_rewrite_performed": false
+      },
+      "review_required": true,
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pass": true
+    },
+    {
+      "scenario": "3. EXCESSIVE_RESOLUTION warning.",
+      "requested_fixes": [],
+      "findings": [
+        {
+          "id": "EXCESSIVE_RESOLUTION"
+        }
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "image_quality_governance": {
+        "review_required": false,
+        "production_certified": true,
+        "certified_pdf_allowed": false,
+        "highest_image_quality_risk": "HIGH",
+        "visual_image_rewrite_applied": false,
+        "unsupported_image_quality_fixes": [],
+        "review_required_reasons": [],
+        "low_res_images_present": false,
+        "excessive_resolution_present": true,
+        "jpeg_artifacts_present": false,
+        "image_replacement_required": false,
+        "bitmap_text_risk": false,
+        "rasterized_vector_risk": false,
+        "image_object_damaged": false,
+        "image_rewrite_performed": false
+      },
+      "review_required": false,
+      "production_certified": true,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pass": true
+    },
+    {
+      "scenario": "4. BITMAP_TEXT_RISK critical finding.",
+      "requested_fixes": [],
+      "findings": [
+        {
+          "id": "BITMAP_TEXT_RISK"
+        }
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "image_quality_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "highest_image_quality_risk": "CRITICAL",
+        "visual_image_rewrite_applied": false,
+        "unsupported_image_quality_fixes": [],
+        "review_required_reasons": [
+          "BITMAP_TEXT_RISK"
+        ],
+        "low_res_images_present": false,
+        "excessive_resolution_present": false,
+        "jpeg_artifacts_present": false,
+        "image_replacement_required": false,
+        "bitmap_text_risk": true,
+        "rasterized_vector_risk": false,
+        "image_object_damaged": false,
+        "image_rewrite_performed": false
+      },
+      "review_required": true,
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pass": true
+    },
+    {
+      "scenario": "5. RASTERIZED_VECTOR_RISK critical finding.",
+      "requested_fixes": [],
+      "findings": [
+        {
+          "id": "RASTERIZED_VECTOR_RISK"
+        }
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "image_quality_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "highest_image_quality_risk": "CRITICAL",
+        "visual_image_rewrite_applied": false,
+        "unsupported_image_quality_fixes": [],
+        "review_required_reasons": [
+          "RASTERIZED_VECTOR_RISK"
+        ],
+        "low_res_images_present": false,
+        "excessive_resolution_present": false,
+        "jpeg_artifacts_present": false,
+        "image_replacement_required": false,
+        "bitmap_text_risk": false,
+        "rasterized_vector_risk": true,
+        "image_object_damaged": false,
+        "image_rewrite_performed": false
+      },
+      "review_required": true,
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pass": true
+    },
+    {
+      "scenario": "6. UPSCALE_LOW_RES_IMAGES unsupported.",
+      "requested_fixes": [
+        "UPSCALE_LOW_RES_IMAGES"
+      ],
+      "findings": [
+        {
+          "id": "LOW_RES_IMAGES"
+        }
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [
+        "UPSCALE_LOW_RES_IMAGES"
+      ],
+      "failed_fixes": [],
+      "image_quality_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "highest_image_quality_risk": "CRITICAL",
+        "visual_image_rewrite_applied": false,
+        "unsupported_image_quality_fixes": [
+          "UPSCALE_LOW_RES_IMAGES"
+        ],
+        "review_required_reasons": [
+          "LOW_RES_IMAGES"
+        ],
+        "low_res_images_present": true,
+        "excessive_resolution_present": false,
+        "jpeg_artifacts_present": false,
+        "image_replacement_required": false,
+        "bitmap_text_risk": false,
+        "rasterized_vector_risk": false,
+        "image_object_damaged": false,
+        "image_rewrite_performed": false
+      },
+      "review_required": true,
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pass": true
+    },
+    {
+      "scenario": "7. RECOMPRESS_IMAGES unsupported.",
+      "requested_fixes": [
+        "RECOMPRESS_IMAGES"
+      ],
+      "findings": [
+        {
+          "id": "EXCESSIVE_RESOLUTION"
+        }
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [
+        "RECOMPRESS_IMAGES"
+      ],
+      "failed_fixes": [],
+      "image_quality_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "highest_image_quality_risk": "HIGH",
+        "visual_image_rewrite_applied": false,
+        "unsupported_image_quality_fixes": [
+          "RECOMPRESS_IMAGES"
+        ],
+        "review_required_reasons": [
+          "EXCESSIVE_RESOLUTION"
+        ],
+        "low_res_images_present": false,
+        "excessive_resolution_present": true,
+        "jpeg_artifacts_present": false,
+        "image_replacement_required": false,
+        "bitmap_text_risk": false,
+        "rasterized_vector_risk": false,
+        "image_object_damaged": false,
+        "image_rewrite_performed": false
+      },
+      "review_required": true,
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pass": true
+    },
+    {
+      "scenario": "8. REPLACE_LOW_RES_IMAGES unsupported.",
+      "requested_fixes": [
+        "REPLACE_LOW_RES_IMAGES"
+      ],
+      "findings": [
+        {
+          "id": "LOW_RES_IMAGES"
+        }
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [
+        "REPLACE_LOW_RES_IMAGES"
+      ],
+      "failed_fixes": [],
+      "image_quality_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "highest_image_quality_risk": "CRITICAL",
+        "visual_image_rewrite_applied": false,
+        "unsupported_image_quality_fixes": [
+          "REPLACE_LOW_RES_IMAGES"
+        ],
+        "review_required_reasons": [
+          "LOW_RES_IMAGES"
+        ],
+        "low_res_images_present": true,
+        "excessive_resolution_present": false,
+        "jpeg_artifacts_present": false,
+        "image_replacement_required": false,
+        "bitmap_text_risk": false,
+        "rasterized_vector_risk": false,
+        "image_object_damaged": false,
+        "image_rewrite_performed": false
+      },
+      "review_required": true,
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pass": true
+    },
+    {
+      "scenario": "9. Engine incorrectly reports unsupported image fix as APPLIED.",
+      "requested_fixes": [
+        "NORMALIZE_IMAGE_COLORSPACE"
+      ],
+      "findings": [],
+      "applied_fixes": [],
+      "skipped_fixes": [
+        "NORMALIZE_IMAGE_COLORSPACE"
+      ],
+      "failed_fixes": [],
+      "image_quality_governance": {
+        "review_required": false,
+        "production_certified": true,
+        "certified_pdf_allowed": false,
+        "highest_image_quality_risk": null,
+        "visual_image_rewrite_applied": false,
+        "unsupported_image_quality_fixes": [
+          "NORMALIZE_IMAGE_COLORSPACE"
+        ],
+        "review_required_reasons": [],
+        "low_res_images_present": false,
+        "excessive_resolution_present": false,
+        "jpeg_artifacts_present": false,
+        "image_replacement_required": false,
+        "bitmap_text_risk": false,
+        "rasterized_vector_risk": false,
+        "image_object_damaged": false,
+        "image_rewrite_performed": false
+      },
+      "review_required": false,
+      "production_certified": true,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pass": true
+    },
+    {
+      "scenario": "10. Future applied visual image rewrite fix.",
+      "requested_fixes": [
+        "UPSCALE_LOW_RES_IMAGES"
+      ],
+      "findings": [],
+      "applied_fixes": [
+        "UPSCALE_LOW_RES_IMAGES"
+      ],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "image_quality_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "highest_image_quality_risk": null,
+        "visual_image_rewrite_applied": true,
+        "unsupported_image_quality_fixes": [],
+        "review_required_reasons": [
+          "UPSCALE_LOW_RES_IMAGES"
+        ],
+        "low_res_images_present": false,
+        "excessive_resolution_present": false,
+        "jpeg_artifacts_present": false,
+        "image_replacement_required": false,
+        "bitmap_text_risk": false,
+        "rasterized_vector_risk": false,
+        "image_object_damaged": false,
+        "image_rewrite_performed": true
+      },
+      "review_required": true,
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pass": true
+    },
+    {
+      "scenario": "11. Findings never applied.",
+      "requested_fixes": [],
+      "findings": [
+        {
+          "id": "JPEG_ARTIFACTS"
+        },
+        {
+          "id": "LOW_RES_IMAGES"
+        }
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "image_quality_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "highest_image_quality_risk": "CRITICAL",
+        "visual_image_rewrite_applied": false,
+        "unsupported_image_quality_fixes": [],
+        "review_required_reasons": [
+          "JPEG_ARTIFACTS",
+          "LOW_RES_IMAGES"
+        ],
+        "low_res_images_present": true,
+        "excessive_resolution_present": false,
+        "jpeg_artifacts_present": true,
+        "image_replacement_required": false,
+        "bitmap_text_risk": false,
+        "rasterized_vector_risk": false,
+        "image_object_damaged": false,
+        "image_rewrite_performed": false
+      },
+      "review_required": true,
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pass": true
+    }
+  ],
+  "pass": true
+}
