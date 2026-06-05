@@ -460,6 +460,99 @@ class AutofixProcessor {
             productionCertified = false;
         }
 
+        // Transparency / Overprint Governance (Phase 53B)
+        const unsupportedTransparencyFixesList = ['FLATTEN_TRANSPARENCY', 'FLATTEN_PDF', 'FLATTEN_OVERPRINT', 'NORMALIZE_OVERPRINT', 'REMOVE_SOFT_MASKS', 'RASTERIZE_TRANSPARENCY', 'CONVERT_TO_PDFX_TRANSPARENCY_SAFE'];
+        const transparencyFindingsList = ['TRANSPARENCY_PRESENT', 'TRANSPARENCY_GROUPS', 'SOFT_MASK_PRESENT', 'BLEND_MODE_PRESENT', 'OVERPRINT_PRESENT', 'OVERPRINT_MODE_PRESENT', 'KNOCKOUT_GROUP_PRESENT', 'FLATTENING_REQUIRED', 'UNSUPPORTED_TRANSPARENCY_FOR_PDFX', 'RASTERIZATION_RISK'];
+        const reviewRequiredTransparencyFindings = ['TRANSPARENCY_PRESENT', 'SOFT_MASK_PRESENT', 'BLEND_MODE_PRESENT', 'OVERPRINT_PRESENT', 'OVERPRINT_MODE_PRESENT', 'KNOCKOUT_GROUP_PRESENT', 'RASTERIZATION_RISK'];
+        const reviewRequiredTransparencyFixes = ['FLATTEN_TRANSPARENCY', 'FLATTEN_PDF', 'FLATTEN_OVERPRINT', 'RASTERIZE_TRANSPARENCY'];
+
+        // 1. Move unsupported fixes from applied to skipped
+        const wronglyAppliedTransparencyFixes = appliedFixes.filter(f => unsupportedTransparencyFixesList.includes(f.fix_id || f.code) && f.implemented === false);
+        if (wronglyAppliedTransparencyFixes.length > 0) {
+            wronglyAppliedTransparencyFixes.forEach(f => {
+                f.status = 'SKIPPED';
+                f.reason = 'UNSUPPORTED_TRANSPARENCY_OVERPRINT_FIX_WAS_REPORTED_AS_APPLIED';
+                f.message = 'Capability is not fully supported or is high-risk.';
+                f.requires_human_review = true;
+                f.production_safe = false;
+                f.moved_from_applied_to_skipped = true;
+                skippedFixes.push(f);
+            });
+            appliedFixes = appliedFixes.filter(f => !unsupportedTransparencyFixesList.includes(f.fix_id || f.code));
+        }
+
+        // 2. Move findings out of applied fixes
+        const wronglyAppliedTransparencyFindings = appliedFixes.filter(f => transparencyFindingsList.includes(f.fix_id || f.code));
+        if (wronglyAppliedTransparencyFindings.length > 0) {
+            wronglyAppliedTransparencyFindings.forEach(f => {
+                const id = f.fix_id || f.code;
+                reviewRequiredReasons.push({
+                    id: id,
+                    code: id,
+                    moved_from_applied_to_review_reason: true,
+                    reason: 'FINDING_WAS_REPORTED_AS_APPLIED_FIX'
+                });
+            });
+            appliedFixes = appliedFixes.filter(f => !transparencyFindingsList.includes(f.fix_id || f.code));
+        }
+
+        const transparencyFindings = (sourceFindings || []).filter(f => transparencyFindingsList.includes(f.id || f.code));
+        
+        let transparencyGovernanceHasRisks = false;
+        let transparencyReviewReasons = [];
+        let pdfxComplianceClaimed = false; // Never claim compliance in this phase
+        let transparencyPresent = false;
+        let overprintPresent = false;
+        let softMasksPresent = false;
+        let blendModesPresent = false;
+        let rasterizationRisk = false;
+
+        let highestTransparencyRisk = 'LOW';
+        const updateTransparencyRisk = (level) => {
+            if (level === 'CRITICAL') highestTransparencyRisk = 'CRITICAL';
+            if (level === 'HIGH' && highestTransparencyRisk !== 'CRITICAL') highestTransparencyRisk = 'HIGH';
+        };
+
+        transparencyFindings.forEach(tf => {
+            const id = tf.id || tf.code;
+            if (reviewRequiredTransparencyFindings.includes(id)) {
+                transparencyGovernanceHasRisks = true;
+                if (!transparencyReviewReasons.includes(id)) transparencyReviewReasons.push(id);
+            }
+            if (['TRANSPARENCY_PRESENT', 'TRANSPARENCY_GROUPS'].includes(id)) { transparencyPresent = true; updateTransparencyRisk('HIGH'); }
+            if (['OVERPRINT_PRESENT', 'OVERPRINT_MODE_PRESENT'].includes(id)) { overprintPresent = true; updateTransparencyRisk('HIGH'); }
+            if (id === 'SOFT_MASK_PRESENT') { softMasksPresent = true; updateTransparencyRisk('HIGH'); }
+            if (id === 'BLEND_MODE_PRESENT') { blendModesPresent = true; updateTransparencyRisk('HIGH'); }
+            if (id === 'RASTERIZATION_RISK') { rasterizationRisk = true; updateTransparencyRisk('CRITICAL'); }
+            if (id === 'KNOCKOUT_GROUP_PRESENT') { updateTransparencyRisk('HIGH'); }
+            if (id === 'UNSUPPORTED_TRANSPARENCY_FOR_PDFX') { updateTransparencyRisk('HIGH'); }
+        });
+
+        const requestedUnsupportedTransparencyFixes = skippedFixes.filter(f => unsupportedTransparencyFixesList.includes(f.fix_id || f.code));
+        
+        const appliedVisualRewriteFix = appliedFixes.filter(f => reviewRequiredTransparencyFixes.includes(f.fix_id || f.code));
+        if (appliedVisualRewriteFix.length > 0) {
+            transparencyGovernanceHasRisks = true;
+            appliedVisualRewriteFix.forEach(f => {
+                f.visually_sensitive = true;
+                f.destructive = true;
+                const id = f.fix_id || f.code;
+                if (!transparencyReviewReasons.includes(id)) transparencyReviewReasons.push(id);
+            });
+        }
+
+        if (transparencyGovernanceHasRisks) {
+            requiresReviewPolicy = true;
+            productionCertified = false;
+            transparencyReviewReasons.forEach(r => {
+                if (!reviewRequiredReasons.includes(r)) reviewRequiredReasons.push(r);
+            });
+        }
+        
+        if (requiresReviewPolicy) {
+            productionCertified = false;
+        }
+
         logger.info({
             jobId,
             tenantId,
@@ -710,6 +803,21 @@ class AutofixProcessor {
                 review_required_color_reasons: colorReviewReasons,
                 production_certified: productionCertified,
                 certified_pdf_allowed: createCertifiedPdf && physicalArtifactsReady
+            },
+            transparency_overprint_governance: {
+                review_required: transparencyGovernanceHasRisks,
+                production_certified: !transparencyGovernanceHasRisks && productionCertified,
+                certified_pdf_allowed: !transparencyGovernanceHasRisks && createCertifiedPdf && physicalArtifactsReady,
+                highest_transparency_overprint_risk: highestTransparencyRisk,
+                visual_rewrite_fix_applied: appliedVisualRewriteFix.length > 0,
+                unsupported_transparency_overprint_fixes: requestedUnsupportedTransparencyFixes.map(f => f.fix_id || f.code),
+                review_required_reasons: transparencyReviewReasons,
+                transparency_present: transparencyPresent,
+                overprint_present: overprintPresent,
+                soft_masks_present: softMasksPresent,
+                blend_modes_present: blendModesPresent,
+                rasterization_risk: rasterizationRisk,
+                pdfx_compliance_claimed: pdfxComplianceClaimed
             }
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });

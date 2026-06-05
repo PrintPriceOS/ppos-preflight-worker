@@ -1,0 +1,392 @@
+{
+  "phase": "53B",
+  "name": "Worker Transparency / Overprint Artifact Policy",
+  "timestamp": "2026-06-05T21:47:37.552Z",
+  "scenarios": [
+    {
+      "scenario": "1. TRANSPARENCY_PRESENT finding",
+      "requested_fixes": [],
+      "findings": [
+        {
+          "id": "TRANSPARENCY_PRESENT"
+        }
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "transparency_overprint_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "highest_transparency_overprint_risk": "HIGH",
+        "visual_rewrite_fix_applied": false,
+        "unsupported_transparency_overprint_fixes": [],
+        "review_required_reasons": [
+          "TRANSPARENCY_PRESENT"
+        ],
+        "transparency_present": true,
+        "overprint_present": false,
+        "soft_masks_present": false,
+        "blend_modes_present": false,
+        "rasterization_risk": false,
+        "pdfx_compliance_claimed": false
+      },
+      "review_required": true,
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pass": true
+    },
+    {
+      "scenario": "2. SOFT_MASK_PRESENT + BLEND_MODE_PRESENT findings",
+      "requested_fixes": [],
+      "findings": [
+        {
+          "id": "SOFT_MASK_PRESENT"
+        },
+        {
+          "id": "BLEND_MODE_PRESENT"
+        }
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "transparency_overprint_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "highest_transparency_overprint_risk": "HIGH",
+        "visual_rewrite_fix_applied": false,
+        "unsupported_transparency_overprint_fixes": [],
+        "review_required_reasons": [
+          "SOFT_MASK_PRESENT",
+          "BLEND_MODE_PRESENT"
+        ],
+        "transparency_present": false,
+        "overprint_present": false,
+        "soft_masks_present": true,
+        "blend_modes_present": true,
+        "rasterization_risk": false,
+        "pdfx_compliance_claimed": false
+      },
+      "review_required": true,
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pass": true
+    },
+    {
+      "scenario": "3. OVERPRINT_PRESENT finding",
+      "requested_fixes": [],
+      "findings": [
+        {
+          "id": "OVERPRINT_PRESENT"
+        }
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "transparency_overprint_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "highest_transparency_overprint_risk": "HIGH",
+        "visual_rewrite_fix_applied": false,
+        "unsupported_transparency_overprint_fixes": [],
+        "review_required_reasons": [
+          "OVERPRINT_PRESENT"
+        ],
+        "transparency_present": false,
+        "overprint_present": true,
+        "soft_masks_present": false,
+        "blend_modes_present": false,
+        "rasterization_risk": false,
+        "pdfx_compliance_claimed": false
+      },
+      "review_required": true,
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pass": true
+    },
+    {
+      "scenario": "4. FLATTEN_TRANSPARENCY unsupported",
+      "requested_fixes": [
+        "FLATTEN_TRANSPARENCY"
+      ],
+      "findings": [
+        {
+          "id": "TRANSPARENCY_PRESENT"
+        }
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [
+        "FLATTEN_TRANSPARENCY"
+      ],
+      "failed_fixes": [],
+      "transparency_overprint_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "highest_transparency_overprint_risk": "HIGH",
+        "visual_rewrite_fix_applied": false,
+        "unsupported_transparency_overprint_fixes": [
+          "FLATTEN_TRANSPARENCY"
+        ],
+        "review_required_reasons": [
+          "TRANSPARENCY_PRESENT"
+        ],
+        "transparency_present": true,
+        "overprint_present": false,
+        "soft_masks_present": false,
+        "blend_modes_present": false,
+        "rasterization_risk": false,
+        "pdfx_compliance_claimed": false
+      },
+      "review_required": true,
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pass": true
+    },
+    {
+      "scenario": "5. FLATTEN_OVERPRINT unsupported",
+      "requested_fixes": [
+        "FLATTEN_OVERPRINT"
+      ],
+      "findings": [
+        {
+          "id": "OVERPRINT_PRESENT"
+        }
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [
+        "FLATTEN_OVERPRINT"
+      ],
+      "failed_fixes": [],
+      "transparency_overprint_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "highest_transparency_overprint_risk": "HIGH",
+        "visual_rewrite_fix_applied": false,
+        "unsupported_transparency_overprint_fixes": [
+          "FLATTEN_OVERPRINT"
+        ],
+        "review_required_reasons": [
+          "OVERPRINT_PRESENT"
+        ],
+        "transparency_present": false,
+        "overprint_present": true,
+        "soft_masks_present": false,
+        "blend_modes_present": false,
+        "rasterization_risk": false,
+        "pdfx_compliance_claimed": false
+      },
+      "review_required": true,
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pass": true
+    },
+    {
+      "scenario": "6. CONVERT_TO_PDFX_TRANSPARENCY_SAFE unsupported",
+      "requested_fixes": [
+        "CONVERT_TO_PDFX_TRANSPARENCY_SAFE"
+      ],
+      "findings": [
+        {
+          "id": "UNSUPPORTED_TRANSPARENCY_FOR_PDFX"
+        }
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [
+        "CONVERT_TO_PDFX_TRANSPARENCY_SAFE"
+      ],
+      "failed_fixes": [],
+      "transparency_overprint_governance": {
+        "review_required": false,
+        "production_certified": true,
+        "certified_pdf_allowed": false,
+        "highest_transparency_overprint_risk": "HIGH",
+        "visual_rewrite_fix_applied": false,
+        "unsupported_transparency_overprint_fixes": [
+          "CONVERT_TO_PDFX_TRANSPARENCY_SAFE"
+        ],
+        "review_required_reasons": [],
+        "transparency_present": false,
+        "overprint_present": false,
+        "soft_masks_present": false,
+        "blend_modes_present": false,
+        "rasterization_risk": false,
+        "pdfx_compliance_claimed": false
+      },
+      "review_required": false,
+      "production_certified": true,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pass": true
+    },
+    {
+      "scenario": "7. Engine incorrectly reports unsupported fix as APPLIED",
+      "requested_fixes": [
+        "RASTERIZE_TRANSPARENCY"
+      ],
+      "findings": [],
+      "applied_fixes": [],
+      "skipped_fixes": [
+        "RASTERIZE_TRANSPARENCY"
+      ],
+      "failed_fixes": [],
+      "transparency_overprint_governance": {
+        "review_required": false,
+        "production_certified": true,
+        "certified_pdf_allowed": false,
+        "highest_transparency_overprint_risk": "LOW",
+        "visual_rewrite_fix_applied": false,
+        "unsupported_transparency_overprint_fixes": [
+          "RASTERIZE_TRANSPARENCY"
+        ],
+        "review_required_reasons": [],
+        "transparency_present": false,
+        "overprint_present": false,
+        "soft_masks_present": false,
+        "blend_modes_present": false,
+        "rasterization_risk": false,
+        "pdfx_compliance_claimed": false
+      },
+      "review_required": false,
+      "production_certified": true,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pass": true
+    },
+    {
+      "scenario": "8. Future applied visual rewrite fix",
+      "requested_fixes": [
+        "FLATTEN_PDF"
+      ],
+      "findings": [],
+      "applied_fixes": [
+        "FLATTEN_PDF"
+      ],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "transparency_overprint_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "highest_transparency_overprint_risk": "LOW",
+        "visual_rewrite_fix_applied": true,
+        "unsupported_transparency_overprint_fixes": [],
+        "review_required_reasons": [
+          "FLATTEN_PDF"
+        ],
+        "transparency_present": false,
+        "overprint_present": false,
+        "soft_masks_present": false,
+        "blend_modes_present": false,
+        "rasterization_risk": false,
+        "pdfx_compliance_claimed": false
+      },
+      "review_required": true,
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pass": true
+    },
+    {
+      "scenario": "9. Findings never applied",
+      "requested_fixes": [],
+      "findings": [
+        {
+          "id": "TRANSPARENCY_PRESENT"
+        },
+        {
+          "id": "RASTERIZATION_RISK"
+        }
+      ],
+      "applied_fixes": [],
+      "skipped_fixes": [],
+      "failed_fixes": [],
+      "transparency_overprint_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "highest_transparency_overprint_risk": "CRITICAL",
+        "visual_rewrite_fix_applied": false,
+        "unsupported_transparency_overprint_fixes": [],
+        "review_required_reasons": [
+          "TRANSPARENCY_PRESENT",
+          "RASTERIZATION_RISK"
+        ],
+        "transparency_present": true,
+        "overprint_present": false,
+        "soft_masks_present": false,
+        "blend_modes_present": false,
+        "rasterization_risk": true,
+        "pdfx_compliance_claimed": false
+      },
+      "review_required": true,
+      "production_certified": false,
+      "artifact_policy": {
+        "fixed_pdf": false,
+        "review_pdf": false,
+        "certified_pdf": false,
+        "delta_report": true
+      },
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pass": true
+    }
+  ],
+  "pass": true
+}
