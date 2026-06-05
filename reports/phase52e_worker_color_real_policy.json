@@ -1,0 +1,440 @@
+[
+  {
+    "name": "Real Engine: rgb_text_device_rgb.pdf",
+    "input_mode": "REAL_ENGINE_OUTPUT",
+    "real_engine_detection": true,
+    "detector_gap": true,
+    "requested_fixes": [],
+    "detected_findings": [
+      "IND_GEOM_003",
+      "IND_GEOM_004",
+      "IND_COLOR_006",
+      "IND_COMPLIANCE_001",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR"
+    ],
+    "applied_fixes": [],
+    "skipped_fixes": [],
+    "failed_fixes": [],
+    "color_governance": {
+      "highest_color_risk": "LOW",
+      "destructive_color_fix_applied": false,
+      "unsupported_color_fixes": [],
+      "review_required_color_reasons": [],
+      "production_certified": true,
+      "certified_pdf_allowed": false
+    },
+    "review_required": false,
+    "production_certified": true,
+    "certified_pdf_allowed": false,
+    "policy_verified": true,
+    "pass": true,
+    "notes": "Detector gap: Expected one of [RGB_DEVICE_COLOR, DEVICE_RGB_USAGE], detected: [IND_GEOM_003, IND_GEOM_004, IND_COLOR_006, IND_COMPLIANCE_001, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR]"
+  },
+  {
+    "name": "Real Engine: rgb_image.pdf",
+    "input_mode": "REAL_ENGINE_OUTPUT",
+    "real_engine_detection": true,
+    "detector_gap": true,
+    "requested_fixes": [],
+    "detected_findings": [
+      "IND_GEOM_003",
+      "IND_GEOM_004",
+      "IND_COLOR_006",
+      "IND_COMPLIANCE_001",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR"
+    ],
+    "applied_fixes": [],
+    "skipped_fixes": [],
+    "failed_fixes": [],
+    "color_governance": {
+      "highest_color_risk": "LOW",
+      "destructive_color_fix_applied": false,
+      "unsupported_color_fixes": [],
+      "review_required_color_reasons": [],
+      "production_certified": true,
+      "certified_pdf_allowed": false
+    },
+    "review_required": false,
+    "production_certified": true,
+    "certified_pdf_allowed": false,
+    "policy_verified": true,
+    "pass": true,
+    "notes": "Detector gap: Expected one of [RGB_IMAGES, RGB_DEVICE_COLOR], detected: [IND_GEOM_003, IND_GEOM_004, IND_COLOR_006, IND_COMPLIANCE_001, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR]"
+  },
+  {
+    "name": "Real Engine: mixed_rgb_cmyk.pdf",
+    "input_mode": "REAL_ENGINE_OUTPUT",
+    "real_engine_detection": true,
+    "detector_gap": true,
+    "requested_fixes": [],
+    "detected_findings": [
+      "IND_GEOM_003",
+      "IND_GEOM_004",
+      "IND_COLOR_006",
+      "IND_COMPLIANCE_001",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR"
+    ],
+    "applied_fixes": [],
+    "skipped_fixes": [],
+    "failed_fixes": [],
+    "color_governance": {
+      "highest_color_risk": "LOW",
+      "destructive_color_fix_applied": false,
+      "unsupported_color_fixes": [],
+      "review_required_color_reasons": [],
+      "production_certified": true,
+      "certified_pdf_allowed": false
+    },
+    "review_required": false,
+    "production_certified": true,
+    "certified_pdf_allowed": false,
+    "policy_verified": true,
+    "pass": true,
+    "notes": "Detector gap: Expected one of [MIXED_RGB_CMYK], detected: [IND_GEOM_003, IND_GEOM_004, IND_COLOR_006, IND_COMPLIANCE_001, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR]"
+  },
+  {
+    "name": "Real Engine: missing_outputintent.pdf",
+    "input_mode": "REAL_ENGINE_OUTPUT",
+    "real_engine_detection": true,
+    "detector_gap": true,
+    "requested_fixes": [
+      "INJECT_OUTPUT_INTENT"
+    ],
+    "detected_findings": [
+      "IND_GEOM_003",
+      "IND_GEOM_004",
+      "IND_COLOR_006",
+      "IND_COMPLIANCE_001",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR"
+    ],
+    "applied_fixes": [],
+    "skipped_fixes": [],
+    "failed_fixes": [],
+    "color_governance": {
+      "highest_color_risk": "LOW",
+      "destructive_color_fix_applied": false,
+      "unsupported_color_fixes": [],
+      "review_required_color_reasons": [],
+      "production_certified": true,
+      "certified_pdf_allowed": false
+    },
+    "review_required": false,
+    "production_certified": true,
+    "certified_pdf_allowed": false,
+    "policy_verified": true,
+    "pass": true,
+    "notes": "Detector gap: Expected one of [MISSING_OUTPUT_INTENT], detected: [IND_GEOM_003, IND_GEOM_004, IND_COLOR_006, IND_COMPLIANCE_001, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR]"
+  },
+  {
+    "name": "Real Engine: rgb_convert_cmyk.pdf",
+    "input_mode": "REAL_ENGINE_OUTPUT",
+    "real_engine_detection": true,
+    "detector_gap": true,
+    "requested_fixes": [
+      "CONVERT_CMYK"
+    ],
+    "detected_findings": [
+      "IND_GEOM_003",
+      "IND_GEOM_004",
+      "IND_COLOR_006",
+      "IND_COMPLIANCE_001",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR",
+      "IND_INTEGRITY_EXTRACTION_ERROR"
+    ],
+    "applied_fixes": [],
+    "skipped_fixes": [],
+    "failed_fixes": [],
+    "color_governance": {
+      "highest_color_risk": "LOW",
+      "destructive_color_fix_applied": false,
+      "unsupported_color_fixes": [],
+      "review_required_color_reasons": [],
+      "production_certified": true,
+      "certified_pdf_allowed": false
+    },
+    "review_required": false,
+    "production_certified": true,
+    "certified_pdf_allowed": false,
+    "policy_verified": true,
+    "pass": true,
+    "notes": "Detector gap: Expected one of [RGB_DEVICE_COLOR], detected: [IND_GEOM_003, IND_GEOM_004, IND_COLOR_006, IND_COMPLIANCE_001, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR, IND_INTEGRITY_EXTRACTION_ERROR]"
+  },
+  {
+    "name": "Synthetic: CONVERT_CMYK applied",
+    "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+    "real_engine_detection": false,
+    "detector_gap": false,
+    "requested_fixes": [
+      "CONVERT_CMYK"
+    ],
+    "detected_findings": [],
+    "applied_fixes": [
+      {
+        "fix_id": "CONVERT_CMYK",
+        "status": "APPLIED"
+      }
+    ],
+    "skipped_fixes": [],
+    "failed_fixes": [],
+    "color_governance": {
+      "highest_color_risk": "HIGH",
+      "destructive_color_fix_applied": true,
+      "unsupported_color_fixes": [],
+      "review_required_color_reasons": [
+        "CONVERT_CMYK"
+      ],
+      "production_certified": false,
+      "certified_pdf_allowed": false
+    },
+    "review_required": true,
+    "production_certified": false,
+    "certified_pdf_allowed": false,
+    "policy_verified": true,
+    "pass": true,
+    "notes": "Synthetic validation"
+  },
+  {
+    "name": "Synthetic: INJECT_OUTPUT_INTENT only",
+    "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+    "real_engine_detection": false,
+    "detector_gap": false,
+    "requested_fixes": [
+      "INJECT_OUTPUT_INTENT"
+    ],
+    "detected_findings": [],
+    "applied_fixes": [
+      {
+        "fix_id": "INJECT_OUTPUT_INTENT",
+        "status": "APPLIED"
+      }
+    ],
+    "skipped_fixes": [],
+    "failed_fixes": [],
+    "color_governance": {
+      "highest_color_risk": "LOW",
+      "destructive_color_fix_applied": false,
+      "unsupported_color_fixes": [],
+      "review_required_color_reasons": [],
+      "production_certified": true,
+      "certified_pdf_allowed": false
+    },
+    "review_required": false,
+    "production_certified": true,
+    "certified_pdf_allowed": false,
+    "policy_verified": true,
+    "pass": true,
+    "notes": "Synthetic validation"
+  },
+  {
+    "name": "Synthetic: INJECT_OUTPUT_INTENT + ICC_MISMATCH",
+    "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+    "real_engine_detection": false,
+    "detector_gap": false,
+    "requested_fixes": [
+      "INJECT_OUTPUT_INTENT"
+    ],
+    "detected_findings": [
+      "ICC_MISMATCH"
+    ],
+    "applied_fixes": [
+      {
+        "fix_id": "INJECT_OUTPUT_INTENT",
+        "status": "APPLIED"
+      }
+    ],
+    "skipped_fixes": [],
+    "failed_fixes": [],
+    "color_governance": {
+      "highest_color_risk": "HIGH",
+      "destructive_color_fix_applied": false,
+      "unsupported_color_fixes": [],
+      "review_required_color_reasons": [
+        "ICC_MISMATCH"
+      ],
+      "production_certified": false,
+      "certified_pdf_allowed": false
+    },
+    "review_required": true,
+    "production_certified": false,
+    "certified_pdf_allowed": false,
+    "policy_verified": true,
+    "pass": true,
+    "notes": "Synthetic validation"
+  },
+  {
+    "name": "Synthetic: RGB_IMAGES unresolved",
+    "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+    "real_engine_detection": false,
+    "detector_gap": false,
+    "requested_fixes": [],
+    "detected_findings": [
+      "RGB_IMAGES"
+    ],
+    "applied_fixes": [],
+    "skipped_fixes": [],
+    "failed_fixes": [],
+    "color_governance": {
+      "highest_color_risk": "HIGH",
+      "destructive_color_fix_applied": false,
+      "unsupported_color_fixes": [],
+      "review_required_color_reasons": [
+        "RGB_IMAGES"
+      ],
+      "production_certified": false,
+      "certified_pdf_allowed": false
+    },
+    "review_required": true,
+    "production_certified": false,
+    "certified_pdf_allowed": false,
+    "policy_verified": true,
+    "pass": true,
+    "notes": "Synthetic validation"
+  },
+  {
+    "name": "Synthetic: MIXED_RGB_CMYK unresolved",
+    "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+    "real_engine_detection": false,
+    "detector_gap": false,
+    "requested_fixes": [],
+    "detected_findings": [
+      "MIXED_RGB_CMYK"
+    ],
+    "applied_fixes": [],
+    "skipped_fixes": [],
+    "failed_fixes": [],
+    "color_governance": {
+      "highest_color_risk": "HIGH",
+      "destructive_color_fix_applied": false,
+      "unsupported_color_fixes": [],
+      "review_required_color_reasons": [
+        "MIXED_RGB_CMYK"
+      ],
+      "production_certified": false,
+      "certified_pdf_allowed": false
+    },
+    "review_required": true,
+    "production_certified": false,
+    "certified_pdf_allowed": false,
+    "policy_verified": true,
+    "pass": true,
+    "notes": "Synthetic validation"
+  },
+  {
+    "name": "Synthetic: REDUCE_TAC unsupported",
+    "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+    "real_engine_detection": false,
+    "detector_gap": false,
+    "requested_fixes": [
+      "REDUCE_TAC"
+    ],
+    "detected_findings": [],
+    "applied_fixes": [],
+    "skipped_fixes": [
+      {
+        "fix_id": "REDUCE_TAC",
+        "status": "SKIPPED",
+        "reason": "UNSUPPORTED_COLOR_FIX_WAS_REPORTED_AS_APPLIED",
+        "message": "Capability is not fully supported or is high-risk.",
+        "requires_human_review": true,
+        "production_safe": false,
+        "moved_from_applied_to_skipped": true
+      }
+    ],
+    "failed_fixes": [],
+    "color_governance": {
+      "highest_color_risk": "HIGH",
+      "destructive_color_fix_applied": false,
+      "unsupported_color_fixes": [
+        "REDUCE_TAC"
+      ],
+      "review_required_color_reasons": [
+        "REDUCE_TAC"
+      ],
+      "production_certified": false,
+      "certified_pdf_allowed": false
+    },
+    "review_required": true,
+    "production_certified": false,
+    "certified_pdf_allowed": false,
+    "policy_verified": true,
+    "pass": true,
+    "notes": "Synthetic validation"
+  },
+  {
+    "name": "Synthetic: RICH_BLACK_TEXT finding",
+    "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+    "real_engine_detection": false,
+    "detector_gap": false,
+    "requested_fixes": [],
+    "detected_findings": [
+      "RICH_BLACK_TEXT"
+    ],
+    "applied_fixes": [],
+    "skipped_fixes": [],
+    "failed_fixes": [],
+    "color_governance": {
+      "highest_color_risk": "HIGH",
+      "destructive_color_fix_applied": false,
+      "unsupported_color_fixes": [],
+      "review_required_color_reasons": [
+        "RICH_BLACK_TEXT"
+      ],
+      "production_certified": false,
+      "certified_pdf_allowed": false
+    },
+    "review_required": true,
+    "production_certified": false,
+    "certified_pdf_allowed": false,
+    "policy_verified": true,
+    "pass": true,
+    "notes": "Synthetic validation"
+  },
+  {
+    "name": "Synthetic: REGISTRATION_COLOR_MISUSE finding",
+    "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+    "real_engine_detection": false,
+    "detector_gap": false,
+    "requested_fixes": [],
+    "detected_findings": [
+      "REGISTRATION_COLOR_MISUSE"
+    ],
+    "applied_fixes": [],
+    "skipped_fixes": [],
+    "failed_fixes": [],
+    "color_governance": {
+      "highest_color_risk": "HIGH",
+      "destructive_color_fix_applied": false,
+      "unsupported_color_fixes": [],
+      "review_required_color_reasons": [
+        "REGISTRATION_COLOR_MISUSE"
+      ],
+      "production_certified": false,
+      "certified_pdf_allowed": false
+    },
+    "review_required": true,
+    "production_certified": false,
+    "certified_pdf_allowed": false,
+    "policy_verified": true,
+    "pass": true,
+    "notes": "Synthetic validation"
+  }
+]
