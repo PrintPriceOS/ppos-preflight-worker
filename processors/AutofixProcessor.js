@@ -737,6 +737,16 @@ class AutofixProcessor {
         let outputintentDoesNotProvePdfx = true;
         let unsupportedStandardsFixes = [];
 
+        let detectorGap = result?.detector_gap || data?.detector_gap || false;
+        let fixtureGap = result?.fixture_gap || data?.fixture_gap || false;
+        let validatorGap = result?.validator_gap || data?.validator_gap || false;
+        let deferredGap = result?.deferred || data?.deferred || false;
+
+        if (validatorGap) {
+            validationPerformed = false;
+            validationPassed = false;
+        }
+
         standardsFindings.forEach(f => {
             const id = f.id || f.code;
             if (reviewRequiredStandardsFindings.includes(id)) {
@@ -1033,7 +1043,11 @@ class AutofixProcessor {
                 outputintent_only: outputintentOnly,
                 outputintent_does_not_prove_pdfx: outputintentDoesNotProvePdfx,
                 unsupported_standards_fixes: unsupportedStandardsFixes,
-                review_required_reasons: standardsReviewReasons
+                review_required_reasons: standardsReviewReasons,
+                detector_gap: detectorGap,
+                fixture_gap: fixtureGap,
+                validator_gap: validatorGap,
+                deferred: deferredGap
             },
             toolchain: toolchain,
             created_at: new Date().toISOString()
@@ -1139,7 +1153,11 @@ class AutofixProcessor {
                 outputintent_only: outputintentOnly,
                 outputintent_does_not_prove_pdfx: outputintentDoesNotProvePdfx,
                 unsupported_standards_fixes: unsupportedStandardsFixes,
-                review_required_reasons: standardsReviewReasons
+                review_required_reasons: standardsReviewReasons,
+                detector_gap: detectorGap,
+                fixture_gap: fixtureGap,
+                validator_gap: validatorGap,
+                deferred: deferredGap
             }
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });
