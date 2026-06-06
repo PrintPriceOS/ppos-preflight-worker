@@ -1,0 +1,160 @@
+[
+  {
+    "scenario": "1. certified.pdf filename only",
+    "input_engine_artifact_trust": "evaluated",
+    "worker_artifact_trust": "FIXED_READY",
+    "fix_audit_present": true,
+    "delta_report_present": true,
+    "primary_artifact_type": "fixed_pdf",
+    "production_certified": false,
+    "standard_certified": false,
+    "customer_visible": false,
+    "blocked_by_governance_domains": [],
+    "certification_labels": [],
+    "pass": true,
+    "notes": "As expected"
+  },
+  {
+    "scenario": "2. fixed.pdf with no blockers",
+    "input_engine_artifact_trust": "evaluated",
+    "worker_artifact_trust": "FIXED_READY",
+    "fix_audit_present": true,
+    "delta_report_present": true,
+    "primary_artifact_type": "fixed_pdf",
+    "production_certified": false,
+    "standard_certified": false,
+    "customer_visible": false,
+    "blocked_by_governance_domains": [],
+    "certification_labels": [],
+    "pass": true,
+    "notes": "As expected"
+  },
+  {
+    "scenario": "3. review.pdf required due to visual governance",
+    "input_engine_artifact_trust": "evaluated",
+    "worker_artifact_trust": "FIXED_REVIEW_REQUIRED",
+    "fix_audit_present": true,
+    "delta_report_present": true,
+    "primary_artifact_type": "review_pdf",
+    "production_certified": false,
+    "standard_certified": false,
+    "customer_visible": false,
+    "blocked_by_governance_domains": [
+      "color"
+    ],
+    "certification_labels": [],
+    "pass": true,
+    "notes": "As expected"
+  },
+  {
+    "scenario": "4. certified.pdf with font/color/image/transparency review blocker",
+    "input_engine_artifact_trust": "evaluated",
+    "worker_artifact_trust": "FIXED_REVIEW_REQUIRED",
+    "fix_audit_present": true,
+    "delta_report_present": true,
+    "primary_artifact_type": "review_pdf",
+    "production_certified": false,
+    "standard_certified": false,
+    "customer_visible": false,
+    "blocked_by_governance_domains": [],
+    "certification_labels": [],
+    "pass": true,
+    "notes": "As expected"
+  },
+  {
+    "scenario": "5. certified.pdf production-certified but not standards-certified",
+    "input_engine_artifact_trust": "evaluated",
+    "worker_artifact_trust": "PRODUCTION_CERTIFIED",
+    "fix_audit_present": true,
+    "delta_report_present": true,
+    "primary_artifact_type": "certified_pdf",
+    "production_certified": true,
+    "standard_certified": false,
+    "customer_visible": true,
+    "blocked_by_governance_domains": [],
+    "certification_labels": [],
+    "pass": true,
+    "notes": "As expected"
+  },
+  {
+    "scenario": "6. certified.pdf standards-certified with complete validator evidence",
+    "input_engine_artifact_trust": "evaluated",
+    "worker_artifact_trust": "STANDARD_CERTIFIED",
+    "fix_audit_present": true,
+    "delta_report_present": true,
+    "primary_artifact_type": "certified_pdf",
+    "production_certified": true,
+    "standard_certified": true,
+    "customer_visible": true,
+    "blocked_by_governance_domains": [],
+    "certification_labels": [
+      "PDF/X-4"
+    ],
+    "pass": true,
+    "notes": "As expected"
+  },
+  {
+    "scenario": "7. OutputIntent injected",
+    "input_engine_artifact_trust": "evaluated",
+    "worker_artifact_trust": "FIXED_READY",
+    "fix_audit_present": true,
+    "delta_report_present": true,
+    "primary_artifact_type": "fixed_pdf",
+    "production_certified": false,
+    "standard_certified": false,
+    "customer_visible": false,
+    "blocked_by_governance_domains": [],
+    "certification_labels": [],
+    "pass": true,
+    "notes": "As expected"
+  },
+  {
+    "scenario": "8. destructive visual fix applied",
+    "input_engine_artifact_trust": "evaluated",
+    "worker_artifact_trust": "FIXED_REVIEW_REQUIRED",
+    "fix_audit_present": true,
+    "delta_report_present": true,
+    "primary_artifact_type": "review_pdf",
+    "production_certified": false,
+    "standard_certified": false,
+    "customer_visible": false,
+    "blocked_by_governance_domains": [
+      "transparency_overprint"
+    ],
+    "certification_labels": [],
+    "pass": true,
+    "notes": "As expected"
+  },
+  {
+    "scenario": "9. detector_gap / validator_gap metadata",
+    "input_engine_artifact_trust": "evaluated",
+    "worker_artifact_trust": "FIXED_READY",
+    "fix_audit_present": true,
+    "delta_report_present": true,
+    "primary_artifact_type": "fixed_pdf",
+    "production_certified": false,
+    "standard_certified": false,
+    "customer_visible": false,
+    "blocked_by_governance_domains": [],
+    "certification_labels": [],
+    "pass": true,
+    "notes": "As expected"
+  },
+  {
+    "scenario": "10. artifact role ordering",
+    "input_engine_artifact_trust": "evaluated",
+    "worker_artifact_trust": "FIXED_REVIEW_REQUIRED",
+    "fix_audit_present": true,
+    "delta_report_present": true,
+    "primary_artifact_type": "review_pdf",
+    "production_certified": false,
+    "standard_certified": false,
+    "customer_visible": false,
+    "blocked_by_governance_domains": [
+      "color"
+    ],
+    "certification_labels": [],
+    "pass": true,
+    "notes": "As expected"
+  }
+]
