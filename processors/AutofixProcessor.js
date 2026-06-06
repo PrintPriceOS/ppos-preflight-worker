@@ -825,6 +825,74 @@ class AutofixProcessor {
             });
         }
 
+        // --- Phase 56B: Artifact Trust Policy Evaluation ---
+        let operatorApproved = data.operator_approved === true || input?.operator_approved === true || payload?.operator_approved === true;
+        let blockedDomains = [];
+        if (colorGovernanceHasRisks) blockedDomains.push('color');
+        if (transparencyGovernanceHasRisks) blockedDomains.push('transparency_overprint');
+        if (imageGovernanceHasRisks) blockedDomains.push('image_quality');
+        if (standardsGovernanceHasRisks) blockedDomains.push('standards_certification');
+
+        let artifactTrust = {
+            trust_level: "RAW_INPUT",
+            primary_artifact_type: null,
+            primary_artifact_filename: null,
+            review_required: requiresReviewPolicy,
+            production_certified: productionCertified,
+            standard_certified: standardCertified,
+            customer_visible: false,
+            certified_pdf_allowed: false,
+            pdfx_compliance_claimed: pdfxComplianceClaimed,
+            pdfa_compliance_claimed: pdfaComplianceClaimed,
+            compliance_claim_allowed: complianceClaimAllowed,
+            blocked_by_governance_domains: blockedDomains,
+            primary_disallowed_reasons: [],
+            certification_labels: [],
+            warnings: [],
+            evidence: {}
+        };
+
+        if (operatorApproved) {
+            let visualOnly = blockedDomains.every(d => ['color', 'transparency_overprint', 'image_quality'].includes(d));
+            if (visualOnly) {
+                artifactTrust.review_required = false;
+                artifactTrust.production_certified = true;
+                artifactTrust.blocked_by_governance_domains = [];
+                artifactTrust.evidence.operator_approval_applied = true;
+            } else {
+                artifactTrust.evidence.operator_approval_ignored = true;
+                artifactTrust.warnings.push("Operator approval ignored: standards governance or non-visual blockers active.");
+            }
+        }
+
+        if (artifactTrust.blocked_by_governance_domains.length > 0) {
+            artifactTrust.review_required = true;
+            artifactTrust.production_certified = false;
+        }
+
+        if (artifactTrust.review_required) {
+            artifactTrust.trust_level = "FIXED_REVIEW_REQUIRED";
+            artifactTrust.certified_pdf_allowed = false;
+        } else if (artifactTrust.standard_certified && artifactTrust.production_certified) {
+            artifactTrust.trust_level = "STANDARD_CERTIFIED";
+            artifactTrust.certified_pdf_allowed = true;
+        } else if (artifactTrust.production_certified) {
+            artifactTrust.trust_level = "PRODUCTION_CERTIFIED";
+            artifactTrust.certified_pdf_allowed = true;
+        } else {
+            artifactTrust.trust_level = "FIXED_READY";
+            artifactTrust.certified_pdf_allowed = false;
+        }
+
+        if (outputintentOnly || outputintentDoesNotProvePdfx) {
+            artifactTrust.warnings.push("OutputIntent injection alone does not prove PDF/X compliance.");
+        }
+
+        // We defer primary_artifact selection until we verify physical artifacts
+        // Update variables based on artifact_trust policy
+        requiresReviewPolicy = artifactTrust.review_required;
+        productionCertified = artifactTrust.production_certified;
+
 
         logger.info({
             jobId,
@@ -907,7 +975,7 @@ class AutofixProcessor {
         }, logger);
 
         const requiresReview = requiresReviewPolicy;
-        const createCertifiedPdf = productionCertified && !hasCriticalFailed && !requiresReview;
+        const createCertifiedPdf = artifactTrust.certified_pdf_allowed;
         
         if (requiresReview) {
             logger.info({ jobId }, '[PREFLIGHT-WORKER][REVIEW_REQUIRED_ARTIFACT_POLICY]');
@@ -1000,6 +1068,51 @@ class AutofixProcessor {
             }
         }
 
+        // Primary Artifact Selection (Phase 56B)
+        if (!physicalArtifactsReady) {
+            artifactTrust.primary_artifact_type = null;
+            artifactTrust.customer_visible = false;
+            artifactTrust.primary_disallowed_reasons.push("NO_SAFE_ARTIFACT");
+            artifactTrust.evidence.primary_selection_reason = "No physical artifacts generated.";
+        } else {
+            if (artifactTrust.review_required) {
+                if (verifiedArtifacts.review_pdf) {
+                    artifactTrust.primary_artifact_type = "review_pdf";
+                    artifactTrust.primary_artifact_filename = verifiedArtifacts.review_pdf;
+                } else {
+                    artifactTrust.primary_artifact_type = "fixed_pdf";
+                    artifactTrust.primary_artifact_filename = verifiedArtifacts.fixed_pdf;
+                }
+                artifactTrust.customer_visible = false;
+                artifactTrust.evidence.primary_selection_reason = "Review required.";
+                if (verifiedArtifacts.certified_pdf) {
+                    artifactTrust.primary_disallowed_reasons.push("certified_pdf blocked by review_required");
+                }
+            } else if (artifactTrust.standard_certified) {
+                artifactTrust.primary_artifact_type = verifiedArtifacts.certified_pdf ? "certified_pdf" : "fixed_pdf";
+                artifactTrust.primary_artifact_filename = verifiedArtifacts.certified_pdf || verifiedArtifacts.fixed_pdf;
+                artifactTrust.customer_visible = true;
+                if (standardDetected) artifactTrust.certification_labels.push(standardDetected);
+                artifactTrust.evidence.primary_selection_reason = "Standard certified.";
+            } else if (artifactTrust.production_certified) {
+                artifactTrust.primary_artifact_type = verifiedArtifacts.certified_pdf ? "certified_pdf" : "fixed_pdf";
+                artifactTrust.primary_artifact_filename = verifiedArtifacts.certified_pdf || verifiedArtifacts.fixed_pdf;
+                artifactTrust.customer_visible = true;
+                artifactTrust.evidence.primary_selection_reason = "Production certified internally.";
+            } else {
+                artifactTrust.primary_artifact_type = "fixed_pdf";
+                artifactTrust.primary_artifact_filename = verifiedArtifacts.fixed_pdf;
+                artifactTrust.customer_visible = false;
+                artifactTrust.primary_disallowed_reasons.push("Not production certified.");
+                artifactTrust.evidence.primary_selection_reason = "Fallback to fixed_pdf due to lack of certification.";
+            }
+        }
+
+        // Enforce customer_visible stricter than production_certified
+        if (artifactTrust.review_required || !artifactTrust.production_certified || artifactTrust.blocked_by_governance_domains.length > 0) {
+            artifactTrust.customer_visible = false;
+        }
+
         // Materialize fix_audit.json
         logger.info({ jobId }, '[PREFLIGHT-WORKER][FIX_AUDIT_V2_WRITE_START]');
         const auditReportPath = `${outputDir}/fix_audit.json`;
@@ -1024,6 +1137,7 @@ class AutofixProcessor {
                 certified_pdf: createCertifiedPdf && physicalArtifactsReady,
                 delta_report: true
             },
+            artifact_trust: artifactTrust,
             standards_certification_governance: {
                 review_required: standardsGovernanceHasRisks,
                 production_certified: !standardsGovernanceHasRisks && productionCertified,
@@ -1158,7 +1272,8 @@ class AutofixProcessor {
                 fixture_gap: fixtureGap,
                 validator_gap: validatorGap,
                 deferred: deferredGap
-            }
+            },
+            artifact_trust: artifactTrust
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });
         try {
