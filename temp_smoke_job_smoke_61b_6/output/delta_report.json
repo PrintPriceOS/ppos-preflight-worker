@@ -1,0 +1,127 @@
+{
+  "job_id": "job_smoke_61b_6",
+  "changes": [
+    "GENERATE_STANDARD_VALIDATION_REPORT_INTERNAL"
+  ],
+  "boxes_changed": [],
+  "color_converted": false,
+  "interactive_removed": false,
+  "skipped_fixes": [],
+  "visual_review_required": false,
+  "color_governance": {
+    "highest_color_risk": "LOW",
+    "destructive_color_fix_applied": false,
+    "unsupported_color_fixes": [],
+    "review_required_color_reasons": [],
+    "production_certified": false,
+    "certified_pdf_allowed": false
+  },
+  "transparency_overprint_governance": {
+    "review_required": false,
+    "production_certified": false,
+    "certified_pdf_allowed": false,
+    "highest_transparency_overprint_risk": "LOW",
+    "visual_rewrite_fix_applied": false,
+    "unsupported_transparency_overprint_fixes": [],
+    "review_required_reasons": [],
+    "transparency_present": false,
+    "overprint_present": false,
+    "soft_masks_present": false,
+    "blend_modes_present": false,
+    "rasterization_risk": false,
+    "pdfx_compliance_claimed": false
+  },
+  "image_quality_governance": {
+    "review_required": false,
+    "production_certified": false,
+    "certified_pdf_allowed": false,
+    "highest_image_quality_risk": null,
+    "visual_image_rewrite_applied": false,
+    "unsupported_image_quality_fixes": [],
+    "review_required_reasons": [],
+    "low_res_images_present": false,
+    "excessive_resolution_present": false,
+    "jpeg_artifacts_present": false,
+    "image_replacement_required": false,
+    "bitmap_text_risk": false,
+    "rasterized_vector_risk": false,
+    "image_object_damaged": false,
+    "image_rewrite_performed": false
+  },
+  "standards_certification_governance": {
+    "review_required": false,
+    "production_certified": false,
+    "certified_pdf_allowed": false,
+    "standard_certified": false,
+    "pdfx_compliance_claimed": false,
+    "pdfa_compliance_claimed": false,
+    "standard_claimed": null,
+    "validator_required": true,
+    "validator_available": false,
+    "validation_performed": false,
+    "validation_passed": false,
+    "validator_name": null,
+    "validator_version": null,
+    "validation_report_available": false,
+    "compliance_claim_allowed": false,
+    "outputintent_only": false,
+    "outputintent_does_not_prove_pdfx": true,
+    "unsupported_standards_fixes": [],
+    "review_required_reasons": [],
+    "detector_gap": false,
+    "fixture_gap": false,
+    "validator_gap": false,
+    "deferred": false
+  },
+  "structural_metadata_governance": {
+    "review_required": false,
+    "production_certified": false,
+    "certified_pdf_allowed": true,
+    "structural_fix_applied": false,
+    "metadata_cleanup_applied": false,
+    "object_streams_normalized": false,
+    "false_certification_revoked": false,
+    "invalid_pdfx_metadata_stripped": false,
+    "invalid_pdfa_metadata_stripped": false,
+    "standard_metadata_normalized": false,
+    "internal_standard_report_generated": true,
+    "qpdf_available": false,
+    "qpdf_warnings": false,
+    "metadata_cleanup_warnings": false,
+    "standards_claim_allowed": false,
+    "standard_certified": false,
+    "pdfx_compliance_claimed": false,
+    "pdfa_compliance_claimed": false,
+    "compliance_claim_allowed": false,
+    "validation_performed": false,
+    "validation_passed": false,
+    "review_required_reasons": [],
+    "warnings": [
+      "Internal standards report generated. This does not constitute validator evidence."
+    ]
+  },
+  "artifact_trust": {
+    "trust_level": "FIXED_READY",
+    "primary_artifact_type": null,
+    "primary_artifact_filename": null,
+    "review_required": false,
+    "production_certified": false,
+    "standard_certified": false,
+    "customer_visible": false,
+    "certified_pdf_allowed": false,
+    "pdfx_compliance_claimed": false,
+    "pdfa_compliance_claimed": false,
+    "compliance_claim_allowed": false,
+    "blocked_by_governance_domains": [],
+    "primary_disallowed_reasons": [
+      "NO_SAFE_ARTIFACT"
+    ],
+    "certification_labels": [],
+    "warnings": [
+      "OutputIntent injection alone does not prove PDF/X compliance."
+    ],
+    "evidence": {
+      "primary_selection_reason": "No physical artifacts generated."
+    }
+  }
+}

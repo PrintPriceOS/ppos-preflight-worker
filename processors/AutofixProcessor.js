@@ -685,8 +685,10 @@ class AutofixProcessor {
         ];
 
         // 1. Move unsupported standards capabilities from applied to skipped
+        const metadataCleanupList = ['STRIP_INVALID_PDFX_METADATA', 'STRIP_INVALID_PDFA_METADATA', 'NORMALIZE_STANDARD_METADATA', 'REVOKE_FALSE_CERTIFICATION', 'MARK_STANDARD_UNCERTIFIED', 'GENERATE_STANDARD_VALIDATION_REPORT_INTERNAL'];
         const wronglyAppliedStandardsFixes = appliedFixes.filter(f => 
             standardsCapabilitiesList.includes(f.fix_id || f.code) && 
+            !metadataCleanupList.includes(f.fix_id || f.code) &&
             (f.validator_available === false || f.implemented === false || !f.validation_performed)
         );
         if (wronglyAppliedStandardsFixes.length > 0) {
@@ -821,6 +823,85 @@ class AutofixProcessor {
             requiresReviewPolicy = true;
             productionCertified = false;
             standardsReviewReasons.forEach(r => {
+                if (!reviewRequiredReasons.includes(r)) reviewRequiredReasons.push(r);
+            });
+        }
+
+        // --- Phase 61B: Structural / Metadata Governance ---
+        const objectStreamsNormalized = appliedFixes.some(f => f.fix_id === 'NORMALIZE_OBJECT_STREAMS' || f.code === 'NORMALIZE_OBJECT_STREAMS');
+        const falseCertificationRevoked = appliedFixes.some(f => f.fix_id === 'REVOKE_FALSE_CERTIFICATION' || f.code === 'REVOKE_FALSE_CERTIFICATION');
+        const invalidPdfxMetadataStripped = appliedFixes.some(f => f.fix_id === 'STRIP_INVALID_PDFX_METADATA' || f.code === 'STRIP_INVALID_PDFX_METADATA');
+        const invalidPdfaMetadataStripped = appliedFixes.some(f => f.fix_id === 'STRIP_INVALID_PDFA_METADATA' || f.code === 'STRIP_INVALID_PDFA_METADATA');
+        const standardMetadataNormalized = appliedFixes.some(f => f.fix_id === 'NORMALIZE_STANDARD_METADATA' || f.code === 'NORMALIZE_STANDARD_METADATA');
+        const internalStandardReportGenerated = appliedFixes.some(f => f.fix_id === 'GENERATE_STANDARD_VALIDATION_REPORT_INTERNAL' || f.code === 'GENERATE_STANDARD_VALIDATION_REPORT_INTERNAL');
+
+        const structuralFixApplied = objectStreamsNormalized;
+        const metadataCleanupApplied = falseCertificationRevoked || invalidPdfxMetadataStripped || invalidPdfaMetadataStripped || standardMetadataNormalized;
+
+        let structuralMetadataGovernanceHasRisks = false;
+        let structuralMetadataReviewReasons = [];
+        let structuralMetadataWarnings = [];
+
+        let qpdfAvailable = toolchain.qpdf.available;
+        let qpdfWarnings = false;
+        if (result?.qpdf_warnings || data?.qpdf_warnings) qpdfWarnings = true;
+
+        if (internalStandardReportGenerated) {
+            validationPerformed = false;
+            validationPassed = false;
+            hasValidatorEvidence = false;
+            complianceClaimAllowed = false;
+            pdfxComplianceClaimed = false;
+            pdfaComplianceClaimed = false;
+            standardCertified = false;
+            structuralMetadataWarnings.push("Internal standards report generated. This does not constitute validator evidence.");
+        }
+
+        if (metadataCleanupApplied) {
+            structuralMetadataWarnings.push("Metadata cleanup removed false or invalid claims.");
+            standardCertified = false;
+            pdfxComplianceClaimed = false;
+            pdfaComplianceClaimed = false;
+            complianceClaimAllowed = false;
+            productionCertified = false;
+        }
+
+        if (objectStreamsNormalized) {
+            if (result?.production_safe !== true) {
+                productionCertified = false;
+            }
+        }
+
+        const structuralMetadataGovernance = {
+            review_required: structuralMetadataGovernanceHasRisks,
+            production_certified: !structuralMetadataGovernanceHasRisks && productionCertified,
+            certified_pdf_allowed: !structuralMetadataGovernanceHasRisks,
+            structural_fix_applied: structuralFixApplied,
+            metadata_cleanup_applied: metadataCleanupApplied,
+            object_streams_normalized: objectStreamsNormalized,
+            false_certification_revoked: falseCertificationRevoked,
+            invalid_pdfx_metadata_stripped: invalidPdfxMetadataStripped,
+            invalid_pdfa_metadata_stripped: invalidPdfaMetadataStripped,
+            standard_metadata_normalized: standardMetadataNormalized,
+            internal_standard_report_generated: internalStandardReportGenerated,
+            qpdf_available: qpdfAvailable,
+            qpdf_warnings: qpdfWarnings,
+            metadata_cleanup_warnings: metadataCleanupApplied,
+            standards_claim_allowed: complianceClaimAllowed,
+            standard_certified: standardCertified,
+            pdfx_compliance_claimed: pdfxComplianceClaimed,
+            pdfa_compliance_claimed: pdfaComplianceClaimed,
+            compliance_claim_allowed: complianceClaimAllowed,
+            validation_performed: validationPerformed,
+            validation_passed: validationPassed,
+            review_required_reasons: structuralMetadataReviewReasons,
+            warnings: structuralMetadataWarnings
+        };
+
+        if (structuralMetadataGovernanceHasRisks) {
+            requiresReviewPolicy = true;
+            productionCertified = false;
+            structuralMetadataReviewReasons.forEach(r => {
                 if (!reviewRequiredReasons.includes(r)) reviewRequiredReasons.push(r);
             });
         }
@@ -1163,6 +1244,7 @@ class AutofixProcessor {
                 validator_gap: validatorGap,
                 deferred: deferredGap
             },
+            structural_metadata_governance: structuralMetadataGovernance,
             toolchain: toolchain,
             created_at: new Date().toISOString()
         };
@@ -1273,6 +1355,7 @@ class AutofixProcessor {
                 validator_gap: validatorGap,
                 deferred: deferredGap
             },
+            structural_metadata_governance: structuralMetadataGovernance,
             artifact_trust: artifactTrust
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });

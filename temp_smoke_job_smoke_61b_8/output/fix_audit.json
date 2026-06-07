@@ -1,0 +1,114 @@
+{
+  "version": "2.0",
+  "job_id": "job_smoke_61b_8",
+  "parent_job_id": null,
+  "source_pdf": "C:\\Users\\KIKE\\Downloads\\ppos-preflight-worker-phase-10-intelligence-layer\\temp_smoke_job_smoke_61b_8\\temp\\input.pdf",
+  "engine_version": "2.5.0",
+  "policy_mode": "EXPERIMENTAL",
+  "requested_fixes": [],
+  "applied_fixes": [
+    {
+      "code": "GENERATE_STANDARD_VALIDATION_REPORT_INTERNAL",
+      "status": "APPLIED"
+    }
+  ],
+  "skipped_fixes": [],
+  "failed_fixes": [],
+  "fix_results": [],
+  "review_required": false,
+  "review_required_reasons": [],
+  "production_certified": false,
+  "artifact_policy": {
+    "fixed_pdf": false,
+    "review_pdf": false,
+    "certified_pdf": false,
+    "delta_report": true
+  },
+  "artifact_trust": {
+    "trust_level": "FIXED_READY",
+    "primary_artifact_type": null,
+    "primary_artifact_filename": null,
+    "review_required": false,
+    "production_certified": false,
+    "standard_certified": false,
+    "customer_visible": false,
+    "certified_pdf_allowed": false,
+    "pdfx_compliance_claimed": false,
+    "pdfa_compliance_claimed": false,
+    "compliance_claim_allowed": false,
+    "blocked_by_governance_domains": [],
+    "primary_disallowed_reasons": [
+      "NO_SAFE_ARTIFACT"
+    ],
+    "certification_labels": [],
+    "warnings": [
+      "OutputIntent injection alone does not prove PDF/X compliance."
+    ],
+    "evidence": {
+      "primary_selection_reason": "No physical artifacts generated."
+    }
+  },
+  "standards_certification_governance": {
+    "review_required": false,
+    "production_certified": false,
+    "certified_pdf_allowed": false,
+    "standard_certified": false,
+    "pdfx_compliance_claimed": false,
+    "pdfa_compliance_claimed": false,
+    "standard_claimed": null,
+    "validator_required": true,
+    "validator_available": false,
+    "validation_performed": false,
+    "validation_passed": false,
+    "validator_name": "veraPDF",
+    "validator_version": null,
+    "validation_report_available": false,
+    "compliance_claim_allowed": false,
+    "outputintent_only": false,
+    "outputintent_does_not_prove_pdfx": true,
+    "unsupported_standards_fixes": [],
+    "review_required_reasons": [],
+    "detector_gap": false,
+    "fixture_gap": false,
+    "validator_gap": false,
+    "deferred": false
+  },
+  "structural_metadata_governance": {
+    "review_required": false,
+    "production_certified": false,
+    "certified_pdf_allowed": true,
+    "structural_fix_applied": false,
+    "metadata_cleanup_applied": false,
+    "object_streams_normalized": false,
+    "false_certification_revoked": false,
+    "invalid_pdfx_metadata_stripped": false,
+    "invalid_pdfa_metadata_stripped": false,
+    "standard_metadata_normalized": false,
+    "internal_standard_report_generated": true,
+    "qpdf_available": false,
+    "qpdf_warnings": false,
+    "metadata_cleanup_warnings": false,
+    "standards_claim_allowed": false,
+    "standard_certified": false,
+    "pdfx_compliance_claimed": false,
+    "pdfa_compliance_claimed": false,
+    "compliance_claim_allowed": false,
+    "validation_performed": false,
+    "validation_passed": false,
+    "review_required_reasons": [],
+    "warnings": [
+      "Internal standards report generated. This does not constitute validator evidence."
+    ]
+  },
+  "toolchain": {
+    "qpdf": {
+      "available": false,
+      "version": null
+    },
+    "ghostscript": {
+      "available": true,
+      "version": "10.06.0"
+    }
+  },
+  "created_at": "2026-06-07T06:25:37.387Z"
+}

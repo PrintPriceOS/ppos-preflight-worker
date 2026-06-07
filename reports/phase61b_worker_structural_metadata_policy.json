@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "timestamp": "2026-06-07T06:25:35.106Z",
+    "input_mode": "ENGINE_REPORT",
+    "scenarios_tested": 10
+  },
+  "scenarios": [
+    {
+      "name": "1. NORMALIZE_OBJECT_STREAMS applied cleanly",
+      "passed": true,
+      "checks_failed": []
+    },
+    {
+      "name": "2. NORMALIZE_OBJECT_STREAMS skipped because qpdf missing",
+      "passed": true,
+      "checks_failed": []
+    },
+    {
+      "name": "3. REVOKE_FALSE_CERTIFICATION applied",
+      "passed": true,
+      "checks_failed": []
+    },
+    {
+      "name": "4. STRIP_INVALID_PDFX_METADATA applied",
+      "passed": true,
+      "checks_failed": []
+    },
+    {
+      "name": "5. STRIP_INVALID_PDFA_METADATA applied",
+      "passed": true,
+      "checks_failed": []
+    },
+    {
+      "name": "6. NORMALIZE_STANDARD_METADATA applied",
+      "passed": true,
+      "checks_failed": []
+    },
+    {
+      "name": "7. GENERATE_STANDARD_VALIDATION_REPORT_INTERNAL generated",
+      "passed": true,
+      "checks_failed": []
+    },
+    {
+      "name": "8. Metadata cleanup with certified.pdf artifact present",
+      "passed": true,
+      "checks_failed": []
+    },
+    {
+      "name": "9. Internal report must not become external validation evidence",
+      "passed": true,
+      "checks_failed": []
+    },
+    {
+      "name": "10. Evidence preservation for skipped/failed states",
+      "passed": true,
+      "checks_failed": []
+    }
+  ]
+}
