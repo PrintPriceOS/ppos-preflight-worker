@@ -906,6 +906,117 @@ class AutofixProcessor {
             });
         }
 
+        // --- Phase 62B: Page Marks Governance ---
+        const pageMarksFixesList = ['ADD_CROP_MARKS', 'REMOVE_REGISTRATION_MARKS', 'NORMALIZE_PAGE_MARKS'];
+        
+        const appliedPageMarksFixes = appliedFixes.filter(f => pageMarksFixesList.includes(f.fix_id || f.code));
+        const skippedPageMarksFixes = skippedFixes.filter(f => pageMarksFixesList.includes(f.fix_id || f.code));
+        
+        let pageMarksGovernanceHasRisks = false;
+        let pageMarksReviewReasons = [];
+        let pageMarksWarnings = [];
+        let pageMarksEvidence = {};
+        
+        const failedPageMarksFixes = failedFixes.filter(f => pageMarksFixesList.includes(f.fix_id || f.code));
+        const allPageMarksFixes = [...appliedPageMarksFixes, ...skippedPageMarksFixes, ...failedPageMarksFixes];
+
+        allPageMarksFixes.forEach(f => {
+            if (!f.evidence) {
+                const synthesized = {
+                    status: f.status,
+                    capability: f.fix_id || f.code
+                };
+                if (f.reason || f.skip_reason) synthesized.reason = f.reason || f.skip_reason;
+                if (f.warnings) synthesized.warnings = f.warnings;
+                if (f.limitations) synthesized.limitations = f.limitations;
+                if (f.safety_checks) synthesized.safety_checks = f.safety_checks;
+                if (f.mark_geometry) synthesized.mark_geometry = f.mark_geometry;
+                if (f.detection_confidence) synthesized.detection_confidence = f.detection_confidence;
+                
+                f.evidence = synthesized;
+            }
+            const id = f.fix_id || f.code;
+            pageMarksEvidence[id] = f.evidence;
+        });
+        
+        const pageMarksFixApplied = appliedPageMarksFixes.length > 0;
+        const cropMarksAdded = appliedPageMarksFixes.some(f => (f.fix_id || f.code) === 'ADD_CROP_MARKS');
+        const registrationMarksRemoved = appliedPageMarksFixes.some(f => (f.fix_id || f.code) === 'REMOVE_REGISTRATION_MARKS');
+        const pageMarksNormalized = appliedPageMarksFixes.some(f => (f.fix_id || f.code) === 'NORMALIZE_PAGE_MARKS');
+        
+        let unsafeGeometryDetected = false;
+        let insufficientMargin = false;
+        let marksInsideTrim = false;
+        let removalNotSafe = false;
+
+        if (pageMarksFixApplied) {
+            pageMarksGovernanceHasRisks = true;
+            pageMarksWarnings.push("Page marks affect print interpretation and require visual review.");
+            
+            // Standards claims cannot be made
+            standardCertified = false;
+            pdfxComplianceClaimed = false;
+            pdfaComplianceClaimed = false;
+            complianceClaimAllowed = false;
+            productionCertified = false;
+            
+            appliedPageMarksFixes.forEach(f => {
+                const id = f.fix_id || f.code;
+                if (!pageMarksReviewReasons.includes(id)) pageMarksReviewReasons.push(id);
+            });
+        }
+        
+        skippedPageMarksFixes.forEach(f => {
+            const id = f.fix_id || f.code;
+            const reason = f.reason || '';
+            
+            if (reason === 'UNSAFE_GEOMETRY' || f.safety_checks?.safe === false) unsafeGeometryDetected = true;
+            if (reason === 'INSUFFICIENT_MARGIN') insufficientMargin = true;
+            if (reason === 'MARKS_INSIDE_TRIM') marksInsideTrim = true;
+            if (reason === 'DETECTION_OR_REMOVAL_NOT_SAFE' || reason === 'UNSAFE_REMOVAL') removalNotSafe = true;
+            
+            // Unsafe geometry needs review if finding persists
+            if (unsafeGeometryDetected || insufficientMargin || marksInsideTrim || removalNotSafe) {
+                if (!pageMarksReviewReasons.includes(id + '_SKIPPED_UNSAFE')) {
+                    pageMarksReviewReasons.push(id + '_SKIPPED_UNSAFE');
+                }
+            }
+        });
+
+        if (pageMarksReviewReasons.length > 0) {
+            pageMarksGovernanceHasRisks = true;
+        }
+
+        const pageMarksGovernance = {
+            review_required: pageMarksGovernanceHasRisks,
+            production_certified: false,
+            certified_pdf_allowed: false,
+            page_marks_fix_applied: pageMarksFixApplied,
+            crop_marks_added: cropMarksAdded,
+            registration_marks_removed: registrationMarksRemoved,
+            page_marks_normalized: pageMarksNormalized,
+            unsafe_geometry_detected: unsafeGeometryDetected,
+            insufficient_margin: insufficientMargin,
+            marks_inside_trim: marksInsideTrim,
+            removal_not_safe: removalNotSafe,
+            visually_sensitive: pageMarksFixApplied,
+            standard_certified: false,
+            pdfx_compliance_claimed: false,
+            pdfa_compliance_claimed: false,
+            compliance_claim_allowed: false,
+            review_required_reasons: pageMarksReviewReasons,
+            warnings: pageMarksWarnings,
+            evidence: pageMarksEvidence
+        };
+        
+        if (pageMarksGovernanceHasRisks) {
+            requiresReviewPolicy = true;
+            productionCertified = false;
+            pageMarksReviewReasons.forEach(r => {
+                if (!reviewRequiredReasons.includes(r)) reviewRequiredReasons.push(r);
+            });
+        }
+
         // --- Phase 56B: Artifact Trust Policy Evaluation ---
         let operatorApproved = data.operator_approved === true || input?.operator_approved === true || payload?.operator_approved === true;
         let blockedDomains = [];
@@ -913,6 +1024,7 @@ class AutofixProcessor {
         if (transparencyGovernanceHasRisks) blockedDomains.push('transparency_overprint');
         if (imageGovernanceHasRisks) blockedDomains.push('image_quality');
         if (standardsGovernanceHasRisks) blockedDomains.push('standards_certification');
+        if (pageMarksGovernanceHasRisks) blockedDomains.push('page_marks');
 
         let artifactTrust = {
             trust_level: "RAW_INPUT",
@@ -1245,6 +1357,7 @@ class AutofixProcessor {
                 deferred: deferredGap
             },
             structural_metadata_governance: structuralMetadataGovernance,
+            page_marks_governance: pageMarksGovernance,
             toolchain: toolchain,
             created_at: new Date().toISOString()
         };
@@ -1356,6 +1469,7 @@ class AutofixProcessor {
                 deferred: deferredGap
             },
             structural_metadata_governance: structuralMetadataGovernance,
+            page_marks_governance: pageMarksGovernance,
             artifact_trust: artifactTrust
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });
