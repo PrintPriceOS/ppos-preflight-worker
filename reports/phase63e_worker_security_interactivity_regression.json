@@ -1,0 +1,1095 @@
+{
+  "timestamp": "2026-06-08T15:29:26.125Z",
+  "phase": "63E.2",
+  "repo": "ppos-preflight-worker",
+  "smoke_passed": true,
+  "input_mode": "ENGINE_REPORT",
+  "results": [
+    {
+      "scenario": "STRIP_JAVASCRIPT removes or skips honestly",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "security_interactivity_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "security_interactivity_fix_applied": true,
+        "active_content_removed": true,
+        "javascript_removed": true,
+        "launch_actions_removed": false,
+        "embedded_files_removed": false,
+        "document_open_actions_removed": false,
+        "page_open_actions_removed": false,
+        "annotations_flattened": false,
+        "annotation_flatten_skipped": false,
+        "forms_flattened": false,
+        "form_flatten_skipped": false,
+        "unresolved_interactive_content": false,
+        "visually_sensitive": false,
+        "security_sensitive": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "STRIP_JAVASCRIPT"
+        ],
+        "warnings": [
+          "Security/interactivity cleanup affects PDF object structure and requires review."
+        ],
+        "evidence": {
+          "STRIP_JAVASCRIPT": {
+            "objects_scanned": 6,
+            "removed_catalog_open_action": true,
+            "removed_catalog_additional_actions": false,
+            "javascript_removed_count": 2,
+            "actions_removed_count": 2,
+            "output_pdf_valid": true,
+            "warnings": [],
+            "limitations": [
+              "Embedded JavaScript inside content streams or third-party annotations may not be fully enumerable."
+            ]
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "security_interactivity"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REMOVE_LAUNCH_ACTIONS removes or skips honestly",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "security_interactivity_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "security_interactivity_fix_applied": true,
+        "active_content_removed": true,
+        "javascript_removed": false,
+        "launch_actions_removed": true,
+        "embedded_files_removed": false,
+        "document_open_actions_removed": false,
+        "page_open_actions_removed": false,
+        "annotations_flattened": false,
+        "annotation_flatten_skipped": false,
+        "forms_flattened": false,
+        "form_flatten_skipped": false,
+        "unresolved_interactive_content": false,
+        "visually_sensitive": false,
+        "security_sensitive": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "REMOVE_LAUNCH_ACTIONS"
+        ],
+        "warnings": [
+          "Security/interactivity cleanup affects PDF object structure and requires review."
+        ],
+        "evidence": {
+          "REMOVE_LAUNCH_ACTIONS": {
+            "objects_scanned": 2,
+            "actions_removed_count": 2,
+            "output_pdf_valid": true,
+            "warnings": [],
+            "limitations": [
+              "Action enumeration is limited to standard catalog/page/annotation action dictionaries."
+            ],
+            "launch_actions_removed_count": 2
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "security_interactivity"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REMOVE_EMBEDDED_FILES removes or skips honestly",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "security_interactivity_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "security_interactivity_fix_applied": true,
+        "active_content_removed": true,
+        "javascript_removed": false,
+        "launch_actions_removed": false,
+        "embedded_files_removed": true,
+        "document_open_actions_removed": false,
+        "page_open_actions_removed": false,
+        "annotations_flattened": false,
+        "annotation_flatten_skipped": false,
+        "forms_flattened": false,
+        "form_flatten_skipped": false,
+        "unresolved_interactive_content": false,
+        "visually_sensitive": false,
+        "security_sensitive": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "REMOVE_EMBEDDED_FILES"
+        ],
+        "warnings": [
+          "Security/interactivity cleanup affects PDF object structure and requires review."
+        ],
+        "evidence": {
+          "REMOVE_EMBEDDED_FILES": {
+            "objects_scanned": 2,
+            "removed_embedded_files_name_tree": true,
+            "file_attachment_annotations_removed": 1,
+            "embedded_files_removed_count": 2,
+            "objects_removed_count": 2,
+            "output_pdf_valid": true,
+            "warnings": [],
+            "limitations": [
+              "Embedded file specifications referenced only from custom/private dictionaries may not be enumerable."
+            ]
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "security_interactivity"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REMOVE_DOCUMENT_OPEN_ACTIONS removes or skips honestly",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "security_interactivity_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "security_interactivity_fix_applied": true,
+        "active_content_removed": true,
+        "javascript_removed": false,
+        "launch_actions_removed": false,
+        "embedded_files_removed": false,
+        "document_open_actions_removed": true,
+        "page_open_actions_removed": false,
+        "annotations_flattened": false,
+        "annotation_flatten_skipped": false,
+        "forms_flattened": false,
+        "form_flatten_skipped": false,
+        "unresolved_interactive_content": false,
+        "visually_sensitive": false,
+        "security_sensitive": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "REMOVE_DOCUMENT_OPEN_ACTIONS"
+        ],
+        "warnings": [
+          "Security/interactivity cleanup affects PDF object structure and requires review."
+        ],
+        "evidence": {
+          "REMOVE_DOCUMENT_OPEN_ACTIONS": {
+            "objects_scanned": 1,
+            "removed_open_action": true,
+            "removed_additional_actions": true,
+            "document_actions_removed_count": 2,
+            "actions_removed_count": 2,
+            "output_pdf_valid": true,
+            "warnings": [],
+            "limitations": []
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "security_interactivity"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REMOVE_PAGE_OPEN_ACTIONS removes or skips honestly",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "security_interactivity_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "security_interactivity_fix_applied": true,
+        "active_content_removed": true,
+        "javascript_removed": false,
+        "launch_actions_removed": false,
+        "embedded_files_removed": false,
+        "document_open_actions_removed": false,
+        "page_open_actions_removed": true,
+        "annotations_flattened": false,
+        "annotation_flatten_skipped": false,
+        "forms_flattened": false,
+        "form_flatten_skipped": false,
+        "unresolved_interactive_content": false,
+        "visually_sensitive": false,
+        "security_sensitive": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "REMOVE_PAGE_OPEN_ACTIONS"
+        ],
+        "warnings": [
+          "Security/interactivity cleanup affects PDF object structure and requires review."
+        ],
+        "evidence": {
+          "REMOVE_PAGE_OPEN_ACTIONS": {
+            "objects_scanned": 1,
+            "pages_scanned": 1,
+            "page_actions_removed_count": 2,
+            "actions_removed_count": 2,
+            "output_pdf_valid": true,
+            "warnings": [],
+            "limitations": []
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "security_interactivity"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "FLATTEN_ANNOTATIONS applies only if safe, otherwise SKIPPED_UNSUPPORTED",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "security_interactivity_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "security_interactivity_fix_applied": true,
+        "active_content_removed": false,
+        "javascript_removed": false,
+        "launch_actions_removed": false,
+        "embedded_files_removed": false,
+        "document_open_actions_removed": false,
+        "page_open_actions_removed": false,
+        "annotations_flattened": true,
+        "annotation_flatten_skipped": false,
+        "forms_flattened": false,
+        "form_flatten_skipped": false,
+        "unresolved_interactive_content": false,
+        "visually_sensitive": true,
+        "security_sensitive": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLATTEN_ANNOTATIONS"
+        ],
+        "warnings": [
+          "Security/interactivity cleanup affects PDF object structure and requires review.",
+          "Annotation/form flattening may alter visual appearance and requires human review."
+        ],
+        "evidence": {
+          "FLATTEN_ANNOTATIONS": {
+            "pages_scanned": 1,
+            "annotations_detected_count": 1,
+            "annotations_flattened_count": 1,
+            "unsupported_objects": [],
+            "output_pdf_valid": true,
+            "warnings": [],
+            "limitations": [
+              "Annotation references were removed; no appearance stream was physically rendered because none was visually significant."
+            ]
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "security_interactivity"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "FLATTEN_FORMS applies only if safe, otherwise SKIPPED_UNSUPPORTED",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "security_interactivity_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "security_interactivity_fix_applied": true,
+        "active_content_removed": false,
+        "javascript_removed": false,
+        "launch_actions_removed": false,
+        "embedded_files_removed": false,
+        "document_open_actions_removed": false,
+        "page_open_actions_removed": false,
+        "annotations_flattened": false,
+        "annotation_flatten_skipped": false,
+        "forms_flattened": true,
+        "form_flatten_skipped": false,
+        "unresolved_interactive_content": false,
+        "visually_sensitive": true,
+        "security_sensitive": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLATTEN_FORMS"
+        ],
+        "warnings": [
+          "Security/interactivity cleanup affects PDF object structure and requires review.",
+          "Annotation/form flattening may alter visual appearance and requires human review."
+        ],
+        "evidence": {
+          "FLATTEN_FORMS": {
+            "forms_detected_count": 1,
+            "form_fields_before": 1,
+            "form_fields_after": 0,
+            "forms_flattened_count": 1,
+            "acroform_present_before": true,
+            "acroform_present_after": false,
+            "flattened": true,
+            "output_pdf_valid": true,
+            "warnings": [],
+            "limitations": [
+              "Visual fidelity depends on pdf-lib's appearance-stream rendering for each field type."
+            ]
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "security_interactivity"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "mixed_interactive_content preserves evidence (STRIP_JAVASCRIPT)",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "security_interactivity_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "security_interactivity_fix_applied": true,
+        "active_content_removed": true,
+        "javascript_removed": true,
+        "launch_actions_removed": false,
+        "embedded_files_removed": false,
+        "document_open_actions_removed": false,
+        "page_open_actions_removed": false,
+        "annotations_flattened": false,
+        "annotation_flatten_skipped": false,
+        "forms_flattened": false,
+        "form_flatten_skipped": false,
+        "unresolved_interactive_content": false,
+        "visually_sensitive": false,
+        "security_sensitive": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "STRIP_JAVASCRIPT"
+        ],
+        "warnings": [
+          "Security/interactivity cleanup affects PDF object structure and requires review."
+        ],
+        "evidence": {
+          "STRIP_JAVASCRIPT": {
+            "objects_scanned": 15,
+            "removed_catalog_open_action": true,
+            "removed_catalog_additional_actions": false,
+            "javascript_removed_count": 1,
+            "actions_removed_count": 1,
+            "output_pdf_valid": true,
+            "warnings": [],
+            "limitations": [
+              "Embedded JavaScript inside content streams or third-party annotations may not be fully enumerable."
+            ]
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "security_interactivity"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "mixed_interactive_content preserves evidence (FLATTEN_FORMS)",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "security_interactivity_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "security_interactivity_fix_applied": true,
+        "active_content_removed": false,
+        "javascript_removed": false,
+        "launch_actions_removed": false,
+        "embedded_files_removed": false,
+        "document_open_actions_removed": false,
+        "page_open_actions_removed": false,
+        "annotations_flattened": false,
+        "annotation_flatten_skipped": false,
+        "forms_flattened": true,
+        "form_flatten_skipped": false,
+        "unresolved_interactive_content": false,
+        "visually_sensitive": true,
+        "security_sensitive": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLATTEN_FORMS"
+        ],
+        "warnings": [
+          "Security/interactivity cleanup affects PDF object structure and requires review.",
+          "Annotation/form flattening may alter visual appearance and requires human review."
+        ],
+        "evidence": {
+          "FLATTEN_FORMS": {
+            "forms_detected_count": 1,
+            "form_fields_before": 1,
+            "form_fields_after": 0,
+            "forms_flattened_count": 1,
+            "acroform_present_before": true,
+            "acroform_present_after": false,
+            "flattened": true,
+            "output_pdf_valid": true,
+            "warnings": [],
+            "limitations": [
+              "Visual fidelity depends on pdf-lib's appearance-stream rendering for each field type."
+            ]
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "security_interactivity"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "clean_control returns no action with evidence (STRIP_JAVASCRIPT)",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "security_interactivity_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "security_interactivity_fix_applied": true,
+        "active_content_removed": true,
+        "javascript_removed": true,
+        "launch_actions_removed": false,
+        "embedded_files_removed": false,
+        "document_open_actions_removed": false,
+        "page_open_actions_removed": false,
+        "annotations_flattened": false,
+        "annotation_flatten_skipped": false,
+        "forms_flattened": false,
+        "form_flatten_skipped": false,
+        "unresolved_interactive_content": false,
+        "visually_sensitive": false,
+        "security_sensitive": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "STRIP_JAVASCRIPT"
+        ],
+        "warnings": [
+          "Security/interactivity cleanup affects PDF object structure and requires review."
+        ],
+        "evidence": {
+          "STRIP_JAVASCRIPT": {
+            "objects_scanned": 6,
+            "removed_catalog_open_action": false,
+            "removed_catalog_additional_actions": false,
+            "javascript_removed_count": 0,
+            "actions_removed_count": 0,
+            "output_pdf_valid": true,
+            "warnings": [],
+            "limitations": [
+              "Embedded JavaScript inside content streams or third-party annotations may not be fully enumerable."
+            ]
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "security_interactivity"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "clean_control returns no action with evidence (FLATTEN_FORMS)",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "security_interactivity_governance": {
+        "review_required": false,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "security_interactivity_fix_applied": false,
+        "active_content_removed": false,
+        "javascript_removed": false,
+        "launch_actions_removed": false,
+        "embedded_files_removed": false,
+        "document_open_actions_removed": false,
+        "page_open_actions_removed": false,
+        "annotations_flattened": false,
+        "annotation_flatten_skipped": false,
+        "forms_flattened": false,
+        "form_flatten_skipped": true,
+        "unresolved_interactive_content": false,
+        "visually_sensitive": false,
+        "security_sensitive": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [],
+        "warnings": [],
+        "evidence": {
+          "FLATTEN_FORMS": {
+            "forms_detected_count": 0,
+            "forms_flattened_count": 0,
+            "output_pdf_valid": false,
+            "warnings": [],
+            "limitations": []
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "primary_artifact_type": "fixed_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": false,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [],
+        "primary_disallowed_reasons": [
+          "Not production certified."
+        ],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Fallback to fixed_pdf due to lack of certification."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": false,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: standards overclaim from security/interactivity fix must be rejected",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "security_interactivity_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "security_interactivity_fix_applied": true,
+        "active_content_removed": true,
+        "javascript_removed": true,
+        "launch_actions_removed": false,
+        "embedded_files_removed": false,
+        "document_open_actions_removed": false,
+        "page_open_actions_removed": false,
+        "annotations_flattened": false,
+        "annotation_flatten_skipped": false,
+        "forms_flattened": false,
+        "form_flatten_skipped": false,
+        "unresolved_interactive_content": false,
+        "visually_sensitive": false,
+        "security_sensitive": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "STRIP_JAVASCRIPT"
+        ],
+        "warnings": [
+          "Security/interactivity cleanup affects PDF object structure and requires review."
+        ],
+        "evidence": {
+          "STRIP_JAVASCRIPT": {
+            "javascript_removed_count": 1
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "standards_certification",
+          "security_interactivity"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: certified.pdf filename must not be trusted by name",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "security_interactivity_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "security_interactivity_fix_applied": true,
+        "active_content_removed": false,
+        "javascript_removed": false,
+        "launch_actions_removed": false,
+        "embedded_files_removed": false,
+        "document_open_actions_removed": false,
+        "page_open_actions_removed": false,
+        "annotations_flattened": true,
+        "annotation_flatten_skipped": false,
+        "forms_flattened": false,
+        "form_flatten_skipped": false,
+        "unresolved_interactive_content": false,
+        "visually_sensitive": true,
+        "security_sensitive": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLATTEN_ANNOTATIONS"
+        ],
+        "warnings": [
+          "Security/interactivity cleanup affects PDF object structure and requires review.",
+          "Annotation/form flattening may alter visual appearance and requires human review."
+        ],
+        "evidence": {
+          "FLATTEN_ANNOTATIONS": {
+            "annotations_flattened_count": 1
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "security_interactivity"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: evidence preservation across applied/skipped/failed buckets",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "security_interactivity_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "security_interactivity_fix_applied": true,
+        "active_content_removed": true,
+        "javascript_removed": false,
+        "launch_actions_removed": false,
+        "embedded_files_removed": true,
+        "document_open_actions_removed": false,
+        "page_open_actions_removed": false,
+        "annotations_flattened": false,
+        "annotation_flatten_skipped": false,
+        "forms_flattened": false,
+        "form_flatten_skipped": true,
+        "unresolved_interactive_content": true,
+        "visually_sensitive": false,
+        "security_sensitive": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLATTEN_FORMS_SKIPPED_UNSUPPORTED",
+          "REMOVE_EMBEDDED_FILES"
+        ],
+        "warnings": [
+          "Security/interactivity cleanup affects PDF object structure and requires review."
+        ],
+        "evidence": {
+          "REMOVE_EMBEDDED_FILES": {
+            "embedded_files_removed_count": 2,
+            "output_pdf_valid": true
+          },
+          "FLATTEN_FORMS": {
+            "forms_detected_count": 1,
+            "forms_flattened_count": 0,
+            "limitations": [
+              "Appearance preservation could not be verified."
+            ]
+          },
+          "REMOVE_LAUNCH_ACTIONS": {
+            "actions_removed_count": 0,
+            "warnings": [
+              "Tool error while parsing actions."
+            ]
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "security_interactivity"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    }
+  ]
+}
