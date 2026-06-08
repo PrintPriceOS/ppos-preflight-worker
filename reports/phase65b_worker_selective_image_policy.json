@@ -1,0 +1,650 @@
+{
+  "timestamp": "2026-06-08T19:34:37.170Z",
+  "phase": "65B",
+  "repo": "ppos-preflight-worker",
+  "smoke_passed": true,
+  "input_mode": "ENGINE_REPORT",
+  "results": [
+    {
+      "scenario": "CONVERT_IMAGE_RGB_TO_CMYK_SELECTIVE returns SKIPPED_UNSUPPORTED with evidence",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "selective_image_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "image_fix_applied": false,
+        "rgb_images_converted": false,
+        "image_profiles_normalized": false,
+        "excessive_resolution_downsampled": false,
+        "low_res_unfixable": false,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "CONVERT_IMAGE_RGB_TO_CMYK_SELECTIVE"
+        ],
+        "warnings": [
+          "Selective image fixes (RGB-to-CMYK conversion, ICC normalization, tagging, downsampling) cause visual change and require human review."
+        ],
+        "evidence": {
+          "CONVERT_IMAGE_RGB_TO_CMYK_SELECTIVE": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "selective_image_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "TAG_UNTAGGED_IMAGES returns SKIPPED_UNSUPPORTED with evidence",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "selective_image_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "image_fix_applied": false,
+        "rgb_images_converted": false,
+        "image_profiles_normalized": false,
+        "excessive_resolution_downsampled": false,
+        "low_res_unfixable": false,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "TAG_UNTAGGED_IMAGES"
+        ],
+        "warnings": [
+          "Selective image fixes (RGB-to-CMYK conversion, ICC normalization, tagging, downsampling) cause visual change and require human review."
+        ],
+        "evidence": {
+          "TAG_UNTAGGED_IMAGES": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "selective_image_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "NORMALIZE_IMAGE_ICC_PROFILE returns SKIPPED_UNSUPPORTED with evidence",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "selective_image_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "image_fix_applied": false,
+        "rgb_images_converted": false,
+        "image_profiles_normalized": false,
+        "excessive_resolution_downsampled": false,
+        "low_res_unfixable": false,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "NORMALIZE_IMAGE_ICC_PROFILE"
+        ],
+        "warnings": [
+          "Selective image fixes (RGB-to-CMYK conversion, ICC normalization, tagging, downsampling) cause visual change and require human review."
+        ],
+        "evidence": {
+          "NORMALIZE_IMAGE_ICC_PROFILE": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "selective_image_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "DOWNSAMPLE_EXCESSIVE_RESOLUTION returns SKIPPED_UNSUPPORTED with evidence",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "selective_image_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "image_fix_applied": false,
+        "rgb_images_converted": false,
+        "image_profiles_normalized": false,
+        "excessive_resolution_downsampled": false,
+        "low_res_unfixable": false,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "DOWNSAMPLE_EXCESSIVE_RESOLUTION"
+        ],
+        "warnings": [
+          "Selective image fixes (RGB-to-CMYK conversion, ICC normalization, tagging, downsampling) cause visual change and require human review."
+        ],
+        "evidence": {
+          "DOWNSAMPLE_EXCESSIVE_RESOLUTION": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "selective_image_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "FLAG_LOW_RES_IMAGES_UNFIXABLE flags honestly without upscaling",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "selective_image_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "image_fix_applied": false,
+        "rgb_images_converted": false,
+        "image_profiles_normalized": false,
+        "excessive_resolution_downsampled": false,
+        "low_res_unfixable": true,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLAG_LOW_RES_IMAGES_UNFIXABLE"
+        ],
+        "warnings": [
+          "Selective image fixes (RGB-to-CMYK conversion, ICC normalization, tagging, downsampling) cause visual change and require human review.",
+          "Low-resolution images cannot be safely improved automatically; upscaling is never performed."
+        ],
+        "evidence": {
+          "FLAG_LOW_RES_IMAGES_UNFIXABLE": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "selective_image_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "CONVERT_IMAGE_RGB_TO_CMYK_SELECTIVE on clean control — honest skip",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "selective_image_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "image_fix_applied": false,
+        "rgb_images_converted": false,
+        "image_profiles_normalized": false,
+        "excessive_resolution_downsampled": false,
+        "low_res_unfixable": false,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "CONVERT_IMAGE_RGB_TO_CMYK_SELECTIVE"
+        ],
+        "warnings": [
+          "Selective image fixes (RGB-to-CMYK conversion, ICC normalization, tagging, downsampling) cause visual change and require human review."
+        ],
+        "evidence": {
+          "CONVERT_IMAGE_RGB_TO_CMYK_SELECTIVE": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "selective_image_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: standards overclaim from selective image fix must be rejected",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "selective_image_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "image_fix_applied": true,
+        "rgb_images_converted": true,
+        "image_profiles_normalized": false,
+        "excessive_resolution_downsampled": false,
+        "low_res_unfixable": false,
+        "visual_change_expected": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "CONVERT_IMAGE_RGB_TO_CMYK_SELECTIVE"
+        ],
+        "warnings": [
+          "Selective image fixes (RGB-to-CMYK conversion, ICC normalization, tagging, downsampling) cause visual change and require human review."
+        ],
+        "evidence": {
+          "CONVERT_IMAGE_RGB_TO_CMYK_SELECTIVE": {
+            "rgb_images_converted": 1
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "standards_certification",
+          "selective_image_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: certified.pdf filename must not be trusted by name",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "selective_image_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "image_fix_applied": true,
+        "rgb_images_converted": false,
+        "image_profiles_normalized": true,
+        "excessive_resolution_downsampled": false,
+        "low_res_unfixable": false,
+        "visual_change_expected": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "NORMALIZE_IMAGE_ICC_PROFILE"
+        ],
+        "warnings": [
+          "Selective image fixes (RGB-to-CMYK conversion, ICC normalization, tagging, downsampling) cause visual change and require human review."
+        ],
+        "evidence": {
+          "NORMALIZE_IMAGE_ICC_PROFILE": {
+            "image_profiles_normalized": 1
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "selective_image_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: evidence preservation across applied/skipped/failed buckets",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "selective_image_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "image_fix_applied": true,
+        "rgb_images_converted": false,
+        "image_profiles_normalized": false,
+        "excessive_resolution_downsampled": true,
+        "low_res_unfixable": true,
+        "visual_change_expected": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "DOWNSAMPLE_EXCESSIVE_RESOLUTION",
+          "FLAG_LOW_RES_IMAGES_UNFIXABLE",
+          "TAG_UNTAGGED_IMAGES"
+        ],
+        "warnings": [
+          "Selective image fixes (RGB-to-CMYK conversion, ICC normalization, tagging, downsampling) cause visual change and require human review.",
+          "Low-resolution images cannot be safely improved automatically; upscaling is never performed."
+        ],
+        "evidence": {
+          "DOWNSAMPLE_EXCESSIVE_RESOLUTION": {
+            "excessive_resolution_images_downsampled": 1
+          },
+          "FLAG_LOW_RES_IMAGES_UNFIXABLE": {
+            "implemented": false,
+            "upscaling_performed": false,
+            "limitations": [
+              "No safe upscaling pipeline available."
+            ]
+          },
+          "TAG_UNTAGGED_IMAGES": {
+            "images_tagged": 0,
+            "warnings": [
+              "Tool error while tagging images."
+            ]
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "image_quality",
+          "selective_image_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: low-res unfixable must never report upscaling performed",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "selective_image_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "image_fix_applied": false,
+        "rgb_images_converted": false,
+        "image_profiles_normalized": false,
+        "excessive_resolution_downsampled": false,
+        "low_res_unfixable": true,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLAG_LOW_RES_IMAGES_UNFIXABLE"
+        ],
+        "warnings": [
+          "Selective image fixes (RGB-to-CMYK conversion, ICC normalization, tagging, downsampling) cause visual change and require human review.",
+          "Low-resolution images cannot be safely improved automatically; upscaling is never performed."
+        ],
+        "evidence": {
+          "FLAG_LOW_RES_IMAGES_UNFIXABLE": {
+            "implemented": false,
+            "upscaling_performed": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "selective_image_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    }
+  ]
+}

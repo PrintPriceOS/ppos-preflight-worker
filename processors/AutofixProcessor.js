@@ -1231,6 +1231,92 @@ class AutofixProcessor {
             });
         }
 
+        // --- Phase 65B: Selective Image Governance ---
+        const selectiveImageFixesList = [
+            'CONVERT_IMAGE_RGB_TO_CMYK_SELECTIVE', 'TAG_UNTAGGED_IMAGES',
+            'NORMALIZE_IMAGE_ICC_PROFILE', 'DOWNSAMPLE_EXCESSIVE_RESOLUTION',
+            'FLAG_LOW_RES_IMAGES_UNFIXABLE'
+        ];
+
+        const appliedSelectiveImageFixes = appliedFixes.filter(f => selectiveImageFixesList.includes(f.fix_id || f.code));
+        const skippedSelectiveImageFixes = skippedFixes.filter(f => selectiveImageFixesList.includes(f.fix_id || f.code));
+        const failedSelectiveImageFixes = failedFixes.filter(f => selectiveImageFixesList.includes(f.fix_id || f.code));
+        const allSelectiveImageFixes = [...appliedSelectiveImageFixes, ...skippedSelectiveImageFixes, ...failedSelectiveImageFixes];
+
+        let selectiveImageWarnings = [];
+        let selectiveImageReviewReasons = [];
+        let selectiveImageEvidence = {};
+
+        allSelectiveImageFixes.forEach(f => {
+            if (!f.evidence) {
+                const synthesized = {
+                    status: f.status,
+                    capability: f.fix_id || f.code
+                };
+                if (f.reason || f.skip_reason) synthesized.reason = f.reason || f.skip_reason;
+                if (f.warnings) synthesized.warnings = f.warnings;
+                if (f.limitations) synthesized.limitations = f.limitations;
+                f.evidence = synthesized;
+            }
+            const id = f.fix_id || f.code;
+            selectiveImageEvidence[id] = f.evidence;
+        });
+
+        const isSelectiveImageApplied = (capability) => appliedSelectiveImageFixes.some(f => (f.fix_id || f.code) === capability);
+        const isSelectiveImageAttempted = (capability) => allSelectiveImageFixes.some(f => (f.fix_id || f.code) === capability);
+
+        const selectiveImageFixApplied = appliedSelectiveImageFixes.length > 0;
+        const rgbImagesConverted = isSelectiveImageApplied('CONVERT_IMAGE_RGB_TO_CMYK_SELECTIVE');
+        const imageProfilesNormalized = isSelectiveImageApplied('NORMALIZE_IMAGE_ICC_PROFILE') || isSelectiveImageApplied('TAG_UNTAGGED_IMAGES');
+        const excessiveResolutionDownsampled = isSelectiveImageApplied('DOWNSAMPLE_EXCESSIVE_RESOLUTION');
+        const lowResUnfixable = isSelectiveImageAttempted('FLAG_LOW_RES_IMAGES_UNFIXABLE');
+
+        const visualChangeExpectedSelectiveImage = rgbImagesConverted || imageProfilesNormalized || excessiveResolutionDownsampled;
+        const selectiveImageGovernanceHasRisks = allSelectiveImageFixes.length > 0;
+
+        if (selectiveImageGovernanceHasRisks) {
+            selectiveImageWarnings.push("Selective image fixes (RGB-to-CMYK conversion, ICC normalization, tagging, downsampling) cause visual change and require human review.");
+            allSelectiveImageFixes.forEach(f => {
+                const id = f.fix_id || f.code;
+                if (!selectiveImageReviewReasons.includes(id)) selectiveImageReviewReasons.push(id);
+            });
+        }
+
+        if (lowResUnfixable) {
+            selectiveImageWarnings.push("Low-resolution images cannot be safely improved automatically; upscaling is never performed.");
+        }
+
+        const selectiveImageGovernance = {
+            review_required: true,
+            production_certified: false,
+            certified_pdf_allowed: false,
+            image_fix_applied: selectiveImageFixApplied,
+            rgb_images_converted: rgbImagesConverted,
+            image_profiles_normalized: imageProfilesNormalized,
+            excessive_resolution_downsampled: excessiveResolutionDownsampled,
+            low_res_unfixable: lowResUnfixable,
+            visual_change_expected: visualChangeExpectedSelectiveImage,
+            standard_certified: false,
+            pdfx_compliance_claimed: false,
+            pdfa_compliance_claimed: false,
+            compliance_claim_allowed: false,
+            review_required_reasons: selectiveImageReviewReasons,
+            warnings: selectiveImageWarnings,
+            evidence: selectiveImageEvidence
+        };
+
+        if (selectiveImageGovernanceHasRisks) {
+            requiresReviewPolicy = true;
+            productionCertified = false;
+            standardCertified = false;
+            pdfxComplianceClaimed = false;
+            pdfaComplianceClaimed = false;
+            complianceClaimAllowed = false;
+            selectiveImageReviewReasons.forEach(r => {
+                if (!reviewRequiredReasons.includes(r)) reviewRequiredReasons.push(r);
+            });
+        }
+
         // --- Phase 56B: Artifact Trust Policy Evaluation ---
         let operatorApproved = data.operator_approved === true || input?.operator_approved === true || payload?.operator_approved === true;
         let blockedDomains = [];
@@ -1241,6 +1327,7 @@ class AutofixProcessor {
         if (pageMarksGovernanceHasRisks) blockedDomains.push('page_marks');
         if (securityInteractivityGovernanceHasRisks) blockedDomains.push('security_interactivity');
         if (inkGovernanceHasRisks) blockedDomains.push('ink_governance');
+        if (selectiveImageGovernanceHasRisks) blockedDomains.push('selective_image_governance');
 
         let artifactTrust = {
             trust_level: "RAW_INPUT",
@@ -1576,6 +1663,7 @@ class AutofixProcessor {
             page_marks_governance: pageMarksGovernance,
             security_interactivity_governance: securityInteractivityGovernance,
             ink_governance: inkGovernance,
+            selective_image_governance: selectiveImageGovernance,
             toolchain: toolchain,
             created_at: new Date().toISOString()
         };
@@ -1690,6 +1778,7 @@ class AutofixProcessor {
             page_marks_governance: pageMarksGovernance,
             security_interactivity_governance: securityInteractivityGovernance,
             ink_governance: inkGovernance,
+            selective_image_governance: selectiveImageGovernance,
             artifact_trust: artifactTrust
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });
