@@ -1145,6 +1145,92 @@ class AutofixProcessor {
             });
         }
 
+        // --- Phase 64B: Ink Governance ---
+        const inkGovernanceFixesList = [
+            'REDUCE_TOTAL_INK_COVERAGE', 'MAP_RICH_BLACK_TEXT_TO_K_ONLY',
+            'MAP_REGISTRATION_COLOR_TO_BLACK', 'NORMALIZE_BLACK_TEXT',
+            'DETECT_SMALL_TEXT_RICH_BLACK'
+        ];
+
+        const appliedInkFixes = appliedFixes.filter(f => inkGovernanceFixesList.includes(f.fix_id || f.code));
+        const skippedInkFixes = skippedFixes.filter(f => inkGovernanceFixesList.includes(f.fix_id || f.code));
+        const failedInkFixes = failedFixes.filter(f => inkGovernanceFixesList.includes(f.fix_id || f.code));
+        const allInkFixes = [...appliedInkFixes, ...skippedInkFixes, ...failedInkFixes];
+
+        let inkGovernanceWarnings = [];
+        let inkGovernanceReviewReasons = [];
+        let inkGovernanceEvidence = {};
+
+        allInkFixes.forEach(f => {
+            if (!f.evidence) {
+                const synthesized = {
+                    status: f.status,
+                    capability: f.fix_id || f.code
+                };
+                if (f.reason || f.skip_reason) synthesized.reason = f.reason || f.skip_reason;
+                if (f.warnings) synthesized.warnings = f.warnings;
+                if (f.limitations) synthesized.limitations = f.limitations;
+                f.evidence = synthesized;
+            }
+            const id = f.fix_id || f.code;
+            inkGovernanceEvidence[id] = f.evidence;
+        });
+
+        const isInkApplied = (capability) => appliedInkFixes.some(f => (f.fix_id || f.code) === capability);
+        const isInkAttempted = (capability) => allInkFixes.some(f => (f.fix_id || f.code) === capability);
+
+        const inkFixApplied = appliedInkFixes.length > 0;
+        const tacReductionAttempted = isInkAttempted('REDUCE_TOTAL_INK_COVERAGE');
+        const tacReductionApplied = isInkApplied('REDUCE_TOTAL_INK_COVERAGE');
+        const richBlackTextMapped = isInkApplied('MAP_RICH_BLACK_TEXT_TO_K_ONLY');
+        const registrationColorMapped = isInkApplied('MAP_REGISTRATION_COLOR_TO_BLACK');
+        const blackTextNormalized = isInkApplied('NORMALIZE_BLACK_TEXT');
+        const smallTextRichBlackDetected = isInkAttempted('DETECT_SMALL_TEXT_RICH_BLACK');
+
+        const visualChangeExpected = inkFixApplied;
+        const inkGovernanceHasRisks = allInkFixes.length > 0;
+
+        if (inkGovernanceHasRisks) {
+            inkGovernanceWarnings.push("Ink/color changes may affect appearance and require review.");
+            allInkFixes.forEach(f => {
+                const id = f.fix_id || f.code;
+                if (!inkGovernanceReviewReasons.includes(id)) inkGovernanceReviewReasons.push(id);
+            });
+        }
+
+        const inkGovernance = {
+            review_required: true,
+            production_certified: false,
+            certified_pdf_allowed: false,
+            ink_fix_applied: inkFixApplied,
+            tac_reduction_attempted: tacReductionAttempted,
+            tac_reduction_applied: tacReductionApplied,
+            rich_black_text_mapped: richBlackTextMapped,
+            registration_color_mapped: registrationColorMapped,
+            black_text_normalized: blackTextNormalized,
+            small_text_rich_black_detected: smallTextRichBlackDetected,
+            visual_change_expected: visualChangeExpected,
+            standard_certified: false,
+            pdfx_compliance_claimed: false,
+            pdfa_compliance_claimed: false,
+            compliance_claim_allowed: false,
+            review_required_reasons: inkGovernanceReviewReasons,
+            warnings: inkGovernanceWarnings,
+            evidence: inkGovernanceEvidence
+        };
+
+        if (inkGovernanceHasRisks) {
+            requiresReviewPolicy = true;
+            productionCertified = false;
+            standardCertified = false;
+            pdfxComplianceClaimed = false;
+            pdfaComplianceClaimed = false;
+            complianceClaimAllowed = false;
+            inkGovernanceReviewReasons.forEach(r => {
+                if (!reviewRequiredReasons.includes(r)) reviewRequiredReasons.push(r);
+            });
+        }
+
         // --- Phase 56B: Artifact Trust Policy Evaluation ---
         let operatorApproved = data.operator_approved === true || input?.operator_approved === true || payload?.operator_approved === true;
         let blockedDomains = [];
@@ -1154,6 +1240,7 @@ class AutofixProcessor {
         if (standardsGovernanceHasRisks) blockedDomains.push('standards_certification');
         if (pageMarksGovernanceHasRisks) blockedDomains.push('page_marks');
         if (securityInteractivityGovernanceHasRisks) blockedDomains.push('security_interactivity');
+        if (inkGovernanceHasRisks) blockedDomains.push('ink_governance');
 
         let artifactTrust = {
             trust_level: "RAW_INPUT",
@@ -1488,6 +1575,7 @@ class AutofixProcessor {
             structural_metadata_governance: structuralMetadataGovernance,
             page_marks_governance: pageMarksGovernance,
             security_interactivity_governance: securityInteractivityGovernance,
+            ink_governance: inkGovernance,
             toolchain: toolchain,
             created_at: new Date().toISOString()
         };
@@ -1601,6 +1689,7 @@ class AutofixProcessor {
             structural_metadata_governance: structuralMetadataGovernance,
             page_marks_governance: pageMarksGovernance,
             security_interactivity_governance: securityInteractivityGovernance,
+            ink_governance: inkGovernance,
             artifact_trust: artifactTrust
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });

@@ -1,0 +1,604 @@
+{
+  "timestamp": "2026-06-08T18:46:23.318Z",
+  "phase": "64B",
+  "repo": "ppos-preflight-worker",
+  "smoke_passed": true,
+  "input_mode": "ENGINE_REPORT",
+  "results": [
+    {
+      "scenario": "REDUCE_TOTAL_INK_COVERAGE returns SKIPPED_UNSUPPORTED with evidence",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "ink_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "ink_fix_applied": false,
+        "tac_reduction_attempted": true,
+        "tac_reduction_applied": false,
+        "rich_black_text_mapped": false,
+        "registration_color_mapped": false,
+        "black_text_normalized": false,
+        "small_text_rich_black_detected": false,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "REDUCE_TOTAL_INK_COVERAGE"
+        ],
+        "warnings": [
+          "Ink/color changes may affect appearance and require review."
+        ],
+        "evidence": {
+          "REDUCE_TOTAL_INK_COVERAGE": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "ink_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "MAP_RICH_BLACK_TEXT_TO_K_ONLY returns SKIPPED_UNSUPPORTED with evidence",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "ink_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "ink_fix_applied": false,
+        "tac_reduction_attempted": false,
+        "tac_reduction_applied": false,
+        "rich_black_text_mapped": false,
+        "registration_color_mapped": false,
+        "black_text_normalized": false,
+        "small_text_rich_black_detected": false,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "MAP_RICH_BLACK_TEXT_TO_K_ONLY"
+        ],
+        "warnings": [
+          "Ink/color changes may affect appearance and require review."
+        ],
+        "evidence": {
+          "MAP_RICH_BLACK_TEXT_TO_K_ONLY": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "color",
+          "ink_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "DETECT_SMALL_TEXT_RICH_BLACK returns SKIPPED_UNSUPPORTED with evidence",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "ink_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "ink_fix_applied": false,
+        "tac_reduction_attempted": false,
+        "tac_reduction_applied": false,
+        "rich_black_text_mapped": false,
+        "registration_color_mapped": false,
+        "black_text_normalized": false,
+        "small_text_rich_black_detected": true,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "DETECT_SMALL_TEXT_RICH_BLACK"
+        ],
+        "warnings": [
+          "Ink/color changes may affect appearance and require review."
+        ],
+        "evidence": {
+          "DETECT_SMALL_TEXT_RICH_BLACK": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "ink_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "MAP_REGISTRATION_COLOR_TO_BLACK returns SKIPPED_UNSUPPORTED with evidence",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "ink_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "ink_fix_applied": false,
+        "tac_reduction_attempted": false,
+        "tac_reduction_applied": false,
+        "rich_black_text_mapped": false,
+        "registration_color_mapped": false,
+        "black_text_normalized": false,
+        "small_text_rich_black_detected": false,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "MAP_REGISTRATION_COLOR_TO_BLACK"
+        ],
+        "warnings": [
+          "Ink/color changes may affect appearance and require review."
+        ],
+        "evidence": {
+          "MAP_REGISTRATION_COLOR_TO_BLACK": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "color",
+          "ink_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "NORMALIZE_BLACK_TEXT returns SKIPPED_UNSUPPORTED with evidence",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "ink_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "ink_fix_applied": false,
+        "tac_reduction_attempted": false,
+        "tac_reduction_applied": false,
+        "rich_black_text_mapped": false,
+        "registration_color_mapped": false,
+        "black_text_normalized": false,
+        "small_text_rich_black_detected": false,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "NORMALIZE_BLACK_TEXT"
+        ],
+        "warnings": [
+          "Ink/color changes may affect appearance and require review."
+        ],
+        "evidence": {
+          "NORMALIZE_BLACK_TEXT": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "ink_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REDUCE_TOTAL_INK_COVERAGE on clean control — honest skip",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "ink_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "ink_fix_applied": false,
+        "tac_reduction_attempted": true,
+        "tac_reduction_applied": false,
+        "rich_black_text_mapped": false,
+        "registration_color_mapped": false,
+        "black_text_normalized": false,
+        "small_text_rich_black_detected": false,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "REDUCE_TOTAL_INK_COVERAGE"
+        ],
+        "warnings": [
+          "Ink/color changes may affect appearance and require review."
+        ],
+        "evidence": {
+          "REDUCE_TOTAL_INK_COVERAGE": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "ink_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: standards overclaim from ink fix must be rejected",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "ink_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "ink_fix_applied": false,
+        "tac_reduction_attempted": false,
+        "tac_reduction_applied": false,
+        "rich_black_text_mapped": false,
+        "registration_color_mapped": false,
+        "black_text_normalized": false,
+        "small_text_rich_black_detected": false,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "MAP_RICH_BLACK_TEXT_TO_K_ONLY"
+        ],
+        "warnings": [
+          "Ink/color changes may affect appearance and require review."
+        ],
+        "evidence": {
+          "MAP_RICH_BLACK_TEXT_TO_K_ONLY": {
+            "rich_black_text_regions": 1
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "color",
+          "standards_certification",
+          "ink_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: certified.pdf filename must not be trusted by name",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "ink_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "ink_fix_applied": true,
+        "tac_reduction_attempted": false,
+        "tac_reduction_applied": false,
+        "rich_black_text_mapped": false,
+        "registration_color_mapped": false,
+        "black_text_normalized": true,
+        "small_text_rich_black_detected": false,
+        "visual_change_expected": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "NORMALIZE_BLACK_TEXT"
+        ],
+        "warnings": [
+          "Ink/color changes may affect appearance and require review."
+        ],
+        "evidence": {
+          "NORMALIZE_BLACK_TEXT": {
+            "black_text_regions_normalized": 1
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "ink_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: evidence preservation across applied/skipped/failed buckets",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "ink_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "ink_fix_applied": false,
+        "tac_reduction_attempted": true,
+        "tac_reduction_applied": false,
+        "rich_black_text_mapped": false,
+        "registration_color_mapped": false,
+        "black_text_normalized": false,
+        "small_text_rich_black_detected": false,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "REDUCE_TOTAL_INK_COVERAGE",
+          "MAP_REGISTRATION_COLOR_TO_BLACK",
+          "NORMALIZE_BLACK_TEXT"
+        ],
+        "warnings": [
+          "Ink/color changes may affect appearance and require review."
+        ],
+        "evidence": {
+          "REDUCE_TOTAL_INK_COVERAGE": {
+            "implemented": false,
+            "limitations": [
+              "No rendering pipeline available for safe TAC reduction."
+            ]
+          },
+          "MAP_REGISTRATION_COLOR_TO_BLACK": {
+            "registration_color_regions_mapped": 2
+          },
+          "NORMALIZE_BLACK_TEXT": {
+            "black_text_regions_normalized": 0,
+            "warnings": [
+              "Tool error while rewriting text color."
+            ]
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "color",
+          "ink_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    }
+  ]
+}
