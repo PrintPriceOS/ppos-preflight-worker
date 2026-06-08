@@ -1017,6 +1017,134 @@ class AutofixProcessor {
             });
         }
 
+        // --- Phase 63B: Security / Interactive Object Governance ---
+        const securityInteractivityFixesList = [
+            'STRIP_JAVASCRIPT', 'REMOVE_LAUNCH_ACTIONS', 'REMOVE_EMBEDDED_FILES',
+            'REMOVE_DOCUMENT_OPEN_ACTIONS', 'REMOVE_PAGE_OPEN_ACTIONS',
+            'FLATTEN_ANNOTATIONS', 'FLATTEN_FORMS'
+        ];
+
+        const appliedSecurityInteractivityFixes = appliedFixes.filter(f => securityInteractivityFixesList.includes(f.fix_id || f.code));
+        const skippedSecurityInteractivityFixes = skippedFixes.filter(f => securityInteractivityFixesList.includes(f.fix_id || f.code));
+        const failedSecurityInteractivityFixes = failedFixes.filter(f => securityInteractivityFixesList.includes(f.fix_id || f.code));
+        const allSecurityInteractivityFixes = [...appliedSecurityInteractivityFixes, ...skippedSecurityInteractivityFixes, ...failedSecurityInteractivityFixes];
+
+        let securityInteractivityGovernanceHasRisks = false;
+        let securityInteractivityReviewReasons = [];
+        let securityInteractivityWarnings = [];
+        let securityInteractivityEvidence = {};
+
+        allSecurityInteractivityFixes.forEach(f => {
+            if (!f.evidence) {
+                const synthesized = {
+                    status: f.status,
+                    capability: f.fix_id || f.code
+                };
+                if (f.reason || f.skip_reason) synthesized.reason = f.reason || f.skip_reason;
+                if (f.warnings) synthesized.warnings = f.warnings;
+                if (f.limitations) synthesized.limitations = f.limitations;
+                f.evidence = synthesized;
+            }
+            const id = f.fix_id || f.code;
+            securityInteractivityEvidence[id] = f.evidence;
+        });
+
+        const isApplied = (capability) => appliedSecurityInteractivityFixes.some(f => (f.fix_id || f.code) === capability);
+        const isSkipped = (capability) => skippedSecurityInteractivityFixes.some(f => (f.fix_id || f.code) === capability);
+
+        const securityInteractivityFixApplied = appliedSecurityInteractivityFixes.length > 0;
+        const javascriptRemoved = isApplied('STRIP_JAVASCRIPT');
+        const launchActionsRemoved = isApplied('REMOVE_LAUNCH_ACTIONS');
+        const embeddedFilesRemoved = isApplied('REMOVE_EMBEDDED_FILES');
+        const documentOpenActionsRemoved = isApplied('REMOVE_DOCUMENT_OPEN_ACTIONS');
+        const pageOpenActionsRemoved = isApplied('REMOVE_PAGE_OPEN_ACTIONS');
+        const annotationsFlattened = isApplied('FLATTEN_ANNOTATIONS');
+        const formsFlattened = isApplied('FLATTEN_FORMS');
+        const annotationFlattenSkipped = isSkipped('FLATTEN_ANNOTATIONS');
+        const formFlattenSkipped = isSkipped('FLATTEN_FORMS');
+
+        const activeContentRemoved = javascriptRemoved || launchActionsRemoved || embeddedFilesRemoved
+            || documentOpenActionsRemoved || pageOpenActionsRemoved;
+
+        const uncertainReasons = ['SKIPPED_UNCERTAIN', 'REVIEW_REQUIRED', 'SKIPPED_UNSUPPORTED'];
+        let unresolvedInteractiveContent = false;
+        [...skippedSecurityInteractivityFixes, ...failedSecurityInteractivityFixes].forEach(f => {
+            const id = f.fix_id || f.code;
+            const reason = f.reason || f.skip_reason || f.status || '';
+            if (uncertainReasons.includes(reason)) {
+                unresolvedInteractiveContent = true;
+                if (!securityInteractivityReviewReasons.includes(id + '_' + reason)) {
+                    securityInteractivityReviewReasons.push(id + '_' + reason);
+                }
+            }
+        });
+
+        const visuallySensitive = annotationsFlattened || formsFlattened;
+        const securitySensitive = allSecurityInteractivityFixes.length > 0;
+
+        if (securityInteractivityFixApplied) {
+            securityInteractivityGovernanceHasRisks = true;
+            securityInteractivityWarnings.push("Security/interactivity cleanup affects PDF object structure and requires review.");
+
+            standardCertified = false;
+            pdfxComplianceClaimed = false;
+            pdfaComplianceClaimed = false;
+            complianceClaimAllowed = false;
+            productionCertified = false;
+
+            appliedSecurityInteractivityFixes.forEach(f => {
+                const id = f.fix_id || f.code;
+                if (!securityInteractivityReviewReasons.includes(id)) securityInteractivityReviewReasons.push(id);
+            });
+        }
+
+        if (visuallySensitive) {
+            securityInteractivityWarnings.push("Annotation/form flattening may alter visual appearance and requires human review.");
+        }
+
+        if (unresolvedInteractiveContent) {
+            securityInteractivityGovernanceHasRisks = true;
+        }
+
+        if (securityInteractivityReviewReasons.length > 0) {
+            securityInteractivityGovernanceHasRisks = true;
+        }
+
+        const securityInteractivityGovernance = {
+            review_required: securityInteractivityGovernanceHasRisks,
+            production_certified: false,
+            certified_pdf_allowed: false,
+            security_interactivity_fix_applied: securityInteractivityFixApplied,
+            active_content_removed: activeContentRemoved,
+            javascript_removed: javascriptRemoved,
+            launch_actions_removed: launchActionsRemoved,
+            embedded_files_removed: embeddedFilesRemoved,
+            document_open_actions_removed: documentOpenActionsRemoved,
+            page_open_actions_removed: pageOpenActionsRemoved,
+            annotations_flattened: annotationsFlattened,
+            annotation_flatten_skipped: annotationFlattenSkipped,
+            forms_flattened: formsFlattened,
+            form_flatten_skipped: formFlattenSkipped,
+            unresolved_interactive_content: unresolvedInteractiveContent,
+            visually_sensitive: visuallySensitive,
+            security_sensitive: securitySensitive,
+            standard_certified: false,
+            pdfx_compliance_claimed: false,
+            pdfa_compliance_claimed: false,
+            compliance_claim_allowed: false,
+            review_required_reasons: securityInteractivityReviewReasons,
+            warnings: securityInteractivityWarnings,
+            evidence: securityInteractivityEvidence
+        };
+
+        if (securityInteractivityGovernanceHasRisks) {
+            requiresReviewPolicy = true;
+            productionCertified = false;
+            securityInteractivityReviewReasons.forEach(r => {
+                if (!reviewRequiredReasons.includes(r)) reviewRequiredReasons.push(r);
+            });
+        }
+
         // --- Phase 56B: Artifact Trust Policy Evaluation ---
         let operatorApproved = data.operator_approved === true || input?.operator_approved === true || payload?.operator_approved === true;
         let blockedDomains = [];
@@ -1025,6 +1153,7 @@ class AutofixProcessor {
         if (imageGovernanceHasRisks) blockedDomains.push('image_quality');
         if (standardsGovernanceHasRisks) blockedDomains.push('standards_certification');
         if (pageMarksGovernanceHasRisks) blockedDomains.push('page_marks');
+        if (securityInteractivityGovernanceHasRisks) blockedDomains.push('security_interactivity');
 
         let artifactTrust = {
             trust_level: "RAW_INPUT",
@@ -1358,6 +1487,7 @@ class AutofixProcessor {
             },
             structural_metadata_governance: structuralMetadataGovernance,
             page_marks_governance: pageMarksGovernance,
+            security_interactivity_governance: securityInteractivityGovernance,
             toolchain: toolchain,
             created_at: new Date().toISOString()
         };
@@ -1470,6 +1600,7 @@ class AutofixProcessor {
             },
             structural_metadata_governance: structuralMetadataGovernance,
             page_marks_governance: pageMarksGovernance,
+            security_interactivity_governance: securityInteractivityGovernance,
             artifact_trust: artifactTrust
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });
