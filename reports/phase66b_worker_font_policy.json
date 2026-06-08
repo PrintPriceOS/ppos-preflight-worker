@@ -1,0 +1,916 @@
+{
+  "timestamp": "2026-06-08T20:13:33.677Z",
+  "phase": "66B",
+  "repo": "ppos-preflight-worker",
+  "smoke_passed": true,
+  "input_mode": "ENGINE_REPORT",
+  "results": [
+    {
+      "scenario": "FixRegistry font_governance (Phase 66A) capabilities check",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "font_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "font_fix_applied": false,
+        "fonts_embedded": false,
+        "font_embedding_skipped": false,
+        "type3_fonts_detected": false,
+        "type3_fonts_outlined": false,
+        "font_encoding_repaired": false,
+        "embedded_fonts_subset": false,
+        "glyphs_missing_unfixable": false,
+        "font_source_available": null,
+        "destructive_operations_attempted": [
+          "EMBED_FONTS"
+        ],
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "EMBED_FONTS"
+        ],
+        "warnings": [
+          "Font fixes (embedding, subsetting, outlining Type3 fonts, encoding repair) change PDF structure and require human review."
+        ],
+        "evidence": {
+          "EMBED_FONTS": {
+            "status": "VERIFIED",
+            "capability": "EMBED_FONTS",
+            "reason": "All Phase 66A font_governance capabilities registered with correct policy fields."
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "font_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "EMBED_FONTS returns honest skip/result with evidence",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "font_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "font_fix_applied": false,
+        "fonts_embedded": false,
+        "font_embedding_skipped": false,
+        "type3_fonts_detected": false,
+        "type3_fonts_outlined": false,
+        "font_encoding_repaired": false,
+        "embedded_fonts_subset": false,
+        "glyphs_missing_unfixable": false,
+        "font_source_available": null,
+        "destructive_operations_attempted": [
+          "EMBED_FONTS"
+        ],
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "EMBED_FONTS"
+        ],
+        "warnings": [
+          "Font fixes (embedding, subsetting, outlining Type3 fonts, encoding repair) change PDF structure and require human review."
+        ],
+        "evidence": {
+          "EMBED_FONTS": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "font_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "SUBSET_EMBEDDED_FONTS returns SKIPPED with evidence",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "font_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "font_fix_applied": false,
+        "fonts_embedded": false,
+        "font_embedding_skipped": false,
+        "type3_fonts_detected": false,
+        "type3_fonts_outlined": false,
+        "font_encoding_repaired": false,
+        "embedded_fonts_subset": false,
+        "glyphs_missing_unfixable": false,
+        "font_source_available": null,
+        "destructive_operations_attempted": [
+          "SUBSET_EMBEDDED_FONTS"
+        ],
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "SUBSET_EMBEDDED_FONTS"
+        ],
+        "warnings": [
+          "Font fixes (embedding, subsetting, outlining Type3 fonts, encoding repair) change PDF structure and require human review."
+        ],
+        "evidence": {
+          "SUBSET_EMBEDDED_FONTS": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "font_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "OUTLINE_TYPE3_FONTS returns SKIPPED with evidence",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "font_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "font_fix_applied": false,
+        "fonts_embedded": false,
+        "font_embedding_skipped": false,
+        "type3_fonts_detected": false,
+        "type3_fonts_outlined": false,
+        "font_encoding_repaired": false,
+        "embedded_fonts_subset": false,
+        "glyphs_missing_unfixable": false,
+        "font_source_available": null,
+        "destructive_operations_attempted": [
+          "OUTLINE_TYPE3_FONTS"
+        ],
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "OUTLINE_TYPE3_FONTS"
+        ],
+        "warnings": [
+          "Font fixes (embedding, subsetting, outlining Type3 fonts, encoding repair) change PDF structure and require human review."
+        ],
+        "evidence": {
+          "OUTLINE_TYPE3_FONTS": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "font_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REPAIR_FONT_ENCODING returns SKIPPED with evidence",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "font_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "font_fix_applied": false,
+        "fonts_embedded": false,
+        "font_embedding_skipped": false,
+        "type3_fonts_detected": false,
+        "type3_fonts_outlined": false,
+        "font_encoding_repaired": false,
+        "embedded_fonts_subset": false,
+        "glyphs_missing_unfixable": false,
+        "font_source_available": null,
+        "destructive_operations_attempted": [
+          "REPAIR_FONT_ENCODING"
+        ],
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "REPAIR_FONT_ENCODING"
+        ],
+        "warnings": [
+          "Font fixes (embedding, subsetting, outlining Type3 fonts, encoding repair) change PDF structure and require human review."
+        ],
+        "evidence": {
+          "REPAIR_FONT_ENCODING": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "font_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "FLAG_MISSING_GLYPHS_UNFIXABLE flags honestly without synthesis",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "font_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "font_fix_applied": false,
+        "fonts_embedded": false,
+        "font_embedding_skipped": false,
+        "type3_fonts_detected": false,
+        "type3_fonts_outlined": false,
+        "font_encoding_repaired": false,
+        "embedded_fonts_subset": false,
+        "glyphs_missing_unfixable": false,
+        "font_source_available": null,
+        "destructive_operations_attempted": [],
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLAG_MISSING_GLYPHS_UNFIXABLE"
+        ],
+        "warnings": [
+          "Font fixes (embedding, subsetting, outlining Type3 fonts, encoding repair) change PDF structure and require human review."
+        ],
+        "evidence": {
+          "FLAG_MISSING_GLYPHS_UNFIXABLE": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "font_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "SUBSET_EMBEDDED_FONTS on clean control — honest skip",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "font_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "font_fix_applied": false,
+        "fonts_embedded": false,
+        "font_embedding_skipped": false,
+        "type3_fonts_detected": false,
+        "type3_fonts_outlined": false,
+        "font_encoding_repaired": false,
+        "embedded_fonts_subset": false,
+        "glyphs_missing_unfixable": false,
+        "font_source_available": null,
+        "destructive_operations_attempted": [
+          "SUBSET_EMBEDDED_FONTS"
+        ],
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "SUBSET_EMBEDDED_FONTS"
+        ],
+        "warnings": [
+          "Font fixes (embedding, subsetting, outlining Type3 fonts, encoding repair) change PDF structure and require human review."
+        ],
+        "evidence": {
+          "SUBSET_EMBEDDED_FONTS": {
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "font_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "No-glyph-synthesis policy regression (aggregate)",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "font_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "font_fix_applied": false,
+        "fonts_embedded": false,
+        "font_embedding_skipped": false,
+        "type3_fonts_detected": false,
+        "type3_fonts_outlined": false,
+        "font_encoding_repaired": false,
+        "embedded_fonts_subset": false,
+        "glyphs_missing_unfixable": false,
+        "font_source_available": null,
+        "destructive_operations_attempted": [],
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLAG_MISSING_GLYPHS_UNFIXABLE"
+        ],
+        "warnings": [
+          "Font fixes (embedding, subsetting, outlining Type3 fonts, encoding repair) change PDF structure and require human review."
+        ],
+        "evidence": {
+          "FLAG_MISSING_GLYPHS_UNFIXABLE": {
+            "status": "VERIFIED",
+            "capability": "FLAG_MISSING_GLYPHS_UNFIXABLE",
+            "reason": "Missing glyphs are honestly flagged; no glyph synthesis/substitution was performed."
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "font_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: standards overclaim from font fix must be rejected",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "font_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "font_fix_applied": true,
+        "fonts_embedded": true,
+        "font_embedding_skipped": false,
+        "type3_fonts_detected": false,
+        "type3_fonts_outlined": false,
+        "font_encoding_repaired": false,
+        "embedded_fonts_subset": false,
+        "glyphs_missing_unfixable": false,
+        "font_source_available": true,
+        "destructive_operations_attempted": [
+          "EMBED_FONTS"
+        ],
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "EMBED_FONTS"
+        ],
+        "warnings": [
+          "Font fixes (embedding, subsetting, outlining Type3 fonts, encoding repair) change PDF structure and require human review."
+        ],
+        "evidence": {
+          "EMBED_FONTS": {
+            "fonts_embedded": true,
+            "font_source_available": true
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "standards_certification",
+          "font_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: certified.pdf filename must not be trusted by name",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "font_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "font_fix_applied": true,
+        "fonts_embedded": false,
+        "font_embedding_skipped": false,
+        "type3_fonts_detected": false,
+        "type3_fonts_outlined": false,
+        "font_encoding_repaired": true,
+        "embedded_fonts_subset": false,
+        "glyphs_missing_unfixable": false,
+        "font_source_available": null,
+        "destructive_operations_attempted": [
+          "REPAIR_FONT_ENCODING"
+        ],
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "REPAIR_FONT_ENCODING"
+        ],
+        "warnings": [
+          "Font fixes (embedding, subsetting, outlining Type3 fonts, encoding repair) change PDF structure and require human review."
+        ],
+        "evidence": {
+          "REPAIR_FONT_ENCODING": {
+            "font_encoding_repaired": true
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "font_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: evidence preservation across applied/skipped/failed buckets",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "font_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "font_fix_applied": true,
+        "fonts_embedded": false,
+        "font_embedding_skipped": false,
+        "type3_fonts_detected": false,
+        "type3_fonts_outlined": false,
+        "font_encoding_repaired": false,
+        "embedded_fonts_subset": true,
+        "glyphs_missing_unfixable": true,
+        "font_source_available": null,
+        "destructive_operations_attempted": [
+          "SUBSET_EMBEDDED_FONTS",
+          "EMBED_FONTS"
+        ],
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "SUBSET_EMBEDDED_FONTS",
+          "FLAG_MISSING_GLYPHS_UNFIXABLE",
+          "EMBED_FONTS"
+        ],
+        "warnings": [
+          "Font fixes (embedding, subsetting, outlining Type3 fonts, encoding repair) change PDF structure and require human review.",
+          "Missing glyphs could not be safely synthesized; they remain unfixed and flagged for review."
+        ],
+        "evidence": {
+          "SUBSET_EMBEDDED_FONTS": {
+            "embedded_fonts_subset": 1
+          },
+          "FLAG_MISSING_GLYPHS_UNFIXABLE": {
+            "implemented": false,
+            "glyphs_missing_unfixable": true,
+            "glyph_synthesis_performed": false,
+            "limitations": [
+              "No safe glyph synthesis pipeline available."
+            ]
+          },
+          "EMBED_FONTS": {
+            "fonts_embedded": false,
+            "warnings": [
+              "Tool error while embedding fonts."
+            ]
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "font_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: glyph synthesis must never be reported as performed",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "font_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "font_fix_applied": false,
+        "fonts_embedded": false,
+        "font_embedding_skipped": false,
+        "type3_fonts_detected": false,
+        "type3_fonts_outlined": false,
+        "font_encoding_repaired": false,
+        "embedded_fonts_subset": false,
+        "glyphs_missing_unfixable": true,
+        "font_source_available": null,
+        "destructive_operations_attempted": [],
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLAG_MISSING_GLYPHS_UNFIXABLE"
+        ],
+        "warnings": [
+          "Font fixes (embedding, subsetting, outlining Type3 fonts, encoding repair) change PDF structure and require human review.",
+          "Missing glyphs could not be safely synthesized; they remain unfixed and flagged for review."
+        ],
+        "evidence": {
+          "FLAG_MISSING_GLYPHS_UNFIXABLE": {
+            "implemented": false,
+            "glyphs_missing_unfixable": true,
+            "glyph_synthesis_performed": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "font_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: destructive outline operations must force review",
+      "input_mode": "ENGINE_REPORT",
+      "status": "COMPLETED",
+      "font_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "font_fix_applied": true,
+        "fonts_embedded": false,
+        "font_embedding_skipped": false,
+        "type3_fonts_detected": true,
+        "type3_fonts_outlined": true,
+        "font_encoding_repaired": false,
+        "embedded_fonts_subset": false,
+        "glyphs_missing_unfixable": false,
+        "font_source_available": null,
+        "destructive_operations_attempted": [
+          "OUTLINE_TYPE3_FONTS"
+        ],
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "OUTLINE_TYPE3_FONTS"
+        ],
+        "warnings": [
+          "Font fixes (embedding, subsetting, outlining Type3 fonts, encoding repair) change PDF structure and require human review.",
+          "Type3 fonts detected; outlining is a destructive operation and requires review."
+        ],
+        "evidence": {
+          "OUTLINE_TYPE3_FONTS": {
+            "type3_fonts_detected": true,
+            "type3_fonts_outlined": 1
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "font_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pdfx_compliance_claimed": false,
+      "review_required": true,
+      "pass": true,
+      "notes": "OK"
+    }
+  ]
+}

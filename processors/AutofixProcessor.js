@@ -1317,6 +1317,111 @@ class AutofixProcessor {
             });
         }
 
+        // --- Phase 66B: Font Governance ---
+        const fontGovernanceFixesList = [
+            'EMBED_FONTS', 'SUBSET_EMBEDDED_FONTS', 'OUTLINE_TYPE3_FONTS',
+            'REPAIR_FONT_ENCODING', 'FLAG_MISSING_GLYPHS_UNFIXABLE'
+        ];
+        const fontOutlineDestructiveFixesList = [
+            'OUTLINE_TYPE3_FONTS', 'REPAIR_FONT_ENCODING', 'EMBED_FONTS', 'SUBSET_EMBEDDED_FONTS'
+        ];
+
+        const appliedFontFixes = appliedFixes.filter(f => fontGovernanceFixesList.includes(f.fix_id || f.code));
+        const skippedFontFixes = skippedFixes.filter(f => fontGovernanceFixesList.includes(f.fix_id || f.code));
+        const failedFontFixes = failedFixes.filter(f => fontGovernanceFixesList.includes(f.fix_id || f.code));
+        const allFontFixes = [...appliedFontFixes, ...skippedFontFixes, ...failedFontFixes];
+
+        let fontGovernanceWarnings = [];
+        let fontGovernanceReviewReasons = [];
+        let fontGovernanceEvidence = {};
+
+        let fontsEmbedded = false;
+        let fontEmbeddingSkipped = false;
+        let type3FontsDetected = false;
+        let glyphsMissingUnfixable = false;
+        let fontSourceAvailable = null;
+
+        allFontFixes.forEach(f => {
+            if (!f.evidence) {
+                const synthesized = {
+                    status: f.status,
+                    capability: f.fix_id || f.code
+                };
+                if (f.reason || f.skip_reason) synthesized.reason = f.reason || f.skip_reason;
+                if (f.warnings) synthesized.warnings = f.warnings;
+                if (f.limitations) synthesized.limitations = f.limitations;
+                f.evidence = synthesized;
+            }
+            const id = f.fix_id || f.code;
+            fontGovernanceEvidence[id] = f.evidence;
+
+            if (f.evidence.fonts_embedded === true) fontsEmbedded = true;
+            if (f.evidence.font_embedding_skipped === true) fontEmbeddingSkipped = true;
+            if (f.evidence.type3_fonts_detected === true) type3FontsDetected = true;
+            if (f.evidence.glyphs_missing_unfixable === true) glyphsMissingUnfixable = true;
+            if (typeof f.evidence.font_source_available === 'boolean') fontSourceAvailable = f.evidence.font_source_available;
+        });
+
+        const isFontFixApplied = (capability) => appliedFontFixes.some(f => (f.fix_id || f.code) === capability);
+        const isFontFixAttempted = (capability) => allFontFixes.some(f => (f.fix_id || f.code) === capability);
+
+        const fontFixApplied = appliedFontFixes.length > 0;
+        const destructiveFontOperationsAttempted = allFontFixes.filter(f => fontOutlineDestructiveFixesList.includes(f.fix_id || f.code));
+        const fontGovernanceHasRisks = allFontFixes.length > 0;
+
+        if (fontGovernanceHasRisks) {
+            fontGovernanceWarnings.push("Font fixes (embedding, subsetting, outlining Type3 fonts, encoding repair) change PDF structure and require human review.");
+            allFontFixes.forEach(f => {
+                const id = f.fix_id || f.code;
+                if (!fontGovernanceReviewReasons.includes(id)) fontGovernanceReviewReasons.push(id);
+            });
+        }
+
+        if (fontEmbeddingSkipped) {
+            fontGovernanceWarnings.push("Font embedding could not be completed because font sources were unavailable; fonts were not invented or substituted.");
+        }
+        if (type3FontsDetected) {
+            fontGovernanceWarnings.push("Type3 fonts detected; outlining is a destructive operation and requires review.");
+        }
+        if (glyphsMissingUnfixable) {
+            fontGovernanceWarnings.push("Missing glyphs could not be safely synthesized; they remain unfixed and flagged for review.");
+        }
+
+        const fontGovernance = {
+            review_required: true,
+            production_certified: false,
+            certified_pdf_allowed: false,
+            font_fix_applied: fontFixApplied,
+            fonts_embedded: fontsEmbedded,
+            font_embedding_skipped: fontEmbeddingSkipped,
+            type3_fonts_detected: type3FontsDetected,
+            type3_fonts_outlined: isFontFixApplied('OUTLINE_TYPE3_FONTS'),
+            font_encoding_repaired: isFontFixApplied('REPAIR_FONT_ENCODING'),
+            embedded_fonts_subset: isFontFixApplied('SUBSET_EMBEDDED_FONTS'),
+            glyphs_missing_unfixable: glyphsMissingUnfixable,
+            font_source_available: fontSourceAvailable,
+            destructive_operations_attempted: destructiveFontOperationsAttempted.map(f => f.fix_id || f.code),
+            standard_certified: false,
+            pdfx_compliance_claimed: false,
+            pdfa_compliance_claimed: false,
+            compliance_claim_allowed: false,
+            review_required_reasons: fontGovernanceReviewReasons,
+            warnings: fontGovernanceWarnings,
+            evidence: fontGovernanceEvidence
+        };
+
+        if (fontGovernanceHasRisks) {
+            requiresReviewPolicy = true;
+            productionCertified = false;
+            standardCertified = false;
+            pdfxComplianceClaimed = false;
+            pdfaComplianceClaimed = false;
+            complianceClaimAllowed = false;
+            fontGovernanceReviewReasons.forEach(r => {
+                if (!reviewRequiredReasons.includes(r)) reviewRequiredReasons.push(r);
+            });
+        }
+
         // --- Phase 56B: Artifact Trust Policy Evaluation ---
         let operatorApproved = data.operator_approved === true || input?.operator_approved === true || payload?.operator_approved === true;
         let blockedDomains = [];
@@ -1328,6 +1433,7 @@ class AutofixProcessor {
         if (securityInteractivityGovernanceHasRisks) blockedDomains.push('security_interactivity');
         if (inkGovernanceHasRisks) blockedDomains.push('ink_governance');
         if (selectiveImageGovernanceHasRisks) blockedDomains.push('selective_image_governance');
+        if (fontGovernanceHasRisks) blockedDomains.push('font_governance');
 
         let artifactTrust = {
             trust_level: "RAW_INPUT",
@@ -1664,6 +1770,7 @@ class AutofixProcessor {
             security_interactivity_governance: securityInteractivityGovernance,
             ink_governance: inkGovernance,
             selective_image_governance: selectiveImageGovernance,
+            font_governance: fontGovernance,
             toolchain: toolchain,
             created_at: new Date().toISOString()
         };
@@ -1779,6 +1886,7 @@ class AutofixProcessor {
             security_interactivity_governance: securityInteractivityGovernance,
             ink_governance: inkGovernance,
             selective_image_governance: selectiveImageGovernance,
+            font_governance: fontGovernance,
             artifact_trust: artifactTrust
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });
