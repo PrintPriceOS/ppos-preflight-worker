@@ -733,6 +733,8 @@ class AutofixProcessor {
         let validationPassed = result?.validation_passed || data?.validation_passed || false;
         let standardDetected = result?.standard_detected || data?.standard_detected || null;
         let validationReportAvailable = result?.validation_report_available || data?.validation_report_available || false;
+        // Phase 68B: validation_report_hash is the canonical 7th evidence field
+        let validationReportHash = result?.validation_report_hash || data?.validation_report_hash || null;
         let validatorRequired = true;
         let validatorAvailable = false;
         let outputintentOnly = false;
@@ -774,8 +776,9 @@ class AutofixProcessor {
         }
 
         // 4. Overclaim protection
-        let hasValidatorEvidence = !!(validatorName && validatorVersion && validationPerformed && validationPassed && standardDetected && validationReportAvailable);
-        
+        // Phase 68B: all 7 evidence fields required; validation_report_hash is canonical
+        let hasValidatorEvidence = !!(validatorName && validatorVersion && validationPerformed && validationPassed && standardDetected && (validationReportHash || validationReportAvailable));
+
         const validatePdfxApplied = appliedFixes.find(f => (f.fix_id || f.code) === 'VALIDATE_PDFX');
         if (validatePdfxApplied) {
             if (validatePdfxApplied.validation_passed && validatePdfxApplied.validation_performed && validatePdfxApplied.validator_name) {
@@ -785,7 +788,25 @@ class AutofixProcessor {
                 validatorName = validatePdfxApplied.validator_name;
                 validatorVersion = validatePdfxApplied.validator_version;
                 standardDetected = validatePdfxApplied.standard_detected;
-                validationReportAvailable = validatePdfxApplied.validation_report_available;
+                validationReportHash = validatePdfxApplied.validation_report_hash || null;
+                validationReportAvailable = validatePdfxApplied.validation_report_available || !!validationReportHash;
+                validatorAvailable = true;
+                complianceClaimAllowed = true;
+            }
+        }
+
+        // Phase 68B: VALIDATE_PDFA applied fix with complete 7-field evidence allows claim
+        const validatePdfaApplied = appliedFixes.find(f => (f.fix_id || f.code) === 'VALIDATE_PDFA');
+        if (validatePdfaApplied) {
+            if (validatePdfaApplied.validation_passed && validatePdfaApplied.validation_performed && validatePdfaApplied.validator_name && (validatePdfaApplied.validation_report_hash || validatePdfaApplied.validation_report_available)) {
+                hasValidatorEvidence = true;
+                validationPassed = true;
+                validationPerformed = true;
+                validatorName = validatePdfaApplied.validator_name;
+                validatorVersion = validatePdfaApplied.validator_version;
+                standardDetected = validatePdfaApplied.standard_detected;
+                validationReportHash = validatePdfaApplied.validation_report_hash || null;
+                validationReportAvailable = !!validationReportHash || validatePdfaApplied.validation_report_available;
                 validatorAvailable = true;
                 complianceClaimAllowed = true;
             }
@@ -802,10 +823,15 @@ class AutofixProcessor {
             certifiedPdfAllowedStandards = false;
         }
 
+        // Phase 68B: set standard-specific claims based on standard_detected; never claim PDF/X from PDF/A validation
         if (hasValidatorEvidence && !standardsGovernanceHasRisks) {
             standardCertified = true;
-            pdfxComplianceClaimed = true;
             complianceClaimAllowed = true;
+            if (standardDetected && /pdf\/x/i.test(standardDetected)) {
+                pdfxComplianceClaimed = true;
+            } else if (standardDetected && /pdf\/a/i.test(standardDetected)) {
+                pdfaComplianceClaimed = true;
+            }
         }
 
         const requestedUnsupportedStandardsFixes = skippedFixes.filter(f => standardsCapabilitiesList.includes(f.fix_id || f.code));
@@ -1841,6 +1867,8 @@ class AutofixProcessor {
                 validation_passed: validationPassed,
                 validator_name: validatorName,
                 validator_version: validatorVersion,
+                standard_detected: standardDetected,
+                validation_report_hash: validationReportHash,
                 validation_report_available: validationReportAvailable,
                 compliance_claim_allowed: complianceClaimAllowed,
                 outputintent_only: outputintentOnly,
@@ -1958,6 +1986,8 @@ class AutofixProcessor {
                 validation_passed: validationPassed,
                 validator_name: validatorName,
                 validator_version: validatorVersion,
+                standard_detected: standardDetected,
+                validation_report_hash: validationReportHash,
                 validation_report_available: validationReportAvailable,
                 compliance_claim_allowed: complianceClaimAllowed,
                 outputintent_only: outputintentOnly,

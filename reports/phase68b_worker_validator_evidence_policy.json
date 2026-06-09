@@ -1,0 +1,586 @@
+{
+  "generated_at": "2026-06-09T02:20:50.802Z",
+  "phase": "68B",
+  "repo": "ppos-preflight-worker",
+  "smoke_passed": true,
+  "input_mode": "ENGINE_REPORT",
+  "core_principle": "compliance_claim_allowed=true is only set when all 7 validator evidence fields are present (validation_performed, validation_passed, validator_name, validator_version, standard_detected, validation_report_hash, compliance_claim_allowed). Incomplete evidence → standard_certified=false/pdfx_compliance_claimed=false/pdfa_compliance_claimed=false/compliance_claim_allowed=false.",
+  "required_evidence_fields": [
+    "validation_performed",
+    "validation_passed",
+    "validator_name",
+    "validator_version",
+    "standard_detected",
+    "validation_report_hash",
+    "compliance_claim_allowed"
+  ],
+  "target_capabilities": [
+    "VALIDATE_PDFX",
+    "VALIDATE_PDFA",
+    "GENERATE_STANDARD_VALIDATION_REPORT",
+    "CONVERT_TO_PDFX_VALIDATED",
+    "CONVERT_TO_PDFA_VALIDATED"
+  ],
+  "results": [
+    {
+      "scenario": "FixRegistry standards_certification (Phase 68A) capabilities check",
+      "input_mode": "ENGINE_REPORT",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "veraPDF availability detection",
+      "input_mode": "ENGINE_REPORT",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "VALIDATE_PDFX — honest about PDF/X validator scope",
+      "input_mode": "ENGINE_REPORT",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "VALIDATE_PDFA — veraPDF integration or honest SKIPPED_UNSUPPORTED",
+      "input_mode": "ENGINE_REPORT",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "GENERATE_STANDARD_VALIDATION_REPORT — veraPDF-backed or honest scaffold",
+      "input_mode": "ENGINE_REPORT",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "CONVERT_TO_PDFX_VALIDATED — scaffolded, always SKIPPED_UNSUPPORTED",
+      "input_mode": "ENGINE_REPORT",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "CONVERT_TO_PDFA_VALIDATED — scaffolded, always SKIPPED_UNSUPPORTED",
+      "input_mode": "ENGINE_REPORT",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "VALIDATE_PDFA on clean_control.pdf — honest result regardless of compliance",
+      "input_mode": "ENGINE_REPORT",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "SYNTHETIC: VALIDATE_PDFA skipped — veraPDF not installed",
+      "input_mode": "SYNTHETIC_POLICY",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "SYNTHETIC: VALIDATE_PDFX skipped — no PDF/X validator",
+      "input_mode": "SYNTHETIC_POLICY",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "SYNTHETIC: GENERATE_STANDARD_VALIDATION_REPORT skipped — no real validator",
+      "input_mode": "SYNTHETIC_POLICY",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "SYNTHETIC: CONVERT_TO_PDFX_VALIDATED skipped unsupported",
+      "input_mode": "SYNTHETIC_POLICY",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "SYNTHETIC: CONVERT_TO_PDFA_VALIDATED skipped unsupported",
+      "input_mode": "SYNTHETIC_POLICY",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "SYNTHETIC: clean control — no standards activity",
+      "input_mode": "SYNTHETIC_POLICY",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: compliance_claim_allowed only when all 7 fields present — COMPLETE EVIDENCE",
+      "input_mode": "SYNTHETIC_POLICY",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": true,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": true,
+        "compliance_claim_allowed": true,
+        "validation_performed": true,
+        "validation_passed": true,
+        "validator_name": "veraPDF",
+        "validator_version": "1.25.0",
+        "standard_detected": "PDF/A-1b",
+        "validation_report_hash": "abc123def456",
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": true,
+        "compliance_claim_allowed": true,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: incomplete evidence — missing validation_report_hash — must reject claim",
+      "input_mode": "SYNTHETIC_POLICY",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": true,
+        "validation_passed": true,
+        "validator_name": "veraPDF",
+        "validator_version": "1.25.0",
+        "standard_detected": "PDF/A-1b",
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: overclaim — compliance_claim_allowed=true without evidence — must be rejected",
+      "input_mode": "SYNTHETIC_POLICY",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": true
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": true
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: standard_certified=false when evidence incomplete",
+      "input_mode": "SYNTHETIC_POLICY",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: certified.pdf not trusted by filename — skipped standards fix",
+      "input_mode": "SYNTHETIC_POLICY",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: evidence preservation across APPLIED/SKIPPED/FAILED buckets",
+      "input_mode": "SYNTHETIC_POLICY",
+      "status": "DEGRADED",
+      "standards_certification_governance": {
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "validation_performed": false,
+        "validation_passed": false,
+        "validator_name": null,
+        "validator_version": null,
+        "standard_detected": null,
+        "validation_report_hash": null,
+        "review_required": false
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_READY",
+        "standard_certified": false,
+        "compliance_claim_allowed": false,
+        "certified_pdf_allowed": false,
+        "review_required": false
+      },
+      "evidence_fields_present": true,
+      "pass": true,
+      "notes": "OK"
+    }
+  ]
+}
