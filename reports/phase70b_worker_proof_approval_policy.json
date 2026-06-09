@@ -1,0 +1,272 @@
+{
+  "timestamp": "2026-06-09T17:18:48.319Z",
+  "phase": "70B",
+  "repo": "ppos-preflight-worker",
+  "smoke_passed": true,
+  "input_mode": "ENGINE_REPORT_AUGMENTED",
+  "results": [
+    {
+      "scenario": "visual change detected — no proof supplied, status=PENDING blocks production",
+      "input_mode": "ENGINE_REPORT_AUGMENTED",
+      "status": "DEGRADED",
+      "proof_approval_governance": {
+        "proof_required": true,
+        "proof_available": false,
+        "proof_id": null,
+        "proof_status": "PENDING",
+        "visual_change_detected": true,
+        "review_required": true,
+        "production_certified": false,
+        "warnings": [
+          "Visual proof requires customer/operator approval before production progression.",
+          "Visual proof is required but no proof record is available."
+        ],
+        "evidence": {
+          "visual_diff_governance": {
+            "visual_change_detected": true,
+            "visual_diff_performed": true,
+            "visual_diff_required": true,
+            "max_changed_pixel_ratio": 0.18
+          },
+          "proof_id": null,
+          "proof_status": "PENDING",
+          "visual_change_detected": true
+        }
+      },
+      "artifact_trust_level": "FIXED_REVIEW_REQUIRED",
+      "review_required": true,
+      "production_certified": false,
+      "proof_required": true,
+      "proof_available": false,
+      "proof_id": null,
+      "proof_status": "PENDING",
+      "visual_change_detected": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "visual change detected — proof APPROVED, unblocks proof gate",
+      "input_mode": "ENGINE_REPORT_AUGMENTED",
+      "status": "DEGRADED",
+      "proof_approval_governance": {
+        "proof_required": true,
+        "proof_available": true,
+        "proof_id": "proof-abc-001",
+        "proof_status": "APPROVED",
+        "visual_change_detected": true,
+        "review_required": false,
+        "production_certified": false,
+        "warnings": [],
+        "evidence": {
+          "visual_diff_governance": {
+            "visual_change_detected": true,
+            "visual_diff_performed": true,
+            "visual_diff_required": true,
+            "max_changed_pixel_ratio": 0.09
+          },
+          "proof_id": "proof-abc-001",
+          "proof_status": "APPROVED",
+          "visual_change_detected": true
+        }
+      },
+      "artifact_trust_level": "FIXED_REVIEW_REQUIRED",
+      "review_required": true,
+      "production_certified": false,
+      "proof_required": true,
+      "proof_available": true,
+      "proof_id": "proof-abc-001",
+      "proof_status": "APPROVED",
+      "visual_change_detected": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "visual change detected — proof REJECTED, triggers remediation",
+      "input_mode": "ENGINE_REPORT_AUGMENTED",
+      "status": "DEGRADED",
+      "proof_approval_governance": {
+        "proof_required": true,
+        "proof_available": true,
+        "proof_id": "proof-xyz-002",
+        "proof_status": "REJECTED",
+        "visual_change_detected": true,
+        "review_required": true,
+        "production_certified": false,
+        "warnings": [
+          "Visual proof was rejected. Remediation or reupload is required."
+        ],
+        "evidence": {
+          "visual_diff_governance": {
+            "visual_change_detected": true,
+            "visual_diff_performed": true,
+            "visual_diff_required": true,
+            "max_changed_pixel_ratio": 0.3
+          },
+          "proof_id": "proof-xyz-002",
+          "proof_status": "REJECTED",
+          "visual_change_detected": true
+        }
+      },
+      "artifact_trust_level": "FIXED_REVIEW_REQUIRED",
+      "review_required": true,
+      "production_certified": false,
+      "proof_required": true,
+      "proof_available": true,
+      "proof_id": "proof-xyz-002",
+      "proof_status": "REJECTED",
+      "visual_change_detected": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "no visual change — proof_status=NOT_REQUIRED, no blocking",
+      "input_mode": "ENGINE_REPORT_AUGMENTED",
+      "status": "DEGRADED",
+      "proof_approval_governance": {
+        "proof_required": false,
+        "proof_available": false,
+        "proof_id": null,
+        "proof_status": "NOT_REQUIRED",
+        "visual_change_detected": false,
+        "review_required": false,
+        "production_certified": false,
+        "warnings": [],
+        "evidence": {
+          "visual_diff_governance": {
+            "visual_change_detected": false,
+            "visual_diff_performed": false,
+            "visual_diff_required": false,
+            "max_changed_pixel_ratio": 0
+          },
+          "proof_id": null,
+          "proof_status": "NOT_REQUIRED",
+          "visual_change_detected": false
+        }
+      },
+      "artifact_trust_level": "FIXED_READY",
+      "review_required": false,
+      "production_certified": false,
+      "proof_required": false,
+      "proof_available": false,
+      "proof_id": null,
+      "proof_status": "NOT_REQUIRED",
+      "visual_change_detected": false,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: visual_change_detected=true and proof!=APPROVED must block production",
+      "input_mode": "ENGINE_REPORT_AUGMENTED",
+      "status": "DEGRADED",
+      "proof_approval_governance": {
+        "proof_required": true,
+        "proof_available": false,
+        "proof_id": null,
+        "proof_status": "PENDING",
+        "visual_change_detected": true,
+        "review_required": true,
+        "production_certified": false,
+        "warnings": [
+          "Visual proof requires customer/operator approval before production progression.",
+          "Visual proof is required but no proof record is available."
+        ],
+        "evidence": {
+          "visual_diff_governance": {
+            "visual_change_detected": true,
+            "visual_diff_performed": true,
+            "visual_diff_required": true,
+            "max_changed_pixel_ratio": 0.25
+          },
+          "proof_id": null,
+          "proof_status": "PENDING",
+          "visual_change_detected": true
+        }
+      },
+      "artifact_trust_level": "FIXED_REVIEW_REQUIRED",
+      "review_required": true,
+      "production_certified": false,
+      "proof_required": true,
+      "proof_available": false,
+      "proof_id": null,
+      "proof_status": "PENDING",
+      "visual_change_detected": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: proof_approval_governance present in fix_audit.json and delta_report.json",
+      "input_mode": "ENGINE_REPORT_AUGMENTED",
+      "status": "DEGRADED",
+      "proof_approval_governance": {
+        "proof_required": false,
+        "proof_available": false,
+        "proof_id": null,
+        "proof_status": "NOT_REQUIRED",
+        "visual_change_detected": false,
+        "review_required": false,
+        "production_certified": false,
+        "warnings": [],
+        "evidence": {
+          "visual_diff_governance": {
+            "visual_change_detected": false,
+            "visual_diff_performed": false,
+            "visual_diff_required": false,
+            "max_changed_pixel_ratio": 0
+          },
+          "proof_id": null,
+          "proof_status": "NOT_REQUIRED",
+          "visual_change_detected": false
+        }
+      },
+      "artifact_trust_level": "FIXED_READY",
+      "review_required": false,
+      "production_certified": false,
+      "proof_required": false,
+      "proof_available": false,
+      "proof_id": null,
+      "proof_status": "NOT_REQUIRED",
+      "visual_change_detected": false,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: standards overclaim blocked when proof pending",
+      "input_mode": "ENGINE_REPORT_AUGMENTED",
+      "status": "DEGRADED",
+      "proof_approval_governance": {
+        "proof_required": true,
+        "proof_available": false,
+        "proof_id": null,
+        "proof_status": "PENDING",
+        "visual_change_detected": true,
+        "review_required": true,
+        "production_certified": false,
+        "warnings": [
+          "Visual proof requires customer/operator approval before production progression.",
+          "Visual proof is required but no proof record is available."
+        ],
+        "evidence": {
+          "visual_diff_governance": {
+            "visual_change_detected": true,
+            "visual_diff_performed": false,
+            "visual_diff_required": true,
+            "max_changed_pixel_ratio": 0
+          },
+          "proof_id": null,
+          "proof_status": "PENDING",
+          "visual_change_detected": true
+        }
+      },
+      "artifact_trust_level": "FIXED_REVIEW_REQUIRED",
+      "review_required": true,
+      "production_certified": false,
+      "proof_required": true,
+      "proof_available": false,
+      "proof_id": null,
+      "proof_status": "PENDING",
+      "visual_change_detected": true,
+      "pass": true,
+      "notes": "OK"
+    }
+  ]
+}

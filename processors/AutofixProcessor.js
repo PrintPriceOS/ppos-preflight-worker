@@ -1613,6 +1613,64 @@ class AutofixProcessor {
             productionCertified = false;
         }
 
+        // --- Phase 70B: Proof Approval Governance ---
+        // Consumes visual_diff_governance; emits proof_approval_governance.
+        // proof_status from job input (set by Service/Control Plane when customer approves/rejects).
+        const proofId = data.proof_id || input?.proof_id || rawSpecs?.proof_id || payload?.proof_id || null;
+        const incomingProofStatus = data.proof_status || input?.proof_status || rawSpecs?.proof_status || payload?.proof_status || null;
+
+        const proofRequired = visualChangeDetected;
+        const proofAvailable = !!(proofId && incomingProofStatus);
+
+        let proofStatus;
+        if (!proofRequired) {
+            proofStatus = 'NOT_REQUIRED';
+        } else if (incomingProofStatus && ['PENDING', 'APPROVED', 'REJECTED'].includes(incomingProofStatus)) {
+            proofStatus = incomingProofStatus;
+        } else {
+            proofStatus = 'PENDING';
+        }
+
+        const proofApprovalGovernanceHasRisks = proofRequired && proofStatus !== 'APPROVED';
+        const proofApprovalWarnings = [];
+
+        if (proofRequired && proofStatus === 'PENDING') {
+            proofApprovalWarnings.push("Visual proof requires customer/operator approval before production progression.");
+        }
+        if (proofRequired && proofStatus === 'REJECTED') {
+            proofApprovalWarnings.push("Visual proof was rejected. Remediation or reupload is required.");
+        }
+        if (proofRequired && !proofAvailable) {
+            proofApprovalWarnings.push("Visual proof is required but no proof record is available.");
+        }
+
+        const proofApprovalGovernance = {
+            proof_required: proofRequired,
+            proof_available: proofAvailable,
+            proof_id: proofId,
+            proof_status: proofStatus,
+            visual_change_detected: visualChangeDetected,
+            review_required: proofApprovalGovernanceHasRisks,
+            production_certified: false,
+            warnings: proofApprovalWarnings,
+            evidence: {
+                visual_diff_governance: {
+                    visual_change_detected: visualChangeDetected,
+                    visual_diff_performed: visualDiffPerformed,
+                    visual_diff_required: visualDiffRequired,
+                    max_changed_pixel_ratio: changedPixelRatioMax
+                },
+                proof_id: proofId,
+                proof_status: proofStatus,
+                visual_change_detected: visualChangeDetected
+            }
+        };
+
+        if (proofApprovalGovernanceHasRisks) {
+            requiresReviewPolicy = true;
+            productionCertified = false;
+        }
+
         // --- Phase 56B: Artifact Trust Policy Evaluation ---
         let operatorApproved = data.operator_approved === true || input?.operator_approved === true || payload?.operator_approved === true;
         let blockedDomains = [];
@@ -1627,6 +1685,7 @@ class AutofixProcessor {
         if (fontGovernanceHasRisks) blockedDomains.push('font_governance');
         if (transparencyOverprintPhysicalGovernanceHasRisks) blockedDomains.push('transparency_overprint_physical_governance');
         if (visualDiffGovernanceHasRisks) blockedDomains.push('visual_diff_governance');
+        if (proofApprovalGovernanceHasRisks) blockedDomains.push('proof_approval_governance');
 
         let artifactTrust = {
             trust_level: "RAW_INPUT",
@@ -1968,6 +2027,7 @@ class AutofixProcessor {
             font_governance: fontGovernance,
             transparency_overprint_physical_governance: transparencyOverprintPhysicalGovernance,
             visual_diff_governance: visualDiffGovernance,
+            proof_approval_governance: proofApprovalGovernance,
             toolchain: toolchain,
             created_at: new Date().toISOString()
         };
@@ -2088,6 +2148,7 @@ class AutofixProcessor {
             font_governance: fontGovernance,
             transparency_overprint_physical_governance: transparencyOverprintPhysicalGovernance,
             visual_diff_governance: visualDiffGovernance,
+            proof_approval_governance: proofApprovalGovernance,
             artifact_trust: artifactTrust
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });
