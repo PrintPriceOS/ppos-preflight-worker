@@ -1422,6 +1422,92 @@ class AutofixProcessor {
             });
         }
 
+        // --- Phase 67B: Transparency / Overprint Physical Governance ---
+        const transparencyOverprintPhysicalFixesList = [
+            'FLATTEN_TRANSPARENCY', 'NORMALIZE_BLEND_MODES',
+            'FLATTEN_OVERPRINT', 'SIMULATE_OVERPRINT_PREVIEW'
+        ];
+
+        const appliedTransparencyPhysicalFixes = appliedFixes.filter(f => transparencyOverprintPhysicalFixesList.includes(f.fix_id || f.code));
+        const skippedTransparencyPhysicalFixes = skippedFixes.filter(f => transparencyOverprintPhysicalFixesList.includes(f.fix_id || f.code));
+        const failedTransparencyPhysicalFixes = failedFixes.filter(f => transparencyOverprintPhysicalFixesList.includes(f.fix_id || f.code));
+        const allTransparencyPhysicalFixes = [...appliedTransparencyPhysicalFixes, ...skippedTransparencyPhysicalFixes, ...failedTransparencyPhysicalFixes];
+
+        let transparencyPhysicalWarnings = [];
+        let transparencyPhysicalReviewReasons = [];
+        let transparencyPhysicalEvidence = {};
+
+        let physicalRenderingSafetyProven = false;
+        let physicalVisualChangeExpected = false;
+
+        allTransparencyPhysicalFixes.forEach(f => {
+            if (!f.evidence) {
+                const synthesized = {
+                    status: f.status,
+                    capability: f.fix_id || f.code
+                };
+                if (f.reason || f.skip_reason) synthesized.reason = f.reason || f.skip_reason;
+                if (f.warnings) synthesized.warnings = f.warnings;
+                if (f.limitations) synthesized.limitations = f.limitations;
+                if (typeof f.rendering_safety_proven === 'boolean') synthesized.rendering_safety_proven = f.rendering_safety_proven;
+                if (typeof f.visual_change_expected === 'boolean') synthesized.visual_change_expected = f.visual_change_expected;
+                f.evidence = synthesized;
+            }
+            const id = f.fix_id || f.code;
+            transparencyPhysicalEvidence[id] = f.evidence;
+
+            if (f.evidence.rendering_safety_proven === true) physicalRenderingSafetyProven = true;
+            if (f.evidence.visual_change_expected === true) physicalVisualChangeExpected = true;
+        });
+
+        const physicalFlattenApplied = appliedTransparencyPhysicalFixes.length > 0;
+        const transparencyOverprintPhysicalGovernanceHasRisks = allTransparencyPhysicalFixes.length > 0;
+
+        if (transparencyOverprintPhysicalGovernanceHasRisks) {
+            transparencyPhysicalWarnings.push("Transparency/overprint physical changes (flattening, blend mode normalization, overprint simulation) always require visual review.");
+            allTransparencyPhysicalFixes.forEach(f => {
+                const id = f.fix_id || f.code;
+                if (!transparencyPhysicalReviewReasons.includes(id)) transparencyPhysicalReviewReasons.push(id);
+            });
+        }
+
+        if (physicalFlattenApplied) {
+            transparencyPhysicalWarnings.push("Physical flattening was applied. rendering_safety_proven=false until visual review confirms output.");
+        }
+
+        const transparencyOverprintPhysicalGovernance = {
+            review_required: true,
+            production_certified: false,
+            certified_pdf_allowed: false,
+            physical_flatten_applied: physicalFlattenApplied,
+            physical_flatten_attempted: transparencyOverprintPhysicalGovernanceHasRisks,
+            flatten_transparency_applied: appliedTransparencyPhysicalFixes.some(f => (f.fix_id || f.code) === 'FLATTEN_TRANSPARENCY'),
+            normalize_blend_modes_applied: appliedTransparencyPhysicalFixes.some(f => (f.fix_id || f.code) === 'NORMALIZE_BLEND_MODES'),
+            flatten_overprint_applied: appliedTransparencyPhysicalFixes.some(f => (f.fix_id || f.code) === 'FLATTEN_OVERPRINT'),
+            simulate_overprint_preview_applied: appliedTransparencyPhysicalFixes.some(f => (f.fix_id || f.code) === 'SIMULATE_OVERPRINT_PREVIEW'),
+            rendering_safety_proven: physicalRenderingSafetyProven,
+            visual_change_expected: physicalVisualChangeExpected || physicalFlattenApplied,
+            standard_certified: false,
+            pdfx_compliance_claimed: false,
+            pdfa_compliance_claimed: false,
+            compliance_claim_allowed: false,
+            review_required_reasons: transparencyPhysicalReviewReasons,
+            warnings: transparencyPhysicalWarnings,
+            evidence: transparencyPhysicalEvidence
+        };
+
+        if (transparencyOverprintPhysicalGovernanceHasRisks) {
+            requiresReviewPolicy = true;
+            productionCertified = false;
+            standardCertified = false;
+            pdfxComplianceClaimed = false;
+            pdfaComplianceClaimed = false;
+            complianceClaimAllowed = false;
+            transparencyPhysicalReviewReasons.forEach(r => {
+                if (!reviewRequiredReasons.includes(r)) reviewRequiredReasons.push(r);
+            });
+        }
+
         // --- Phase 56B: Artifact Trust Policy Evaluation ---
         let operatorApproved = data.operator_approved === true || input?.operator_approved === true || payload?.operator_approved === true;
         let blockedDomains = [];
@@ -1434,6 +1520,7 @@ class AutofixProcessor {
         if (inkGovernanceHasRisks) blockedDomains.push('ink_governance');
         if (selectiveImageGovernanceHasRisks) blockedDomains.push('selective_image_governance');
         if (fontGovernanceHasRisks) blockedDomains.push('font_governance');
+        if (transparencyOverprintPhysicalGovernanceHasRisks) blockedDomains.push('transparency_overprint_physical_governance');
 
         let artifactTrust = {
             trust_level: "RAW_INPUT",
@@ -1771,6 +1858,7 @@ class AutofixProcessor {
             ink_governance: inkGovernance,
             selective_image_governance: selectiveImageGovernance,
             font_governance: fontGovernance,
+            transparency_overprint_physical_governance: transparencyOverprintPhysicalGovernance,
             toolchain: toolchain,
             created_at: new Date().toISOString()
         };
@@ -1887,6 +1975,7 @@ class AutofixProcessor {
             ink_governance: inkGovernance,
             selective_image_governance: selectiveImageGovernance,
             font_governance: fontGovernance,
+            transparency_overprint_physical_governance: transparencyOverprintPhysicalGovernance,
             artifact_trust: artifactTrust
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });

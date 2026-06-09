@@ -1,0 +1,757 @@
+{
+  "timestamp": "2026-06-09T01:30:31.995Z",
+  "phase": "67B",
+  "repo": "ppos-preflight-worker",
+  "smoke_passed": true,
+  "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+  "results": [
+    {
+      "scenario": "SYNTHETIC: FLATTEN_TRANSPARENCY skipped unsupported",
+      "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+      "status": "COMPLETED",
+      "transparency_overprint_physical_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "physical_flatten_applied": false,
+        "physical_flatten_attempted": true,
+        "flatten_transparency_applied": false,
+        "normalize_blend_modes_applied": false,
+        "flatten_overprint_applied": false,
+        "simulate_overprint_preview_applied": false,
+        "rendering_safety_proven": false,
+        "visual_change_expected": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLATTEN_TRANSPARENCY"
+        ],
+        "warnings": [
+          "Transparency/overprint physical changes (flattening, blend mode normalization, overprint simulation) always require visual review."
+        ],
+        "evidence": {
+          "FLATTEN_TRANSPARENCY": {
+            "rendering_safety_proven": false,
+            "visual_change_expected": true,
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "transparency_overprint",
+          "transparency_overprint_physical_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "rendering_safety_proven": false,
+      "visual_change_expected": true,
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "SYNTHETIC: NORMALIZE_BLEND_MODES skipped unsupported",
+      "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+      "status": "COMPLETED",
+      "transparency_overprint_physical_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "physical_flatten_applied": false,
+        "physical_flatten_attempted": true,
+        "flatten_transparency_applied": false,
+        "normalize_blend_modes_applied": false,
+        "flatten_overprint_applied": false,
+        "simulate_overprint_preview_applied": false,
+        "rendering_safety_proven": false,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "NORMALIZE_BLEND_MODES"
+        ],
+        "warnings": [
+          "Transparency/overprint physical changes (flattening, blend mode normalization, overprint simulation) always require visual review."
+        ],
+        "evidence": {
+          "NORMALIZE_BLEND_MODES": {
+            "rendering_safety_proven": false,
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "transparency_overprint",
+          "transparency_overprint_physical_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "rendering_safety_proven": false,
+      "visual_change_expected": false,
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "SYNTHETIC: FLATTEN_OVERPRINT skipped unsupported",
+      "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+      "status": "COMPLETED",
+      "transparency_overprint_physical_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "physical_flatten_applied": false,
+        "physical_flatten_attempted": true,
+        "flatten_transparency_applied": false,
+        "normalize_blend_modes_applied": false,
+        "flatten_overprint_applied": false,
+        "simulate_overprint_preview_applied": false,
+        "rendering_safety_proven": false,
+        "visual_change_expected": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLATTEN_OVERPRINT"
+        ],
+        "warnings": [
+          "Transparency/overprint physical changes (flattening, blend mode normalization, overprint simulation) always require visual review."
+        ],
+        "evidence": {
+          "FLATTEN_OVERPRINT": {
+            "rendering_safety_proven": false,
+            "visual_change_expected": true,
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "transparency_overprint",
+          "transparency_overprint_physical_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "rendering_safety_proven": false,
+      "visual_change_expected": true,
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "SYNTHETIC: SIMULATE_OVERPRINT_PREVIEW skipped unsupported",
+      "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+      "status": "COMPLETED",
+      "transparency_overprint_physical_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "physical_flatten_applied": false,
+        "physical_flatten_attempted": true,
+        "flatten_transparency_applied": false,
+        "normalize_blend_modes_applied": false,
+        "flatten_overprint_applied": false,
+        "simulate_overprint_preview_applied": false,
+        "rendering_safety_proven": false,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "SIMULATE_OVERPRINT_PREVIEW"
+        ],
+        "warnings": [
+          "Transparency/overprint physical changes (flattening, blend mode normalization, overprint simulation) always require visual review."
+        ],
+        "evidence": {
+          "SIMULATE_OVERPRINT_PREVIEW": {
+            "rendering_safety_proven": false,
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "transparency_overprint",
+          "transparency_overprint_physical_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "rendering_safety_proven": false,
+      "visual_change_expected": false,
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "SYNTHETIC: mixed physical fixes all skipped",
+      "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+      "status": "COMPLETED",
+      "transparency_overprint_physical_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "physical_flatten_applied": false,
+        "physical_flatten_attempted": true,
+        "flatten_transparency_applied": false,
+        "normalize_blend_modes_applied": false,
+        "flatten_overprint_applied": false,
+        "simulate_overprint_preview_applied": false,
+        "rendering_safety_proven": false,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLATTEN_TRANSPARENCY",
+          "FLATTEN_OVERPRINT"
+        ],
+        "warnings": [
+          "Transparency/overprint physical changes (flattening, blend mode normalization, overprint simulation) always require visual review."
+        ],
+        "evidence": {
+          "FLATTEN_TRANSPARENCY": {
+            "rendering_safety_proven": false,
+            "implemented": false
+          },
+          "FLATTEN_OVERPRINT": {
+            "rendering_safety_proven": false,
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "transparency_overprint",
+          "transparency_overprint_physical_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "rendering_safety_proven": false,
+      "visual_change_expected": false,
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "SYNTHETIC: clean control no action",
+      "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+      "status": "COMPLETED",
+      "transparency_overprint_physical_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "physical_flatten_applied": false,
+        "physical_flatten_attempted": false,
+        "flatten_transparency_applied": false,
+        "normalize_blend_modes_applied": false,
+        "flatten_overprint_applied": false,
+        "simulate_overprint_preview_applied": false,
+        "rendering_safety_proven": false,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [],
+        "warnings": [],
+        "evidence": {}
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "transparency_overprint"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": false,
+      "rendering_safety_proven": false,
+      "visual_change_expected": false,
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: physical flatten APPLIED must force FIXED_REVIEW_REQUIRED",
+      "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+      "status": "COMPLETED",
+      "transparency_overprint_physical_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "physical_flatten_applied": true,
+        "physical_flatten_attempted": true,
+        "flatten_transparency_applied": true,
+        "normalize_blend_modes_applied": false,
+        "flatten_overprint_applied": false,
+        "simulate_overprint_preview_applied": false,
+        "rendering_safety_proven": false,
+        "visual_change_expected": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLATTEN_TRANSPARENCY"
+        ],
+        "warnings": [
+          "Transparency/overprint physical changes (flattening, blend mode normalization, overprint simulation) always require visual review.",
+          "Physical flattening was applied. rendering_safety_proven=false until visual review confirms output."
+        ],
+        "evidence": {
+          "FLATTEN_TRANSPARENCY": {
+            "rendering_safety_proven": false,
+            "visual_change_expected": true
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "transparency_overprint",
+          "transparency_overprint_physical_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "rendering_safety_proven": false,
+      "visual_change_expected": true,
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: rendering_safety_proven must never leak as true",
+      "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+      "status": "COMPLETED",
+      "transparency_overprint_physical_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "physical_flatten_applied": false,
+        "physical_flatten_attempted": true,
+        "flatten_transparency_applied": false,
+        "normalize_blend_modes_applied": false,
+        "flatten_overprint_applied": false,
+        "simulate_overprint_preview_applied": false,
+        "rendering_safety_proven": false,
+        "visual_change_expected": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLATTEN_OVERPRINT"
+        ],
+        "warnings": [
+          "Transparency/overprint physical changes (flattening, blend mode normalization, overprint simulation) always require visual review."
+        ],
+        "evidence": {
+          "FLATTEN_OVERPRINT": {
+            "rendering_safety_proven": false,
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "transparency_overprint",
+          "transparency_overprint_physical_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "rendering_safety_proven": false,
+      "visual_change_expected": false,
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: visual_change_expected must be preserved from evidence",
+      "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+      "status": "COMPLETED",
+      "transparency_overprint_physical_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "physical_flatten_applied": false,
+        "physical_flatten_attempted": true,
+        "flatten_transparency_applied": false,
+        "normalize_blend_modes_applied": false,
+        "flatten_overprint_applied": false,
+        "simulate_overprint_preview_applied": false,
+        "rendering_safety_proven": false,
+        "visual_change_expected": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLATTEN_TRANSPARENCY"
+        ],
+        "warnings": [
+          "Transparency/overprint physical changes (flattening, blend mode normalization, overprint simulation) always require visual review."
+        ],
+        "evidence": {
+          "FLATTEN_TRANSPARENCY": {
+            "visual_change_expected": true,
+            "rendering_safety_proven": false,
+            "implemented": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "transparency_overprint",
+          "transparency_overprint_physical_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "rendering_safety_proven": false,
+      "visual_change_expected": true,
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: standards overclaim from physical fix must be rejected",
+      "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+      "status": "COMPLETED",
+      "transparency_overprint_physical_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "physical_flatten_applied": true,
+        "physical_flatten_attempted": true,
+        "flatten_transparency_applied": true,
+        "normalize_blend_modes_applied": false,
+        "flatten_overprint_applied": false,
+        "simulate_overprint_preview_applied": false,
+        "rendering_safety_proven": false,
+        "visual_change_expected": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLATTEN_TRANSPARENCY"
+        ],
+        "warnings": [
+          "Transparency/overprint physical changes (flattening, blend mode normalization, overprint simulation) always require visual review.",
+          "Physical flattening was applied. rendering_safety_proven=false until visual review confirms output."
+        ],
+        "evidence": {
+          "FLATTEN_TRANSPARENCY": {
+            "rendering_safety_proven": false
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "transparency_overprint",
+          "standards_certification",
+          "transparency_overprint_physical_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "rendering_safety_proven": false,
+      "visual_change_expected": true,
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: evidence preservation across applied/skipped/failed buckets",
+      "input_mode": "SYNTHETIC_POLICY_FALLBACK",
+      "status": "COMPLETED",
+      "transparency_overprint_physical_governance": {
+        "review_required": true,
+        "production_certified": false,
+        "certified_pdf_allowed": false,
+        "physical_flatten_applied": true,
+        "physical_flatten_attempted": true,
+        "flatten_transparency_applied": true,
+        "normalize_blend_modes_applied": false,
+        "flatten_overprint_applied": false,
+        "simulate_overprint_preview_applied": false,
+        "rendering_safety_proven": false,
+        "visual_change_expected": true,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "review_required_reasons": [
+          "FLATTEN_TRANSPARENCY",
+          "NORMALIZE_BLEND_MODES",
+          "FLATTEN_OVERPRINT"
+        ],
+        "warnings": [
+          "Transparency/overprint physical changes (flattening, blend mode normalization, overprint simulation) always require visual review.",
+          "Physical flattening was applied. rendering_safety_proven=false until visual review confirms output."
+        ],
+        "evidence": {
+          "FLATTEN_TRANSPARENCY": {
+            "rendering_safety_proven": false,
+            "visual_change_expected": true
+          },
+          "NORMALIZE_BLEND_MODES": {
+            "rendering_safety_proven": false,
+            "implemented": false
+          },
+          "FLATTEN_OVERPRINT": {
+            "rendering_safety_proven": false,
+            "error": "Tool error"
+          }
+        }
+      },
+      "artifact_trust": {
+        "trust_level": "FIXED_REVIEW_REQUIRED",
+        "primary_artifact_type": "review_pdf",
+        "primary_artifact_filename": "fixed.pdf",
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "customer_visible": false,
+        "certified_pdf_allowed": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "blocked_by_governance_domains": [
+          "transparency_overprint",
+          "transparency_overprint_physical_governance"
+        ],
+        "primary_disallowed_reasons": [],
+        "certification_labels": [],
+        "warnings": [
+          "OutputIntent injection alone does not prove PDF/X compliance."
+        ],
+        "evidence": {
+          "primary_selection_reason": "Review required."
+        }
+      },
+      "evidence_present": true,
+      "rendering_safety_proven": false,
+      "visual_change_expected": true,
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "pass": true,
+      "notes": "OK"
+    }
+  ]
+}
