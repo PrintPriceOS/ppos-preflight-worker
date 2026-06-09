@@ -1534,6 +1534,85 @@ class AutofixProcessor {
             });
         }
 
+        // --- Phase 69B: Visual Diff Governance ---
+        const visualDiffEvidence = result?.visual_diff_evidence || result?.visual_diff || {};
+        const renderPerformed = visualDiffEvidence.render_performed || result?.render_performed || false;
+        const diffPerformed = visualDiffEvidence.diff_performed || result?.diff_performed || false;
+        const pagesRendered = visualDiffEvidence.pages_rendered ?? result?.pages_rendered ?? 0;
+        const pagesCompared = visualDiffEvidence.pages_compared ?? result?.pages_compared ?? 0;
+        const changedPixelRatioMax = visualDiffEvidence.changed_pixel_ratio_max ?? result?.changed_pixel_ratio_max ?? 0;
+        const changedPixelRatioAvg = visualDiffEvidence.changed_pixel_ratio_avg ?? result?.changed_pixel_ratio_avg ?? 0;
+        const dimensionsMatch = visualDiffEvidence.dimensions_match ?? result?.dimensions_match ?? true;
+        const renderTool = visualDiffEvidence.render_tool || result?.render_tool || null;
+        const renderToolVersion = visualDiffEvidence.render_tool_version || result?.render_tool_version || null;
+        const diffImages = visualDiffEvidence.diff_images || result?.diff_images || [];
+        const thumbnails = visualDiffEvidence.thumbnails || result?.thumbnails || [];
+        const rawVisualDiffWarnings = visualDiffEvidence.warnings || result?.visual_diff_warnings || [];
+        const visualDiffLimitations = visualDiffEvidence.limitations || result?.visual_diff_limitations || [];
+
+        // Visual diff is required whenever visually sensitive fixes were attempted
+        const visualDiffRequired =
+            physicalFlattenApplied ||
+            physicalVisualChangeExpected ||
+            visualChangeExpectedSelectiveImage ||
+            (inkFixApplied && inkGovernanceHasRisks) ||
+            appliedFixes.some(f => f.visually_sensitive === true || f.destructive === true);
+
+        const visualChangeDetectedFromEvidence = diffPerformed && changedPixelRatioMax > 0;
+        const visualChangeDetectedFromGovernance = physicalVisualChangeExpected || visualChangeExpectedSelectiveImage || (inkFixApplied && inkGovernanceHasRisks);
+        const visualChangeDetected = visualChangeDetectedFromEvidence || visualChangeDetectedFromGovernance;
+
+        const renderToolGap = visualDiffRequired && !renderPerformed && !renderTool;
+        const visualDiffPerformed = renderPerformed && diffPerformed;
+        const visualReviewRequired = visualChangeDetected || (visualDiffRequired && !visualDiffPerformed);
+        const proofArtifactsAvailable = diffImages.length > 0 || thumbnails.length > 0;
+
+        const visualDiffGovernanceHasRisks = visualReviewRequired;
+        const visualDiffGovernanceWarnings = [...rawVisualDiffWarnings];
+
+        if (visualDiffRequired && !visualDiffPerformed) {
+            visualDiffGovernanceWarnings.push("Visual diff was required but not performed. Review required before production progression.");
+        }
+        if (renderToolGap) {
+            visualDiffGovernanceWarnings.push("Rendering tool unavailable. Visual diff could not be performed.");
+        }
+        if (visualChangeDetected) {
+            visualDiffGovernanceWarnings.push("Visual change detected or expected. Human review required.");
+        }
+
+        const visualDiffGovernance = {
+            visual_diff_required: visualDiffRequired,
+            visual_diff_performed: visualDiffPerformed,
+            visual_change_detected: visualChangeDetected,
+            visual_review_required: visualReviewRequired,
+            render_tool_gap: renderToolGap,
+            max_changed_pixel_ratio: changedPixelRatioMax,
+            proof_artifacts_available: proofArtifactsAvailable,
+            production_certified: false,
+            standard_certified: false,
+            warnings: visualDiffGovernanceWarnings,
+            evidence: {
+                render_performed: renderPerformed,
+                diff_performed: diffPerformed,
+                pages_rendered: pagesRendered,
+                pages_compared: pagesCompared,
+                changed_pixel_ratio_max: changedPixelRatioMax,
+                changed_pixel_ratio_avg: changedPixelRatioAvg,
+                dimensions_match: dimensionsMatch,
+                render_tool: renderTool,
+                render_tool_version: renderToolVersion,
+                diff_images: diffImages,
+                thumbnails: thumbnails,
+                warnings: rawVisualDiffWarnings,
+                limitations: visualDiffLimitations
+            }
+        };
+
+        if (visualDiffGovernanceHasRisks) {
+            requiresReviewPolicy = true;
+            productionCertified = false;
+        }
+
         // --- Phase 56B: Artifact Trust Policy Evaluation ---
         let operatorApproved = data.operator_approved === true || input?.operator_approved === true || payload?.operator_approved === true;
         let blockedDomains = [];
@@ -1547,6 +1626,7 @@ class AutofixProcessor {
         if (selectiveImageGovernanceHasRisks) blockedDomains.push('selective_image_governance');
         if (fontGovernanceHasRisks) blockedDomains.push('font_governance');
         if (transparencyOverprintPhysicalGovernanceHasRisks) blockedDomains.push('transparency_overprint_physical_governance');
+        if (visualDiffGovernanceHasRisks) blockedDomains.push('visual_diff_governance');
 
         let artifactTrust = {
             trust_level: "RAW_INPUT",
@@ -1887,6 +1967,7 @@ class AutofixProcessor {
             selective_image_governance: selectiveImageGovernance,
             font_governance: fontGovernance,
             transparency_overprint_physical_governance: transparencyOverprintPhysicalGovernance,
+            visual_diff_governance: visualDiffGovernance,
             toolchain: toolchain,
             created_at: new Date().toISOString()
         };
@@ -2006,6 +2087,7 @@ class AutofixProcessor {
             selective_image_governance: selectiveImageGovernance,
             font_governance: fontGovernance,
             transparency_overprint_physical_governance: transparencyOverprintPhysicalGovernance,
+            visual_diff_governance: visualDiffGovernance,
             artifact_trust: artifactTrust
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });

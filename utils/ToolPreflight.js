@@ -1,6 +1,9 @@
 const util = require('util');
 const { exec } = require('child_process');
+const os = require('os');
 const execAsync = util.promisify(exec);
+
+const whichCmd = os.platform() === 'win32' ? 'where' : 'which';
 
 class ToolPreflight {
     /**
@@ -64,6 +67,7 @@ class ToolPreflight {
                 const searchCmd = isWindows ? `where ${tool}` : `which ${tool}`;
                 const { stdout } = await execAsync(searchCmd, { timeout: 3000 });
                 binPath = stdout.trim().split('\n')[0].trim(); // Get first match
+
                 if (binPath) {
                     version = await probeVersion(tool, binPath);
                     available = true;

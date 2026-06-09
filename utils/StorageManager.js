@@ -15,7 +15,7 @@ class StorageManager {
         if (!tenantId || !jobId) {
             throw new Error('[STORAGE-ERR] tenantId and jobId are REQUIRED for isolation.');
         }
-        return path.join(this.basePath, 'tenants', tenantId, 'jobs', jobId);
+        return path.resolve(this.basePath, 'tenants', tenantId, 'jobs', jobId);
     }
 
     getJobSubfolder(tenantId, jobId, subfolder) {
@@ -50,7 +50,7 @@ class StorageManager {
     }
 
     verifyPathIsolation(tenantId, targetPath) {
-        const tenantRoot = path.join(this.basePath, 'tenants', tenantId);
+        const tenantRoot = path.resolve(this.basePath, 'tenants', tenantId);
         const resolvedPath = path.resolve(targetPath);
         if (!resolvedPath.startsWith(tenantRoot)) {
             throw new Error(`CRITICAL: Isolation breach detected for tenant ${tenantId}.`);
