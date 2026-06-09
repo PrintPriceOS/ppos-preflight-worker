@@ -1671,6 +1671,96 @@ class AutofixProcessor {
             productionCertified = false;
         }
 
+        // --- Phase 62F-B: Heavy PDF Probe Governance ---
+        // Extract heavy_pdf_probe_governance from engine result defensively.
+        // Supports both inline result fields and nested governance object.
+        const engineHeavyPdfGov = result?.heavy_pdf_probe_governance || {};
+        const heavyPdfDetected = engineHeavyPdfGov.heavy_pdf_detected || result?.heavy_pdf_detected || false;
+        const heavyPdfFileSizeBytes = engineHeavyPdfGov.file_size_bytes || result?.file_size_bytes || null;
+        const heavyPdfFileSizeMb = engineHeavyPdfGov.file_size_mb || result?.file_size_mb || null;
+        const heavyPdfPageCount = engineHeavyPdfGov.page_count || result?.page_count || null;
+        const probeSemanticApplied = engineHeavyPdfGov.probe_semantics_applied || false;
+        const heavyPdfAnalysisDegraded = engineHeavyPdfGov.analysis_degraded || false;
+        const heavyPdfDegradedButUsable = engineHeavyPdfGov.degraded_but_usable || false;
+        const heavyPdfFatalDocumentFailure = engineHeavyPdfGov.fatal_document_failure || false;
+        const heavyPdfCertifiable = engineHeavyPdfGov.certifiable || false;
+        const heavyPdfReviewRequired = engineHeavyPdfGov.review_required || false;
+        const heavyPdfProbeSummary = engineHeavyPdfGov.probe_summary || {};
+        const heavyPdfToolSemantics = engineHeavyPdfGov.tools || {};
+        const heavyPdfGovWarnings = engineHeavyPdfGov.warnings || [];
+        const heavyPdfReviewRequiredReasons = engineHeavyPdfGov.review_required_reasons || [];
+        const heavyPdfEvidence = engineHeavyPdfGov.evidence || {};
+
+        // Also extract analysisIntegrity.probeSemantics if present
+        const probeSemanticsMeta = result?.analysisIntegrity?.probeSemantics || result?.probe_semantics || {};
+
+        // Determine strict_forensic_mode from incoming data
+        const strictForensicMode = data.strict_forensic_mode ?? input?.strict_forensic_mode ?? rawSpecs?.strict_forensic_mode ?? payload?.strict_forensic_mode ?? false;
+
+        // Build heavy_pdf_probe_governance output for Worker artifacts
+        const heavyPdfProbeGovernanceHasRisks = heavyPdfReviewRequired || heavyPdfFatalDocumentFailure || (heavyPdfAnalysisDegraded && !heavyPdfDegradedButUsable);
+        const heavyPdfGovernanceWarningsOut = [...heavyPdfGovWarnings];
+
+        if (heavyPdfDetected && heavyPdfAnalysisDegraded) {
+            heavyPdfGovernanceWarningsOut.push('Heavy PDF analysis completed with probe warnings.');
+        }
+        if (heavyPdfToolSemantics.qpdf && (heavyPdfToolSemantics.qpdf.semantic_status === 'WARNING_ONLY' || heavyPdfToolSemantics.qpdf.semantic_status === 'SUCCESS_WITH_WARNINGS')) {
+            heavyPdfGovernanceWarningsOut.push('qpdf reported structural warnings that require review.');
+        }
+        if (heavyPdfToolSemantics.pdfimages && (heavyPdfToolSemantics.pdfimages.semantic_status === 'WARNING_ONLY' || heavyPdfToolSemantics.pdfimages.semantic_status === 'SUCCESS_WITH_WARNINGS')) {
+            heavyPdfGovernanceWarningsOut.push('pdfimages reported warnings during image extraction.');
+        }
+        if (heavyPdfAnalysisDegraded && heavyPdfDegradedButUsable) {
+            heavyPdfGovernanceWarningsOut.push('Analysis is degraded but usable; production approval requires review.');
+        }
+        if (strictForensicMode && (heavyPdfReviewRequired || probeSemanticApplied)) {
+            heavyPdfGovernanceWarningsOut.push('Strict forensic mode prevents automatic certification when probe warnings reduce analysis confidence.');
+        }
+
+        const heavyPdfProbeGovernance = {
+            heavy_pdf_detected: heavyPdfDetected,
+            file_size_bytes: heavyPdfFileSizeBytes,
+            file_size_mb: heavyPdfFileSizeMb,
+            page_count: heavyPdfPageCount,
+            probe_semantics_applied: probeSemanticApplied,
+            analysis_degraded: heavyPdfAnalysisDegraded,
+            degraded_but_usable: heavyPdfDegradedButUsable,
+            fatal_document_failure: heavyPdfFatalDocumentFailure,
+            certifiable: heavyPdfCertifiable,
+            review_required: heavyPdfReviewRequired || heavyPdfFatalDocumentFailure || (strictForensicMode && probeSemanticApplied),
+            production_certified: false,
+            standard_certified: false,
+            pdfx_compliance_claimed: false,
+            pdfa_compliance_claimed: false,
+            compliance_claim_allowed: false,
+            strict_forensic_mode: strictForensicMode,
+            probe_summary: heavyPdfProbeSummary,
+            tools: heavyPdfToolSemantics,
+            probe_semantics: probeSemanticsMeta,
+            warnings: heavyPdfGovernanceWarningsOut,
+            review_required_reasons: heavyPdfReviewRequiredReasons,
+            evidence: heavyPdfEvidence
+        };
+
+        // Apply heavy_pdf_probe_governance to global governance flags
+        if (heavyPdfFatalDocumentFailure) {
+            requiresReviewPolicy = true;
+            productionCertified = false;
+            standardCertified = false;
+            pdfxComplianceClaimed = false;
+            pdfaComplianceClaimed = false;
+            complianceClaimAllowed = false;
+            if (!reviewRequiredReasons.includes('HEAVY_PDF_FATAL_DOCUMENT_FAILURE')) {
+                reviewRequiredReasons.push('HEAVY_PDF_FATAL_DOCUMENT_FAILURE');
+            }
+        } else if (heavyPdfReviewRequired || (strictForensicMode && probeSemanticApplied)) {
+            requiresReviewPolicy = true;
+            productionCertified = false;
+            if (!reviewRequiredReasons.includes('HEAVY_PDF_PROBE_REVIEW_REQUIRED')) {
+                reviewRequiredReasons.push('HEAVY_PDF_PROBE_REVIEW_REQUIRED');
+            }
+        }
+
         // --- Phase 56B: Artifact Trust Policy Evaluation ---
         let operatorApproved = data.operator_approved === true || input?.operator_approved === true || payload?.operator_approved === true;
         let blockedDomains = [];
@@ -1686,6 +1776,7 @@ class AutofixProcessor {
         if (transparencyOverprintPhysicalGovernanceHasRisks) blockedDomains.push('transparency_overprint_physical_governance');
         if (visualDiffGovernanceHasRisks) blockedDomains.push('visual_diff_governance');
         if (proofApprovalGovernanceHasRisks) blockedDomains.push('proof_approval_governance');
+        if (heavyPdfProbeGovernanceHasRisks || heavyPdfFatalDocumentFailure || heavyPdfReviewRequired) blockedDomains.push('heavy_pdf_probe');
 
         let artifactTrust = {
             trust_level: "RAW_INPUT",
@@ -1707,15 +1798,16 @@ class AutofixProcessor {
         };
 
         if (operatorApproved) {
+            // Operator approval cannot override heavy PDF probe fatal failures or heavy PDF review
             let visualOnly = blockedDomains.every(d => ['color', 'transparency_overprint', 'image_quality'].includes(d));
-            if (visualOnly) {
+            if (visualOnly && !heavyPdfFatalDocumentFailure && !heavyPdfReviewRequired) {
                 artifactTrust.review_required = false;
                 artifactTrust.production_certified = true;
                 artifactTrust.blocked_by_governance_domains = [];
                 artifactTrust.evidence.operator_approval_applied = true;
             } else {
                 artifactTrust.evidence.operator_approval_ignored = true;
-                artifactTrust.warnings.push("Operator approval ignored: standards governance or non-visual blockers active.");
+                artifactTrust.warnings.push("Operator approval ignored: standards governance, heavy PDF probe blockers, or non-visual blockers active.");
             }
         }
 
@@ -1724,8 +1816,48 @@ class AutofixProcessor {
             artifactTrust.production_certified = false;
         }
 
+        // Phase 62F-B: Apply heavy_pdf_probe_governance to artifact_trust
+        if (heavyPdfFatalDocumentFailure) {
+            artifactTrust.review_required = true;
+            artifactTrust.production_certified = false;
+            artifactTrust.standard_certified = false;
+            artifactTrust.certified_pdf_allowed = false;
+            artifactTrust.pdfx_compliance_claimed = false;
+            artifactTrust.pdfa_compliance_claimed = false;
+            artifactTrust.compliance_claim_allowed = false;
+            if (!artifactTrust.blocked_by_governance_domains.includes('heavy_pdf_probe')) {
+                artifactTrust.blocked_by_governance_domains.push('heavy_pdf_probe');
+            }
+            artifactTrust.warnings.push('Heavy PDF probe detected a fatal document failure. Re-export or repair of the source PDF is required.');
+        } else if (heavyPdfAnalysisDegraded && heavyPdfDegradedButUsable) {
+            artifactTrust.review_required = true;
+            artifactTrust.production_certified = false;
+            artifactTrust.standard_certified = false;
+            if (!artifactTrust.blocked_by_governance_domains.includes('heavy_pdf_probe')) {
+                artifactTrust.blocked_by_governance_domains.push('heavy_pdf_probe');
+            }
+            artifactTrust.warnings.push('Heavy PDF analysis completed with probe warnings. Production approval requires human review.');
+        } else if (heavyPdfReviewRequired || (strictForensicMode && probeSemanticApplied)) {
+            artifactTrust.review_required = true;
+            artifactTrust.production_certified = false;
+            if (!artifactTrust.blocked_by_governance_domains.includes('heavy_pdf_probe')) {
+                artifactTrust.blocked_by_governance_domains.push('heavy_pdf_probe');
+            }
+        }
+
+        // Propagate heavy PDF probe warnings to artifact_trust.warnings
+        heavyPdfGovernanceWarningsOut.forEach(w => {
+            if (!artifactTrust.warnings.includes(w)) artifactTrust.warnings.push(w);
+        });
+
         if (artifactTrust.review_required) {
-            artifactTrust.trust_level = "FIXED_REVIEW_REQUIRED";
+            if (heavyPdfFatalDocumentFailure) {
+                artifactTrust.trust_level = "ANALYSIS_FAILED_REVIEW_REQUIRED";
+            } else if (heavyPdfAnalysisDegraded) {
+                artifactTrust.trust_level = "DEGRADED_ANALYSIS_REVIEW_REQUIRED";
+            } else {
+                artifactTrust.trust_level = "FIXED_REVIEW_REQUIRED";
+            }
             artifactTrust.certified_pdf_allowed = false;
         } else if (artifactTrust.standard_certified && artifactTrust.production_certified) {
             artifactTrust.trust_level = "STANDARD_CERTIFIED";
@@ -2028,6 +2160,7 @@ class AutofixProcessor {
             transparency_overprint_physical_governance: transparencyOverprintPhysicalGovernance,
             visual_diff_governance: visualDiffGovernance,
             proof_approval_governance: proofApprovalGovernance,
+            heavy_pdf_probe_governance: heavyPdfProbeGovernance,
             toolchain: toolchain,
             created_at: new Date().toISOString()
         };
@@ -2149,6 +2282,7 @@ class AutofixProcessor {
             transparency_overprint_physical_governance: transparencyOverprintPhysicalGovernance,
             visual_diff_governance: visualDiffGovernance,
             proof_approval_governance: proofApprovalGovernance,
+            heavy_pdf_probe_governance: heavyPdfProbeGovernance,
             artifact_trust: artifactTrust
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });

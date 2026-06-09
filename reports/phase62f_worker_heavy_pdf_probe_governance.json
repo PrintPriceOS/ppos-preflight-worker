@@ -1,0 +1,780 @@
+{
+  "timestamp": "2026-06-09T19:21:38.881Z",
+  "phase": "62F-B",
+  "repo": "ppos-preflight-worker",
+  "smoke_passed": true,
+  "input_mode": "ENGINE_62F_REPORT_AUGMENTED",
+  "engine_report_used": "C:\\Users\\braul\\Documents\\ppp\\ppos-preflight-engine\\reports\\phase62f_engine_heavy_pdf_probe_semantics.json",
+  "results": [
+    {
+      "scenario": "qpdf WARNING_ONLY — governance preserved, not generic fatal",
+      "input_mode": "ENGINE_62F_REPORT_AUGMENTED",
+      "status": "DEGRADED",
+      "heavy_pdf_probe_governance": {
+        "heavy_pdf_detected": true,
+        "file_size_bytes": 853898611,
+        "file_size_mb": 814.34,
+        "page_count": 64,
+        "probe_semantics_applied": true,
+        "analysis_degraded": true,
+        "degraded_but_usable": true,
+        "fatal_document_failure": false,
+        "certifiable": false,
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "strict_forensic_mode": false,
+        "probe_summary": {
+          "total": 2,
+          "success": 0,
+          "success_with_warnings": 0,
+          "warning_only": 2,
+          "partial_success": 0,
+          "failed_fatal": 0
+        },
+        "tools": {
+          "qpdf": {
+            "raw_status": "FAILED",
+            "semantic_status": "WARNING_ONLY",
+            "severity": "warning",
+            "usable_output": true,
+            "fatal": false,
+            "warning_classes": [
+              "PDF_LINEARIZATION_HINT_WARNING",
+              "PDF_SHARED_OBJECT_HINT_MISMATCH",
+              "PDF_OBJECT_COUNT_HINT_MISMATCH"
+            ]
+          }
+        },
+        "probe_semantics": {},
+        "warnings": [
+          "Heavy PDF analysis completed with probe warnings.",
+          "qpdf reported structural warnings that require review.",
+          "Analysis is degraded but usable; production approval requires review."
+        ],
+        "review_required_reasons": [
+          "TOOL_PROBE_WARNING:qpdf"
+        ],
+        "evidence": {
+          "qpdf_exit_code": 3,
+          "qpdf_stderr_excerpt": "WARNING: page 0 has shared identifier entries"
+        }
+      },
+      "artifact_trust_level": "DEGRADED_ANALYSIS_REVIEW_REQUIRED",
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pdfa_compliance_claimed": false,
+      "heavy_pdf_probe_governance_present": true,
+      "heavy_pdf_detected": true,
+      "fatal_document_failure": false,
+      "analysis_degraded": true,
+      "degraded_but_usable": true,
+      "probe_semantics_applied": true,
+      "tool_qpdf_semantic_status": "WARNING_ONLY",
+      "tool_pdfimages_semantic_status": null,
+      "blocked_by_governance_domains": [
+        "heavy_pdf_probe"
+      ],
+      "overclaim_guard_passed": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "pdfimages WARNING_ONLY — governance preserved, not generic fatal",
+      "input_mode": "ENGINE_62F_REPORT_AUGMENTED",
+      "status": "DEGRADED",
+      "heavy_pdf_probe_governance": {
+        "heavy_pdf_detected": true,
+        "file_size_bytes": 853898611,
+        "file_size_mb": 814.34,
+        "page_count": 64,
+        "probe_semantics_applied": true,
+        "analysis_degraded": true,
+        "degraded_but_usable": true,
+        "fatal_document_failure": false,
+        "certifiable": false,
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "strict_forensic_mode": false,
+        "probe_summary": {
+          "total": 2,
+          "success": 0,
+          "success_with_warnings": 0,
+          "warning_only": 2,
+          "partial_success": 0,
+          "failed_fatal": 0
+        },
+        "tools": {
+          "pdfimages": {
+            "raw_status": "FAILED",
+            "semantic_status": "WARNING_ONLY",
+            "severity": "warning",
+            "usable_output": true,
+            "fatal": false,
+            "warning_classes": [
+              "PDF_FONT_WEIGHT_WARNING"
+            ]
+          }
+        },
+        "probe_semantics": {},
+        "warnings": [
+          "Heavy PDF analysis completed with probe warnings.",
+          "pdfimages reported warnings during image extraction.",
+          "Analysis is degraded but usable; production approval requires review."
+        ],
+        "review_required_reasons": [
+          "PDF_FONT_WEIGHT_WARNING:pdfimages"
+        ],
+        "evidence": {
+          "pdfimages_exit_code": 1,
+          "pdfimages_stderr_excerpt": "Syntax Warning: Invalid Font Weight"
+        }
+      },
+      "artifact_trust_level": "DEGRADED_ANALYSIS_REVIEW_REQUIRED",
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pdfa_compliance_claimed": false,
+      "heavy_pdf_probe_governance_present": true,
+      "heavy_pdf_detected": true,
+      "fatal_document_failure": false,
+      "analysis_degraded": true,
+      "degraded_but_usable": true,
+      "probe_semantics_applied": true,
+      "tool_qpdf_semantic_status": null,
+      "tool_pdfimages_semantic_status": "WARNING_ONLY",
+      "blocked_by_governance_domains": [
+        "heavy_pdf_probe"
+      ],
+      "overclaim_guard_passed": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "qpdf FAILED_FATAL — fatal preserved, blocks production",
+      "input_mode": "ENGINE_62F_REPORT_AUGMENTED",
+      "status": "DEGRADED",
+      "heavy_pdf_probe_governance": {
+        "heavy_pdf_detected": true,
+        "file_size_bytes": 853898611,
+        "file_size_mb": 814.34,
+        "page_count": 64,
+        "probe_semantics_applied": true,
+        "analysis_degraded": true,
+        "degraded_but_usable": false,
+        "fatal_document_failure": true,
+        "certifiable": false,
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "strict_forensic_mode": false,
+        "probe_summary": {
+          "total": 2,
+          "success": 0,
+          "success_with_warnings": 0,
+          "warning_only": 0,
+          "partial_success": 0,
+          "failed_fatal": 1
+        },
+        "tools": {
+          "qpdf": {
+            "raw_status": "FAILED",
+            "semantic_status": "FAILED_FATAL",
+            "severity": "error",
+            "usable_output": false,
+            "fatal": true,
+            "structural_fatal": true,
+            "fatal_classes": [
+              "INVALID_XREF",
+              "UNABLE_TO_FIND_TRAILER"
+            ]
+          }
+        },
+        "probe_semantics": {},
+        "warnings": [
+          "Heavy PDF analysis completed with probe warnings."
+        ],
+        "review_required_reasons": [
+          "QPDF_FATAL_STRUCTURAL_ERROR"
+        ],
+        "evidence": {
+          "qpdf_exit_code": 2,
+          "qpdf_stderr_excerpt": "unable to find trailer dictionary"
+        }
+      },
+      "artifact_trust_level": "ANALYSIS_FAILED_REVIEW_REQUIRED",
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pdfa_compliance_claimed": false,
+      "heavy_pdf_probe_governance_present": true,
+      "heavy_pdf_detected": true,
+      "fatal_document_failure": true,
+      "analysis_degraded": true,
+      "degraded_but_usable": false,
+      "probe_semantics_applied": true,
+      "tool_qpdf_semantic_status": "FAILED_FATAL",
+      "tool_pdfimages_semantic_status": null,
+      "blocked_by_governance_domains": [
+        "heavy_pdf_probe"
+      ],
+      "overclaim_guard_passed": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "pdfimages FAILED_NO_OUTPUT — fatal preserved, blocks production",
+      "input_mode": "ENGINE_62F_REPORT_AUGMENTED",
+      "status": "DEGRADED",
+      "heavy_pdf_probe_governance": {
+        "heavy_pdf_detected": true,
+        "file_size_bytes": 853898611,
+        "file_size_mb": 814.34,
+        "page_count": 64,
+        "probe_semantics_applied": true,
+        "analysis_degraded": true,
+        "degraded_but_usable": false,
+        "fatal_document_failure": true,
+        "certifiable": false,
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "strict_forensic_mode": false,
+        "probe_summary": {
+          "total": 2,
+          "success": 0,
+          "success_with_warnings": 0,
+          "warning_only": 0,
+          "partial_success": 0,
+          "failed_fatal": 1
+        },
+        "tools": {
+          "pdfimages": {
+            "raw_status": "FAILED",
+            "semantic_status": "FAILED_NO_OUTPUT",
+            "severity": "error",
+            "usable_output": false,
+            "fatal": true,
+            "fatal_classes": [
+              "NO_OUTPUT"
+            ]
+          }
+        },
+        "probe_semantics": {},
+        "warnings": [
+          "Heavy PDF analysis completed with probe warnings."
+        ],
+        "review_required_reasons": [
+          "PDFIMAGES_NO_OUTPUT"
+        ],
+        "evidence": {
+          "pdfimages_exit_code": 1,
+          "pdfimages_stderr_excerpt": "Couldn't open file"
+        }
+      },
+      "artifact_trust_level": "ANALYSIS_FAILED_REVIEW_REQUIRED",
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pdfa_compliance_claimed": false,
+      "heavy_pdf_probe_governance_present": true,
+      "heavy_pdf_detected": true,
+      "fatal_document_failure": true,
+      "analysis_degraded": true,
+      "degraded_but_usable": false,
+      "probe_semantics_applied": true,
+      "tool_qpdf_semantic_status": null,
+      "tool_pdfimages_semantic_status": "FAILED_NO_OUTPUT",
+      "blocked_by_governance_domains": [
+        "heavy_pdf_probe"
+      ],
+      "overclaim_guard_passed": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "heavy file degraded_but_usable=true — review required, degraded trust level",
+      "input_mode": "ENGINE_62F_REPORT_AUGMENTED",
+      "status": "DEGRADED",
+      "heavy_pdf_probe_governance": {
+        "heavy_pdf_detected": true,
+        "file_size_bytes": 853898611,
+        "file_size_mb": 814.34,
+        "page_count": 64,
+        "probe_semantics_applied": true,
+        "analysis_degraded": true,
+        "degraded_but_usable": true,
+        "fatal_document_failure": false,
+        "certifiable": false,
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "strict_forensic_mode": false,
+        "probe_summary": {
+          "total": 2,
+          "warning_only": 2
+        },
+        "tools": {
+          "qpdf": {
+            "semantic_status": "WARNING_ONLY",
+            "severity": "warning",
+            "usable_output": true,
+            "fatal": false,
+            "warning_classes": [
+              "PDF_LINEARIZATION_HINT_WARNING"
+            ]
+          },
+          "pdfimages": {
+            "semantic_status": "WARNING_ONLY",
+            "severity": "warning",
+            "usable_output": true,
+            "fatal": false,
+            "warning_classes": [
+              "PDF_FONT_WEIGHT_WARNING"
+            ]
+          }
+        },
+        "probe_semantics": {},
+        "warnings": [
+          "Heavy PDF analysis completed with probe warnings.",
+          "qpdf reported structural warnings that require review.",
+          "pdfimages reported warnings during image extraction.",
+          "Analysis is degraded but usable; production approval requires review."
+        ],
+        "review_required_reasons": [
+          "TOOL_PROBE_WARNING:qpdf",
+          "PDF_FONT_WEIGHT_WARNING:pdfimages"
+        ],
+        "evidence": {}
+      },
+      "artifact_trust_level": "DEGRADED_ANALYSIS_REVIEW_REQUIRED",
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pdfa_compliance_claimed": false,
+      "heavy_pdf_probe_governance_present": true,
+      "heavy_pdf_detected": true,
+      "fatal_document_failure": false,
+      "analysis_degraded": true,
+      "degraded_but_usable": true,
+      "probe_semantics_applied": true,
+      "tool_qpdf_semantic_status": "WARNING_ONLY",
+      "tool_pdfimages_semantic_status": "WARNING_ONLY",
+      "blocked_by_governance_domains": [
+        "heavy_pdf_probe"
+      ],
+      "overclaim_guard_passed": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "heavy file fatal_document_failure=true — requires remediation, max restrictions",
+      "input_mode": "ENGINE_62F_REPORT_AUGMENTED",
+      "status": "DEGRADED",
+      "heavy_pdf_probe_governance": {
+        "heavy_pdf_detected": true,
+        "file_size_bytes": 853898611,
+        "file_size_mb": 814.34,
+        "page_count": 64,
+        "probe_semantics_applied": true,
+        "analysis_degraded": true,
+        "degraded_but_usable": false,
+        "fatal_document_failure": true,
+        "certifiable": false,
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "strict_forensic_mode": false,
+        "probe_summary": {
+          "total": 2,
+          "success": 0,
+          "success_with_warnings": 0,
+          "warning_only": 0,
+          "partial_success": 0,
+          "failed_fatal": 1
+        },
+        "tools": {
+          "qpdf": {
+            "raw_status": "FAILED",
+            "semantic_status": "FAILED_FATAL",
+            "severity": "error",
+            "usable_output": false,
+            "fatal": true,
+            "structural_fatal": true,
+            "fatal_classes": [
+              "INVALID_XREF",
+              "UNABLE_TO_FIND_TRAILER"
+            ]
+          }
+        },
+        "probe_semantics": {},
+        "warnings": [
+          "Heavy PDF analysis completed with probe warnings."
+        ],
+        "review_required_reasons": [
+          "QPDF_FATAL_STRUCTURAL_ERROR"
+        ],
+        "evidence": {
+          "qpdf_exit_code": 2,
+          "qpdf_stderr_excerpt": "unable to find trailer dictionary"
+        }
+      },
+      "artifact_trust_level": "ANALYSIS_FAILED_REVIEW_REQUIRED",
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pdfa_compliance_claimed": false,
+      "heavy_pdf_probe_governance_present": true,
+      "heavy_pdf_detected": true,
+      "fatal_document_failure": true,
+      "analysis_degraded": true,
+      "degraded_but_usable": false,
+      "probe_semantics_applied": true,
+      "tool_qpdf_semantic_status": "FAILED_FATAL",
+      "tool_pdfimages_semantic_status": null,
+      "blocked_by_governance_domains": [
+        "heavy_pdf_probe"
+      ],
+      "overclaim_guard_passed": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "certified.pdf filename regression — suppressed when review_required=true",
+      "input_mode": "ENGINE_62F_REPORT_AUGMENTED",
+      "status": "DEGRADED",
+      "heavy_pdf_probe_governance": {
+        "heavy_pdf_detected": true,
+        "file_size_bytes": 853898611,
+        "file_size_mb": 814.34,
+        "page_count": 64,
+        "probe_semantics_applied": true,
+        "analysis_degraded": true,
+        "degraded_but_usable": true,
+        "fatal_document_failure": false,
+        "certifiable": false,
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "strict_forensic_mode": false,
+        "probe_summary": {
+          "total": 2,
+          "success": 0,
+          "success_with_warnings": 0,
+          "warning_only": 2,
+          "partial_success": 0,
+          "failed_fatal": 0
+        },
+        "tools": {
+          "qpdf": {
+            "raw_status": "FAILED",
+            "semantic_status": "WARNING_ONLY",
+            "severity": "warning",
+            "usable_output": true,
+            "fatal": false,
+            "warning_classes": [
+              "PDF_LINEARIZATION_HINT_WARNING",
+              "PDF_SHARED_OBJECT_HINT_MISMATCH",
+              "PDF_OBJECT_COUNT_HINT_MISMATCH"
+            ]
+          }
+        },
+        "probe_semantics": {},
+        "warnings": [
+          "Heavy PDF analysis completed with probe warnings.",
+          "qpdf reported structural warnings that require review.",
+          "Analysis is degraded but usable; production approval requires review."
+        ],
+        "review_required_reasons": [
+          "TOOL_PROBE_WARNING:qpdf"
+        ],
+        "evidence": {
+          "qpdf_exit_code": 3,
+          "qpdf_stderr_excerpt": "WARNING: page 0 has shared identifier entries"
+        }
+      },
+      "artifact_trust_level": "DEGRADED_ANALYSIS_REVIEW_REQUIRED",
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pdfa_compliance_claimed": false,
+      "heavy_pdf_probe_governance_present": true,
+      "heavy_pdf_detected": true,
+      "fatal_document_failure": false,
+      "analysis_degraded": true,
+      "degraded_but_usable": true,
+      "probe_semantics_applied": true,
+      "tool_qpdf_semantic_status": "WARNING_ONLY",
+      "tool_pdfimages_semantic_status": null,
+      "blocked_by_governance_domains": [
+        "standards_certification",
+        "heavy_pdf_probe"
+      ],
+      "overclaim_guard_passed": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "standards overclaim regression — no PDF/X or PDF/A from heavy PDF probe",
+      "input_mode": "ENGINE_62F_REPORT_AUGMENTED",
+      "status": "DEGRADED",
+      "heavy_pdf_probe_governance": {
+        "heavy_pdf_detected": true,
+        "file_size_bytes": 853898611,
+        "file_size_mb": 814.34,
+        "page_count": 64,
+        "probe_semantics_applied": true,
+        "analysis_degraded": true,
+        "degraded_but_usable": true,
+        "fatal_document_failure": false,
+        "certifiable": false,
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "strict_forensic_mode": false,
+        "probe_summary": {
+          "total": 2,
+          "success": 0,
+          "success_with_warnings": 0,
+          "warning_only": 2,
+          "partial_success": 0,
+          "failed_fatal": 0
+        },
+        "tools": {
+          "qpdf": {
+            "raw_status": "FAILED",
+            "semantic_status": "WARNING_ONLY",
+            "severity": "warning",
+            "usable_output": true,
+            "fatal": false,
+            "warning_classes": [
+              "PDF_LINEARIZATION_HINT_WARNING",
+              "PDF_SHARED_OBJECT_HINT_MISMATCH",
+              "PDF_OBJECT_COUNT_HINT_MISMATCH"
+            ]
+          }
+        },
+        "probe_semantics": {},
+        "warnings": [
+          "Heavy PDF analysis completed with probe warnings.",
+          "qpdf reported structural warnings that require review.",
+          "Analysis is degraded but usable; production approval requires review."
+        ],
+        "review_required_reasons": [
+          "TOOL_PROBE_WARNING:qpdf"
+        ],
+        "evidence": {
+          "qpdf_exit_code": 3,
+          "qpdf_stderr_excerpt": "WARNING: page 0 has shared identifier entries"
+        }
+      },
+      "artifact_trust_level": "DEGRADED_ANALYSIS_REVIEW_REQUIRED",
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pdfa_compliance_claimed": false,
+      "heavy_pdf_probe_governance_present": true,
+      "heavy_pdf_detected": true,
+      "fatal_document_failure": false,
+      "analysis_degraded": true,
+      "degraded_but_usable": true,
+      "probe_semantics_applied": true,
+      "tool_qpdf_semantic_status": "WARNING_ONLY",
+      "tool_pdfimages_semantic_status": null,
+      "blocked_by_governance_domains": [
+        "standards_certification",
+        "heavy_pdf_probe"
+      ],
+      "overclaim_guard_passed": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "strict_forensic_mode=true — warning-only probes block certification",
+      "input_mode": "ENGINE_62F_REPORT_AUGMENTED",
+      "status": "DEGRADED",
+      "heavy_pdf_probe_governance": {
+        "heavy_pdf_detected": true,
+        "file_size_bytes": 209715200,
+        "file_size_mb": 200,
+        "page_count": 20,
+        "probe_semantics_applied": true,
+        "analysis_degraded": false,
+        "degraded_but_usable": false,
+        "fatal_document_failure": false,
+        "certifiable": false,
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "strict_forensic_mode": true,
+        "probe_summary": {
+          "total": 1,
+          "warning_only": 1
+        },
+        "tools": {
+          "qpdf": {
+            "semantic_status": "WARNING_ONLY",
+            "severity": "warning",
+            "usable_output": true,
+            "fatal": false,
+            "warning_classes": [
+              "PDF_LINEARIZATION_HINT_WARNING"
+            ]
+          }
+        },
+        "probe_semantics": {},
+        "warnings": [
+          "qpdf reported structural warnings that require review.",
+          "Strict forensic mode prevents automatic certification when probe warnings reduce analysis confidence."
+        ],
+        "review_required_reasons": [],
+        "evidence": {}
+      },
+      "artifact_trust_level": "FIXED_REVIEW_REQUIRED",
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pdfa_compliance_claimed": false,
+      "heavy_pdf_probe_governance_present": true,
+      "heavy_pdf_detected": true,
+      "fatal_document_failure": false,
+      "analysis_degraded": false,
+      "degraded_but_usable": false,
+      "probe_semantics_applied": true,
+      "tool_qpdf_semantic_status": "WARNING_ONLY",
+      "tool_pdfimages_semantic_status": null,
+      "blocked_by_governance_domains": [
+        "heavy_pdf_probe"
+      ],
+      "overclaim_guard_passed": true,
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "evidence preservation — probe evidence and tool semantics preserved end-to-end",
+      "input_mode": "ENGINE_62F_REPORT_AUGMENTED",
+      "status": "DEGRADED",
+      "heavy_pdf_probe_governance": {
+        "heavy_pdf_detected": true,
+        "file_size_bytes": 853898611,
+        "file_size_mb": 814.34,
+        "page_count": 64,
+        "probe_semantics_applied": true,
+        "analysis_degraded": true,
+        "degraded_but_usable": true,
+        "fatal_document_failure": false,
+        "certifiable": false,
+        "review_required": true,
+        "production_certified": false,
+        "standard_certified": false,
+        "pdfx_compliance_claimed": false,
+        "pdfa_compliance_claimed": false,
+        "compliance_claim_allowed": false,
+        "strict_forensic_mode": false,
+        "probe_summary": {
+          "total": 2,
+          "success": 0,
+          "success_with_warnings": 0,
+          "warning_only": 2,
+          "partial_success": 0,
+          "failed_fatal": 0
+        },
+        "tools": {
+          "qpdf": {
+            "raw_status": "FAILED",
+            "semantic_status": "WARNING_ONLY",
+            "severity": "warning",
+            "usable_output": true,
+            "fatal": false,
+            "warning_classes": [
+              "PDF_LINEARIZATION_HINT_WARNING",
+              "PDF_SHARED_OBJECT_HINT_MISMATCH",
+              "PDF_OBJECT_COUNT_HINT_MISMATCH"
+            ]
+          }
+        },
+        "probe_semantics": {},
+        "warnings": [
+          "Heavy PDF analysis completed with probe warnings.",
+          "qpdf reported structural warnings that require review.",
+          "Analysis is degraded but usable; production approval requires review."
+        ],
+        "review_required_reasons": [
+          "TOOL_PROBE_WARNING:qpdf"
+        ],
+        "evidence": {
+          "qpdf_exit_code": 3,
+          "qpdf_stderr_excerpt": "WARNING: page 0 has shared identifier entries"
+        }
+      },
+      "artifact_trust_level": "DEGRADED_ANALYSIS_REVIEW_REQUIRED",
+      "review_required": true,
+      "production_certified": false,
+      "standard_certified": false,
+      "certified_pdf_allowed": false,
+      "pdfx_compliance_claimed": false,
+      "pdfa_compliance_claimed": false,
+      "heavy_pdf_probe_governance_present": true,
+      "heavy_pdf_detected": true,
+      "fatal_document_failure": false,
+      "analysis_degraded": true,
+      "degraded_but_usable": true,
+      "probe_semantics_applied": true,
+      "tool_qpdf_semantic_status": "WARNING_ONLY",
+      "tool_pdfimages_semantic_status": null,
+      "blocked_by_governance_domains": [
+        "heavy_pdf_probe"
+      ],
+      "overclaim_guard_passed": true,
+      "pass": true,
+      "notes": "OK"
+    }
+  ]
+}
