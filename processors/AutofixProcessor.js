@@ -2099,6 +2099,80 @@ class AutofixProcessor {
             artifactTrust.customer_visible = false;
         }
 
+        // --- Phase 71B: Production Package Governance ---
+        // Determine readiness for printhouse delivery packaging from artifact_trust and
+        // upstream gates (review, proof approval, payment). package_ready=false if any
+        // of these gates are unresolved.
+        const paymentStatus = data.payment_status || input?.payment_status || rawSpecs?.payment_status || payload?.payment_status || null;
+        const paymentGateSatisfied = paymentStatus === null || ['PAID', 'CLEARED', 'NOT_REQUIRED'].includes(paymentStatus);
+
+        const productionPackageBlockedDomains = [];
+        if (!physicalArtifactsReady) productionPackageBlockedDomains.push('artifact_availability');
+        if (artifactTrust.review_required) productionPackageBlockedDomains.push('review_required');
+        if (!artifactTrust.production_certified) productionPackageBlockedDomains.push('production_certification');
+        if (!paymentGateSatisfied) productionPackageBlockedDomains.push('payment_governance');
+        artifactTrust.blocked_by_governance_domains.forEach(d => {
+            if (!productionPackageBlockedDomains.includes(d)) productionPackageBlockedDomains.push(d);
+        });
+
+        const productionPackageWarnings = [];
+        if (!physicalArtifactsReady) {
+            productionPackageWarnings.push('No physical artifact available for production packaging.');
+        }
+        if (artifactTrust.review_required) {
+            productionPackageWarnings.push('Artifact requires human review before packaging for production.');
+        }
+        if (!artifactTrust.production_certified) {
+            productionPackageWarnings.push('Artifact is not production certified; package not ready.');
+        }
+        if (!paymentGateSatisfied) {
+            productionPackageWarnings.push(`Payment status '${paymentStatus}' does not clear the production package gate.`);
+        }
+
+        const packageReady = physicalArtifactsReady
+            && artifactTrust.production_certified
+            && !artifactTrust.review_required
+            && productionPackageBlockedDomains.length === 0;
+
+        const includedReports = ['fix_audit.json', 'delta_report.json'];
+        if (verifiedArtifacts.certified_pdf) includedReports.push(verifiedArtifacts.certified_pdf);
+        if (verifiedArtifacts.fixed_pdf) includedReports.push(verifiedArtifacts.fixed_pdf);
+
+        let approvedArtifactType = null;
+        let approvedArtifactHash = null;
+        if (packageReady) {
+            approvedArtifactType = artifactTrust.primary_artifact_type;
+            const approvedArtifactFilename = artifactTrust.primary_artifact_filename;
+            if (approvedArtifactFilename) {
+                try {
+                    approvedArtifactHash = await sha256File(`${outputDir}/${approvedArtifactFilename}`);
+                } catch (e) {
+                    productionPackageWarnings.push('Failed to compute approved artifact hash.');
+                }
+            }
+        }
+
+        const productionPackageGovernance = {
+            package_ready: packageReady,
+            approved_artifact_type: approvedArtifactType,
+            approved_artifact_hash: approvedArtifactHash,
+            included_reports: includedReports,
+            blocked_by_governance_domains: productionPackageBlockedDomains,
+            warnings: productionPackageWarnings,
+            evidence: {
+                physical_artifacts_ready: physicalArtifactsReady,
+                review_required: artifactTrust.review_required,
+                production_certified: artifactTrust.production_certified,
+                standard_certified: artifactTrust.standard_certified,
+                proof_required: proofRequired,
+                proof_status: proofStatus,
+                payment_status: paymentStatus,
+                payment_gate_satisfied: paymentGateSatisfied,
+                primary_artifact_type: artifactTrust.primary_artifact_type,
+                primary_artifact_filename: artifactTrust.primary_artifact_filename
+            }
+        };
+
         // Materialize fix_audit.json
         logger.info({ jobId }, '[PREFLIGHT-WORKER][FIX_AUDIT_V2_WRITE_START]');
         const auditReportPath = `${outputDir}/fix_audit.json`;
@@ -2161,6 +2235,7 @@ class AutofixProcessor {
             visual_diff_governance: visualDiffGovernance,
             proof_approval_governance: proofApprovalGovernance,
             heavy_pdf_probe_governance: heavyPdfProbeGovernance,
+            production_package_governance: productionPackageGovernance,
             toolchain: toolchain,
             created_at: new Date().toISOString()
         };
@@ -2283,6 +2358,7 @@ class AutofixProcessor {
             visual_diff_governance: visualDiffGovernance,
             proof_approval_governance: proofApprovalGovernance,
             heavy_pdf_probe_governance: heavyPdfProbeGovernance,
+            production_package_governance: productionPackageGovernance,
             artifact_trust: artifactTrust
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });

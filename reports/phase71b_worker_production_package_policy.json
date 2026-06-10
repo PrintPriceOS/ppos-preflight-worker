@@ -1,0 +1,345 @@
+{
+  "timestamp": "2026-06-10T15:25:35.072Z",
+  "phase": "71B",
+  "repo": "ppos-preflight-worker",
+  "smoke_passed": true,
+  "results": [
+    {
+      "scenario": "production certified, no review/proof/payment blockers -> package_ready=true",
+      "status": "DEGRADED",
+      "production_package_governance": {
+        "package_ready": true,
+        "approved_artifact_type": "certified_pdf",
+        "approved_artifact_hash": "18960407306c08ff7b47e4172d88c9b7bae236246d1fe4638e303bb424c1e56a",
+        "included_reports": [
+          "fix_audit.json",
+          "delta_report.json",
+          "certified.pdf",
+          "fixed.pdf"
+        ],
+        "blocked_by_governance_domains": [],
+        "warnings": [],
+        "evidence": {
+          "physical_artifacts_ready": true,
+          "review_required": false,
+          "production_certified": true,
+          "standard_certified": false,
+          "proof_required": false,
+          "proof_status": "NOT_REQUIRED",
+          "payment_status": null,
+          "payment_gate_satisfied": true,
+          "primary_artifact_type": "certified_pdf",
+          "primary_artifact_filename": "certified.pdf"
+        }
+      },
+      "artifact_trust_level": "PRODUCTION_CERTIFIED",
+      "production_certified": true,
+      "package_ready": true,
+      "approved_artifact_type": "certified_pdf",
+      "approved_artifact_hash": "18960407306c08ff7b47e4172d88c9b7bae236246d1fe4638e303bb424c1e56a",
+      "included_reports": [
+        "fix_audit.json",
+        "delta_report.json",
+        "certified.pdf",
+        "fixed.pdf"
+      ],
+      "blocked_by_governance_domains": [],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "review required (unsupported color fix) -> package_ready=false",
+      "status": "DEGRADED",
+      "production_package_governance": {
+        "package_ready": false,
+        "approved_artifact_type": null,
+        "approved_artifact_hash": null,
+        "included_reports": [
+          "fix_audit.json",
+          "delta_report.json",
+          "fixed.pdf"
+        ],
+        "blocked_by_governance_domains": [
+          "review_required",
+          "production_certification"
+        ],
+        "warnings": [
+          "Artifact requires human review before packaging for production.",
+          "Artifact is not production certified; package not ready."
+        ],
+        "evidence": {
+          "physical_artifacts_ready": true,
+          "review_required": true,
+          "production_certified": false,
+          "standard_certified": false,
+          "proof_required": false,
+          "proof_status": "NOT_REQUIRED",
+          "payment_status": null,
+          "payment_gate_satisfied": true,
+          "primary_artifact_type": "review_pdf",
+          "primary_artifact_filename": "fixed.pdf"
+        }
+      },
+      "artifact_trust_level": "FIXED_REVIEW_REQUIRED",
+      "production_certified": false,
+      "package_ready": false,
+      "approved_artifact_type": null,
+      "approved_artifact_hash": null,
+      "included_reports": [
+        "fix_audit.json",
+        "delta_report.json",
+        "fixed.pdf"
+      ],
+      "blocked_by_governance_domains": [
+        "review_required",
+        "production_certification"
+      ],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "visual change detected, proof pending -> package_ready=false",
+      "status": "DEGRADED",
+      "production_package_governance": {
+        "package_ready": false,
+        "approved_artifact_type": null,
+        "approved_artifact_hash": null,
+        "included_reports": [
+          "fix_audit.json",
+          "delta_report.json",
+          "fixed.pdf"
+        ],
+        "blocked_by_governance_domains": [
+          "review_required",
+          "production_certification",
+          "transparency_overprint",
+          "transparency_overprint_physical_governance",
+          "visual_diff_governance",
+          "proof_approval_governance"
+        ],
+        "warnings": [
+          "Artifact requires human review before packaging for production.",
+          "Artifact is not production certified; package not ready."
+        ],
+        "evidence": {
+          "physical_artifacts_ready": true,
+          "review_required": true,
+          "production_certified": false,
+          "standard_certified": false,
+          "proof_required": true,
+          "proof_status": "PENDING",
+          "payment_status": null,
+          "payment_gate_satisfied": true,
+          "primary_artifact_type": "review_pdf",
+          "primary_artifact_filename": "fixed.pdf"
+        }
+      },
+      "artifact_trust_level": "FIXED_REVIEW_REQUIRED",
+      "production_certified": false,
+      "package_ready": false,
+      "approved_artifact_type": null,
+      "approved_artifact_hash": null,
+      "included_reports": [
+        "fix_audit.json",
+        "delta_report.json",
+        "fixed.pdf"
+      ],
+      "blocked_by_governance_domains": [
+        "review_required",
+        "production_certification",
+        "transparency_overprint",
+        "transparency_overprint_physical_governance",
+        "visual_diff_governance",
+        "proof_approval_governance"
+      ],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "production certified, payment_status=UNPAID -> package_ready=false",
+      "status": "DEGRADED",
+      "production_package_governance": {
+        "package_ready": false,
+        "approved_artifact_type": null,
+        "approved_artifact_hash": null,
+        "included_reports": [
+          "fix_audit.json",
+          "delta_report.json",
+          "certified.pdf",
+          "fixed.pdf"
+        ],
+        "blocked_by_governance_domains": [
+          "payment_governance"
+        ],
+        "warnings": [
+          "Payment status 'UNPAID' does not clear the production package gate."
+        ],
+        "evidence": {
+          "physical_artifacts_ready": true,
+          "review_required": false,
+          "production_certified": true,
+          "standard_certified": false,
+          "proof_required": false,
+          "proof_status": "NOT_REQUIRED",
+          "payment_status": "UNPAID",
+          "payment_gate_satisfied": false,
+          "primary_artifact_type": "certified_pdf",
+          "primary_artifact_filename": "certified.pdf"
+        }
+      },
+      "artifact_trust_level": "PRODUCTION_CERTIFIED",
+      "production_certified": true,
+      "package_ready": false,
+      "approved_artifact_type": null,
+      "approved_artifact_hash": null,
+      "included_reports": [
+        "fix_audit.json",
+        "delta_report.json",
+        "certified.pdf",
+        "fixed.pdf"
+      ],
+      "blocked_by_governance_domains": [
+        "payment_governance"
+      ],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "production certified, payment_status=PAID -> package_ready=true",
+      "status": "DEGRADED",
+      "production_package_governance": {
+        "package_ready": true,
+        "approved_artifact_type": "certified_pdf",
+        "approved_artifact_hash": "18960407306c08ff7b47e4172d88c9b7bae236246d1fe4638e303bb424c1e56a",
+        "included_reports": [
+          "fix_audit.json",
+          "delta_report.json",
+          "certified.pdf",
+          "fixed.pdf"
+        ],
+        "blocked_by_governance_domains": [],
+        "warnings": [],
+        "evidence": {
+          "physical_artifacts_ready": true,
+          "review_required": false,
+          "production_certified": true,
+          "standard_certified": false,
+          "proof_required": false,
+          "proof_status": "NOT_REQUIRED",
+          "payment_status": "PAID",
+          "payment_gate_satisfied": true,
+          "primary_artifact_type": "certified_pdf",
+          "primary_artifact_filename": "certified.pdf"
+        }
+      },
+      "artifact_trust_level": "PRODUCTION_CERTIFIED",
+      "production_certified": true,
+      "package_ready": true,
+      "approved_artifact_type": "certified_pdf",
+      "approved_artifact_hash": "18960407306c08ff7b47e4172d88c9b7bae236246d1fe4638e303bb424c1e56a",
+      "included_reports": [
+        "fix_audit.json",
+        "delta_report.json",
+        "certified.pdf",
+        "fixed.pdf"
+      ],
+      "blocked_by_governance_domains": [],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: production_package_governance present in fix_audit.json and delta_report.json",
+      "status": "DEGRADED",
+      "production_package_governance": {
+        "package_ready": false,
+        "approved_artifact_type": null,
+        "approved_artifact_hash": null,
+        "included_reports": [
+          "fix_audit.json",
+          "delta_report.json",
+          "fixed.pdf"
+        ],
+        "blocked_by_governance_domains": [
+          "production_certification"
+        ],
+        "warnings": [
+          "Artifact is not production certified; package not ready."
+        ],
+        "evidence": {
+          "physical_artifacts_ready": true,
+          "review_required": false,
+          "production_certified": false,
+          "standard_certified": false,
+          "proof_required": false,
+          "proof_status": "NOT_REQUIRED",
+          "payment_status": null,
+          "payment_gate_satisfied": true,
+          "primary_artifact_type": "fixed_pdf",
+          "primary_artifact_filename": "fixed.pdf"
+        }
+      },
+      "artifact_trust_level": "FIXED_READY",
+      "production_certified": false,
+      "package_ready": false,
+      "approved_artifact_type": null,
+      "approved_artifact_hash": null,
+      "included_reports": [
+        "fix_audit.json",
+        "delta_report.json",
+        "fixed.pdf"
+      ],
+      "blocked_by_governance_domains": [
+        "production_certification"
+      ],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: production_certified=false must force package_ready=false",
+      "status": "DEGRADED",
+      "production_package_governance": {
+        "package_ready": false,
+        "approved_artifact_type": null,
+        "approved_artifact_hash": null,
+        "included_reports": [
+          "fix_audit.json",
+          "delta_report.json",
+          "fixed.pdf"
+        ],
+        "blocked_by_governance_domains": [
+          "production_certification"
+        ],
+        "warnings": [
+          "Artifact is not production certified; package not ready."
+        ],
+        "evidence": {
+          "physical_artifacts_ready": true,
+          "review_required": false,
+          "production_certified": false,
+          "standard_certified": false,
+          "proof_required": false,
+          "proof_status": "NOT_REQUIRED",
+          "payment_status": null,
+          "payment_gate_satisfied": true,
+          "primary_artifact_type": "fixed_pdf",
+          "primary_artifact_filename": "fixed.pdf"
+        }
+      },
+      "artifact_trust_level": "FIXED_READY",
+      "production_certified": false,
+      "package_ready": false,
+      "approved_artifact_type": null,
+      "approved_artifact_hash": null,
+      "included_reports": [
+        "fix_audit.json",
+        "delta_report.json",
+        "fixed.pdf"
+      ],
+      "blocked_by_governance_domains": [
+        "production_certification"
+      ],
+      "pass": true,
+      "notes": "OK"
+    }
+  ]
+}
