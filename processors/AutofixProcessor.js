@@ -2173,8 +2173,39 @@ class AutofixProcessor {
             }
         };
 
+        // Phase 72A/72B: Policy Profile Governance evaluation
+        // Evaluate the active policy profile against source findings.
+        // This is advisory only — profile_passed=true NEVER implies production_certified or standard_certified.
+        let policyProfileGovernance = null;
+        try {
+            const { evaluateFromFixAudit } = require('../../ppos-preflight-engine/policy/PolicyProfileEvaluator');
+            const { resolveProfile } = require('../../ppos-preflight-engine/policy/PolicyProfileSchema');
+            const activeProfile = resolveProfile(policyProfile || 'NONE');
+            policyProfileGovernance = evaluateFromFixAudit(
+                activeProfile,
+                { findings: sourceFindings || [], plan: [], issues: [] },
+                { detected_standard: standardDetected || null, tac_measured: null }
+            );
+        } catch (ppgErr) {
+            // Non-fatal: profile governance is advisory. Do not block the job.
+            logger.warn({ jobId, error: ppgErr.message }, '[PREFLIGHT-WORKER][POLICY-PROFILE-GOVERNANCE-ERR] Profile evaluation skipped');
+            policyProfileGovernance = {
+                profile_id: 'NONE',
+                profile_label: 'No policy profile',
+                profile_passed: true,
+                profile_blockers: [],
+                profile_warnings: ['PROFILE_EVALUATION_SKIPPED: ' + (ppgErr.message || 'unknown error')],
+                evaluated_at: new Date().toISOString(),
+                production_certified: false,
+                standard_certified: false,
+                compliance_claim_allowed: false,
+                print_ready_claim_allowed: false
+            };
+        }
+
         // Materialize fix_audit.json
         logger.info({ jobId }, '[PREFLIGHT-WORKER][FIX_AUDIT_V2_WRITE_START]');
+
         const auditReportPath = `${outputDir}/fix_audit.json`;
         const auditData = {
             version: "2.0",
@@ -2236,6 +2267,7 @@ class AutofixProcessor {
             proof_approval_governance: proofApprovalGovernance,
             heavy_pdf_probe_governance: heavyPdfProbeGovernance,
             production_package_governance: productionPackageGovernance,
+            policy_profile_governance: policyProfileGovernance,
             toolchain: toolchain,
             created_at: new Date().toISOString()
         };
@@ -2359,6 +2391,7 @@ class AutofixProcessor {
             proof_approval_governance: proofApprovalGovernance,
             heavy_pdf_probe_governance: heavyPdfProbeGovernance,
             production_package_governance: productionPackageGovernance,
+            policy_profile_governance: policyProfileGovernance,
             artifact_trust: artifactTrust
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });
