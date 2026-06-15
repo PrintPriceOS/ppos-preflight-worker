@@ -2203,6 +2203,68 @@ class AutofixProcessor {
             };
         }
 
+        // Phase 73A/73B: Machine Readiness Governance
+        // Derive machine_capability_signals from source findings/metadata and surface
+        // advisory machine-matching signals. These signals are inputs to downstream
+        // machine assignment (Phase 73D) only — they never imply production or
+        // standards certification, and machine_match_authority is always false here.
+        let machineReadinessGovernance = null;
+        try {
+            const { generateMachineCapabilitySignals } = require('../../ppos-preflight-engine/interpretation/MachineCapabilitySignals');
+            const machineMetadata = data?.metadata || result?.metadata || input?.metadata || {};
+            const machineJobMeta = {
+                tac_measured: rawSpecs?.tac_measured ?? data?.tac_measured ?? null,
+                detected_standard: standardDetected || null,
+                standard_validated: validationPassed || false,
+                paper_type: rawSpecs?.paper_type ?? data?.paper_type ?? null,
+                paper_gsm: rawSpecs?.paper_gsm ?? data?.paper_gsm ?? null
+            };
+            const machineCapabilitySignals = generateMachineCapabilitySignals(machineMetadata, sourceFindings || [], machineJobMeta);
+
+            const incompatibleMachineReasons = [];
+            if (machineCapabilitySignals.media_requirements.requires_cmyk_conversion) incompatibleMachineReasons.push('REQUIRES_CMYK_CONVERSION');
+            if (machineCapabilitySignals.finishing_signals.bleed_missing) incompatibleMachineReasons.push('BLEED_MISSING');
+            if (machineCapabilitySignals.ink_signals.ink_risk === 'HIGH') incompatibleMachineReasons.push('INK_RISK_HIGH');
+            else if (machineCapabilitySignals.ink_signals.ink_risk === 'MEDIUM') incompatibleMachineReasons.push('INK_RISK_MEDIUM');
+            if (machineCapabilitySignals.finishing_signals.finishing_marks_risk === 'HIGH') incompatibleMachineReasons.push('FINISHING_MARKS_RISK_HIGH');
+            else if (machineCapabilitySignals.finishing_signals.finishing_marks_risk === 'MEDIUM') incompatibleMachineReasons.push('FINISHING_MARKS_RISK_MEDIUM');
+            if (!machineCapabilitySignals.page_signals.page_size_consistent) incompatibleMachineReasons.push('PAGE_SIZE_INCONSISTENT');
+            if (machineCapabilitySignals.page_signals.mixed_orientation_detected) incompatibleMachineReasons.push('MIXED_ORIENTATION_DETECTED');
+            if (machineCapabilitySignals.standards_signals.standard_invalid) incompatibleMachineReasons.push('STANDARD_INVALID');
+            else if (machineCapabilitySignals.standards_signals.standard_claimed_not_validated) incompatibleMachineReasons.push('STANDARD_CLAIMED_NOT_VALIDATED');
+
+            machineReadinessGovernance = {
+                machine_capability_signals: machineCapabilitySignals,
+                machine_match_required: incompatibleMachineReasons.length > 0,
+                incompatible_machine_reasons: incompatibleMachineReasons,
+                warnings: machineCapabilitySignals.warnings || [],
+                machine_match_authority: false,
+                production_certified: false,
+                standard_certified: false,
+                evidence: {
+                    page_count: machineCapabilitySignals.page_signals.page_count,
+                    orientation: machineCapabilitySignals.page_signals.orientation,
+                    color_mode: machineCapabilitySignals.color_signals.color_mode,
+                    ink_risk: machineCapabilitySignals.ink_signals.ink_risk,
+                    finishing_marks_risk: machineCapabilitySignals.finishing_signals.finishing_marks_risk,
+                    standard_status: machineCapabilitySignals.standards_signals.standard_status
+                }
+            };
+        } catch (mrgErr) {
+            // Non-fatal: machine readiness governance is advisory. Do not block the job.
+            logger.warn({ jobId, error: mrgErr.message }, '[PREFLIGHT-WORKER][MACHINE-READINESS-GOVERNANCE-ERR] Machine readiness evaluation skipped');
+            machineReadinessGovernance = {
+                machine_capability_signals: null,
+                machine_match_required: false,
+                incompatible_machine_reasons: [],
+                warnings: ['MACHINE_READINESS_EVALUATION_SKIPPED: ' + (mrgErr.message || 'unknown error')],
+                machine_match_authority: false,
+                production_certified: false,
+                standard_certified: false,
+                evidence: {}
+            };
+        }
+
         // Materialize fix_audit.json
         logger.info({ jobId }, '[PREFLIGHT-WORKER][FIX_AUDIT_V2_WRITE_START]');
 
@@ -2268,6 +2330,7 @@ class AutofixProcessor {
             heavy_pdf_probe_governance: heavyPdfProbeGovernance,
             production_package_governance: productionPackageGovernance,
             policy_profile_governance: policyProfileGovernance,
+            machine_readiness_governance: machineReadinessGovernance,
             toolchain: toolchain,
             created_at: new Date().toISOString()
         };
@@ -2392,6 +2455,7 @@ class AutofixProcessor {
             heavy_pdf_probe_governance: heavyPdfProbeGovernance,
             production_package_governance: productionPackageGovernance,
             policy_profile_governance: policyProfileGovernance,
+            machine_readiness_governance: machineReadinessGovernance,
             artifact_trust: artifactTrust
         };
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });

@@ -1,0 +1,694 @@
+{
+  "timestamp": "2026-06-15T17:24:05.835Z",
+  "phase": "73B",
+  "repo": "ppos-preflight-worker",
+  "smoke_passed": true,
+  "results": [
+    {
+      "scenario": "no findings, no metadata -> machine_match_required=false",
+      "status": "DEGRADED",
+      "machine_readiness_governance": {
+        "machine_capability_signals": {
+          "generated_at": "2026-06-15T17:24:04.605Z",
+          "page_signals": {
+            "page_count": 0,
+            "page_size_mm": {
+              "width": null,
+              "height": null
+            },
+            "orientation": "UNKNOWN",
+            "page_size_consistent": true,
+            "mixed_orientation_detected": false
+          },
+          "color_signals": {
+            "color_mode": "CMYK_OR_UNSPECIFIED",
+            "rgb_detected": false,
+            "spot_color_detected": false,
+            "mixed_color_spaces": false,
+            "icc_profile_missing": false
+          },
+          "ink_signals": {
+            "ink_risk": "LOW",
+            "tac_exceeded": false,
+            "tac_measured": null,
+            "rich_black_risk": false,
+            "registration_color_misuse": false
+          },
+          "finishing_signals": {
+            "finishing_marks_risk": "LOW",
+            "bleed_missing": false,
+            "crop_marks_missing": false,
+            "registration_marks_inside_trim": false,
+            "page_marks_inconsistent": false
+          },
+          "standards_signals": {
+            "standard_status": "UNKNOWN",
+            "detected_standard": null,
+            "standard_validated": false,
+            "standard_claimed_not_validated": false,
+            "standard_invalid": false
+          },
+          "media_requirements": {
+            "min_bleed_mm": 3,
+            "bleed_present": true,
+            "page_size_mm": {
+              "width": null,
+              "height": null
+            },
+            "requires_cmyk_conversion": false,
+            "paper_type": null,
+            "paper_gsm": null
+          },
+          "warnings": [
+            "PAGE_COUNT_UNAVAILABLE",
+            "PAGE_SIZE_UNAVAILABLE"
+          ],
+          "machine_capability_signals_governance": {
+            "signals_are_advisory_only": true,
+            "machine_match_authority": false,
+            "production_certified": false,
+            "standard_certified": false,
+            "compliance_claim_allowed": false
+          }
+        },
+        "machine_match_required": false,
+        "incompatible_machine_reasons": [],
+        "warnings": [
+          "PAGE_COUNT_UNAVAILABLE",
+          "PAGE_SIZE_UNAVAILABLE"
+        ],
+        "machine_match_authority": false,
+        "production_certified": false,
+        "standard_certified": false,
+        "evidence": {
+          "page_count": 0,
+          "orientation": "UNKNOWN",
+          "color_mode": "CMYK_OR_UNSPECIFIED",
+          "ink_risk": "LOW",
+          "finishing_marks_risk": "LOW",
+          "standard_status": "UNKNOWN"
+        }
+      },
+      "machine_match_required": false,
+      "incompatible_machine_reasons": [],
+      "warnings": [
+        "PAGE_COUNT_UNAVAILABLE",
+        "PAGE_SIZE_UNAVAILABLE"
+      ],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "RGB images present -> REQUIRES_CMYK_CONVERSION",
+      "status": "COMPLETED",
+      "machine_readiness_governance": {
+        "machine_capability_signals": {
+          "generated_at": "2026-06-15T17:24:04.803Z",
+          "page_signals": {
+            "page_count": 0,
+            "page_size_mm": {
+              "width": null,
+              "height": null
+            },
+            "orientation": "UNKNOWN",
+            "page_size_consistent": true,
+            "mixed_orientation_detected": false
+          },
+          "color_signals": {
+            "color_mode": "RGB_PRESENT",
+            "rgb_detected": true,
+            "spot_color_detected": false,
+            "mixed_color_spaces": false,
+            "icc_profile_missing": false
+          },
+          "ink_signals": {
+            "ink_risk": "LOW",
+            "tac_exceeded": false,
+            "tac_measured": null,
+            "rich_black_risk": false,
+            "registration_color_misuse": false
+          },
+          "finishing_signals": {
+            "finishing_marks_risk": "LOW",
+            "bleed_missing": false,
+            "crop_marks_missing": false,
+            "registration_marks_inside_trim": false,
+            "page_marks_inconsistent": false
+          },
+          "standards_signals": {
+            "standard_status": "UNKNOWN",
+            "detected_standard": null,
+            "standard_validated": false,
+            "standard_claimed_not_validated": false,
+            "standard_invalid": false
+          },
+          "media_requirements": {
+            "min_bleed_mm": 3,
+            "bleed_present": true,
+            "page_size_mm": {
+              "width": null,
+              "height": null
+            },
+            "requires_cmyk_conversion": true,
+            "paper_type": null,
+            "paper_gsm": null
+          },
+          "warnings": [
+            "PAGE_COUNT_UNAVAILABLE",
+            "PAGE_SIZE_UNAVAILABLE"
+          ],
+          "machine_capability_signals_governance": {
+            "signals_are_advisory_only": true,
+            "machine_match_authority": false,
+            "production_certified": false,
+            "standard_certified": false,
+            "compliance_claim_allowed": false
+          }
+        },
+        "machine_match_required": true,
+        "incompatible_machine_reasons": [
+          "REQUIRES_CMYK_CONVERSION"
+        ],
+        "warnings": [
+          "PAGE_COUNT_UNAVAILABLE",
+          "PAGE_SIZE_UNAVAILABLE"
+        ],
+        "machine_match_authority": false,
+        "production_certified": false,
+        "standard_certified": false,
+        "evidence": {
+          "page_count": 0,
+          "orientation": "UNKNOWN",
+          "color_mode": "RGB_PRESENT",
+          "ink_risk": "LOW",
+          "finishing_marks_risk": "LOW",
+          "standard_status": "UNKNOWN"
+        }
+      },
+      "machine_match_required": true,
+      "incompatible_machine_reasons": [
+        "REQUIRES_CMYK_CONVERSION"
+      ],
+      "warnings": [
+        "PAGE_COUNT_UNAVAILABLE",
+        "PAGE_SIZE_UNAVAILABLE"
+      ],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "bleed missing finding -> BLEED_MISSING",
+      "status": "COMPLETED",
+      "machine_readiness_governance": {
+        "machine_capability_signals": {
+          "generated_at": "2026-06-15T17:24:04.999Z",
+          "page_signals": {
+            "page_count": 0,
+            "page_size_mm": {
+              "width": null,
+              "height": null
+            },
+            "orientation": "UNKNOWN",
+            "page_size_consistent": true,
+            "mixed_orientation_detected": false
+          },
+          "color_signals": {
+            "color_mode": "CMYK_OR_UNSPECIFIED",
+            "rgb_detected": false,
+            "spot_color_detected": false,
+            "mixed_color_spaces": false,
+            "icc_profile_missing": false
+          },
+          "ink_signals": {
+            "ink_risk": "LOW",
+            "tac_exceeded": false,
+            "tac_measured": null,
+            "rich_black_risk": false,
+            "registration_color_misuse": false
+          },
+          "finishing_signals": {
+            "finishing_marks_risk": "MEDIUM",
+            "bleed_missing": true,
+            "crop_marks_missing": false,
+            "registration_marks_inside_trim": false,
+            "page_marks_inconsistent": false
+          },
+          "standards_signals": {
+            "standard_status": "UNKNOWN",
+            "detected_standard": null,
+            "standard_validated": false,
+            "standard_claimed_not_validated": false,
+            "standard_invalid": false
+          },
+          "media_requirements": {
+            "min_bleed_mm": 3,
+            "bleed_present": false,
+            "page_size_mm": {
+              "width": null,
+              "height": null
+            },
+            "requires_cmyk_conversion": false,
+            "paper_type": null,
+            "paper_gsm": null
+          },
+          "warnings": [
+            "PAGE_COUNT_UNAVAILABLE",
+            "PAGE_SIZE_UNAVAILABLE"
+          ],
+          "machine_capability_signals_governance": {
+            "signals_are_advisory_only": true,
+            "machine_match_authority": false,
+            "production_certified": false,
+            "standard_certified": false,
+            "compliance_claim_allowed": false
+          }
+        },
+        "machine_match_required": true,
+        "incompatible_machine_reasons": [
+          "BLEED_MISSING",
+          "FINISHING_MARKS_RISK_MEDIUM"
+        ],
+        "warnings": [
+          "PAGE_COUNT_UNAVAILABLE",
+          "PAGE_SIZE_UNAVAILABLE"
+        ],
+        "machine_match_authority": false,
+        "production_certified": false,
+        "standard_certified": false,
+        "evidence": {
+          "page_count": 0,
+          "orientation": "UNKNOWN",
+          "color_mode": "CMYK_OR_UNSPECIFIED",
+          "ink_risk": "LOW",
+          "finishing_marks_risk": "MEDIUM",
+          "standard_status": "UNKNOWN"
+        }
+      },
+      "machine_match_required": true,
+      "incompatible_machine_reasons": [
+        "BLEED_MISSING",
+        "FINISHING_MARKS_RISK_MEDIUM"
+      ],
+      "warnings": [
+        "PAGE_COUNT_UNAVAILABLE",
+        "PAGE_SIZE_UNAVAILABLE"
+      ],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "TAC exceeded -> INK_RISK_HIGH",
+      "status": "COMPLETED",
+      "machine_readiness_governance": {
+        "machine_capability_signals": {
+          "generated_at": "2026-06-15T17:24:05.201Z",
+          "page_signals": {
+            "page_count": 0,
+            "page_size_mm": {
+              "width": null,
+              "height": null
+            },
+            "orientation": "UNKNOWN",
+            "page_size_consistent": true,
+            "mixed_orientation_detected": false
+          },
+          "color_signals": {
+            "color_mode": "CMYK_OR_UNSPECIFIED",
+            "rgb_detected": false,
+            "spot_color_detected": false,
+            "mixed_color_spaces": false,
+            "icc_profile_missing": false
+          },
+          "ink_signals": {
+            "ink_risk": "HIGH",
+            "tac_exceeded": true,
+            "tac_measured": null,
+            "rich_black_risk": false,
+            "registration_color_misuse": false
+          },
+          "finishing_signals": {
+            "finishing_marks_risk": "LOW",
+            "bleed_missing": false,
+            "crop_marks_missing": false,
+            "registration_marks_inside_trim": false,
+            "page_marks_inconsistent": false
+          },
+          "standards_signals": {
+            "standard_status": "UNKNOWN",
+            "detected_standard": null,
+            "standard_validated": false,
+            "standard_claimed_not_validated": false,
+            "standard_invalid": false
+          },
+          "media_requirements": {
+            "min_bleed_mm": 3,
+            "bleed_present": true,
+            "page_size_mm": {
+              "width": null,
+              "height": null
+            },
+            "requires_cmyk_conversion": false,
+            "paper_type": null,
+            "paper_gsm": null
+          },
+          "warnings": [
+            "PAGE_COUNT_UNAVAILABLE",
+            "PAGE_SIZE_UNAVAILABLE"
+          ],
+          "machine_capability_signals_governance": {
+            "signals_are_advisory_only": true,
+            "machine_match_authority": false,
+            "production_certified": false,
+            "standard_certified": false,
+            "compliance_claim_allowed": false
+          }
+        },
+        "machine_match_required": true,
+        "incompatible_machine_reasons": [
+          "INK_RISK_HIGH"
+        ],
+        "warnings": [
+          "PAGE_COUNT_UNAVAILABLE",
+          "PAGE_SIZE_UNAVAILABLE"
+        ],
+        "machine_match_authority": false,
+        "production_certified": false,
+        "standard_certified": false,
+        "evidence": {
+          "page_count": 0,
+          "orientation": "UNKNOWN",
+          "color_mode": "CMYK_OR_UNSPECIFIED",
+          "ink_risk": "HIGH",
+          "finishing_marks_risk": "LOW",
+          "standard_status": "UNKNOWN"
+        }
+      },
+      "machine_match_required": true,
+      "incompatible_machine_reasons": [
+        "INK_RISK_HIGH"
+      ],
+      "warnings": [
+        "PAGE_COUNT_UNAVAILABLE",
+        "PAGE_SIZE_UNAVAILABLE"
+      ],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "PDFX_INVALID standard -> STANDARD_INVALID",
+      "status": "COMPLETED",
+      "machine_readiness_governance": {
+        "machine_capability_signals": {
+          "generated_at": "2026-06-15T17:24:05.421Z",
+          "page_signals": {
+            "page_count": 0,
+            "page_size_mm": {
+              "width": null,
+              "height": null
+            },
+            "orientation": "UNKNOWN",
+            "page_size_consistent": true,
+            "mixed_orientation_detected": false
+          },
+          "color_signals": {
+            "color_mode": "CMYK_OR_UNSPECIFIED",
+            "rgb_detected": false,
+            "spot_color_detected": false,
+            "mixed_color_spaces": false,
+            "icc_profile_missing": false
+          },
+          "ink_signals": {
+            "ink_risk": "LOW",
+            "tac_exceeded": false,
+            "tac_measured": null,
+            "rich_black_risk": false,
+            "registration_color_misuse": false
+          },
+          "finishing_signals": {
+            "finishing_marks_risk": "LOW",
+            "bleed_missing": false,
+            "crop_marks_missing": false,
+            "registration_marks_inside_trim": false,
+            "page_marks_inconsistent": false
+          },
+          "standards_signals": {
+            "standard_status": "INVALID",
+            "detected_standard": null,
+            "standard_validated": false,
+            "standard_claimed_not_validated": false,
+            "standard_invalid": true
+          },
+          "media_requirements": {
+            "min_bleed_mm": 3,
+            "bleed_present": true,
+            "page_size_mm": {
+              "width": null,
+              "height": null
+            },
+            "requires_cmyk_conversion": false,
+            "paper_type": null,
+            "paper_gsm": null
+          },
+          "warnings": [
+            "PAGE_COUNT_UNAVAILABLE",
+            "PAGE_SIZE_UNAVAILABLE"
+          ],
+          "machine_capability_signals_governance": {
+            "signals_are_advisory_only": true,
+            "machine_match_authority": false,
+            "production_certified": false,
+            "standard_certified": false,
+            "compliance_claim_allowed": false
+          }
+        },
+        "machine_match_required": true,
+        "incompatible_machine_reasons": [
+          "STANDARD_INVALID"
+        ],
+        "warnings": [
+          "PAGE_COUNT_UNAVAILABLE",
+          "PAGE_SIZE_UNAVAILABLE"
+        ],
+        "machine_match_authority": false,
+        "production_certified": false,
+        "standard_certified": false,
+        "evidence": {
+          "page_count": 0,
+          "orientation": "UNKNOWN",
+          "color_mode": "CMYK_OR_UNSPECIFIED",
+          "ink_risk": "LOW",
+          "finishing_marks_risk": "LOW",
+          "standard_status": "INVALID"
+        }
+      },
+      "machine_match_required": true,
+      "incompatible_machine_reasons": [
+        "STANDARD_INVALID"
+      ],
+      "warnings": [
+        "PAGE_COUNT_UNAVAILABLE",
+        "PAGE_SIZE_UNAVAILABLE"
+      ],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "multiple findings -> multiple incompatible_machine_reasons",
+      "status": "COMPLETED",
+      "machine_readiness_governance": {
+        "machine_capability_signals": {
+          "generated_at": "2026-06-15T17:24:05.616Z",
+          "page_signals": {
+            "page_count": 0,
+            "page_size_mm": {
+              "width": null,
+              "height": null
+            },
+            "orientation": "UNKNOWN",
+            "page_size_consistent": true,
+            "mixed_orientation_detected": true
+          },
+          "color_signals": {
+            "color_mode": "RGB_PRESENT",
+            "rgb_detected": true,
+            "spot_color_detected": false,
+            "mixed_color_spaces": false,
+            "icc_profile_missing": false
+          },
+          "ink_signals": {
+            "ink_risk": "LOW",
+            "tac_exceeded": false,
+            "tac_measured": null,
+            "rich_black_risk": false,
+            "registration_color_misuse": false
+          },
+          "finishing_signals": {
+            "finishing_marks_risk": "HIGH",
+            "bleed_missing": true,
+            "crop_marks_missing": true,
+            "registration_marks_inside_trim": false,
+            "page_marks_inconsistent": false
+          },
+          "standards_signals": {
+            "standard_status": "UNKNOWN",
+            "detected_standard": null,
+            "standard_validated": false,
+            "standard_claimed_not_validated": false,
+            "standard_invalid": false
+          },
+          "media_requirements": {
+            "min_bleed_mm": 3,
+            "bleed_present": false,
+            "page_size_mm": {
+              "width": null,
+              "height": null
+            },
+            "requires_cmyk_conversion": true,
+            "paper_type": null,
+            "paper_gsm": null
+          },
+          "warnings": [
+            "PAGE_COUNT_UNAVAILABLE",
+            "PAGE_SIZE_UNAVAILABLE"
+          ],
+          "machine_capability_signals_governance": {
+            "signals_are_advisory_only": true,
+            "machine_match_authority": false,
+            "production_certified": false,
+            "standard_certified": false,
+            "compliance_claim_allowed": false
+          }
+        },
+        "machine_match_required": true,
+        "incompatible_machine_reasons": [
+          "REQUIRES_CMYK_CONVERSION",
+          "BLEED_MISSING",
+          "FINISHING_MARKS_RISK_HIGH",
+          "MIXED_ORIENTATION_DETECTED"
+        ],
+        "warnings": [
+          "PAGE_COUNT_UNAVAILABLE",
+          "PAGE_SIZE_UNAVAILABLE"
+        ],
+        "machine_match_authority": false,
+        "production_certified": false,
+        "standard_certified": false,
+        "evidence": {
+          "page_count": 0,
+          "orientation": "UNKNOWN",
+          "color_mode": "RGB_PRESENT",
+          "ink_risk": "LOW",
+          "finishing_marks_risk": "HIGH",
+          "standard_status": "UNKNOWN"
+        }
+      },
+      "machine_match_required": true,
+      "incompatible_machine_reasons": [
+        "REQUIRES_CMYK_CONVERSION",
+        "BLEED_MISSING",
+        "FINISHING_MARKS_RISK_HIGH",
+        "MIXED_ORIENTATION_DETECTED"
+      ],
+      "warnings": [
+        "PAGE_COUNT_UNAVAILABLE",
+        "PAGE_SIZE_UNAVAILABLE"
+      ],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: machine_readiness_governance present with required fields and invariants",
+      "status": "COMPLETED",
+      "machine_readiness_governance": {
+        "machine_capability_signals": {
+          "generated_at": "2026-06-15T17:24:05.817Z",
+          "page_signals": {
+            "page_count": 0,
+            "page_size_mm": {
+              "width": null,
+              "height": null
+            },
+            "orientation": "UNKNOWN",
+            "page_size_consistent": true,
+            "mixed_orientation_detected": false
+          },
+          "color_signals": {
+            "color_mode": "CMYK_OR_UNSPECIFIED",
+            "rgb_detected": false,
+            "spot_color_detected": false,
+            "mixed_color_spaces": false,
+            "icc_profile_missing": false
+          },
+          "ink_signals": {
+            "ink_risk": "LOW",
+            "tac_exceeded": false,
+            "tac_measured": null,
+            "rich_black_risk": false,
+            "registration_color_misuse": false
+          },
+          "finishing_signals": {
+            "finishing_marks_risk": "LOW",
+            "bleed_missing": false,
+            "crop_marks_missing": false,
+            "registration_marks_inside_trim": false,
+            "page_marks_inconsistent": false
+          },
+          "standards_signals": {
+            "standard_status": "VALIDATED",
+            "detected_standard": null,
+            "standard_validated": true,
+            "standard_claimed_not_validated": false,
+            "standard_invalid": false
+          },
+          "media_requirements": {
+            "min_bleed_mm": 3,
+            "bleed_present": true,
+            "page_size_mm": {
+              "width": null,
+              "height": null
+            },
+            "requires_cmyk_conversion": false,
+            "paper_type": null,
+            "paper_gsm": null
+          },
+          "warnings": [
+            "PAGE_COUNT_UNAVAILABLE",
+            "PAGE_SIZE_UNAVAILABLE"
+          ],
+          "machine_capability_signals_governance": {
+            "signals_are_advisory_only": true,
+            "machine_match_authority": false,
+            "production_certified": false,
+            "standard_certified": false,
+            "compliance_claim_allowed": false
+          }
+        },
+        "machine_match_required": false,
+        "incompatible_machine_reasons": [],
+        "warnings": [
+          "PAGE_COUNT_UNAVAILABLE",
+          "PAGE_SIZE_UNAVAILABLE"
+        ],
+        "machine_match_authority": false,
+        "production_certified": false,
+        "standard_certified": false,
+        "evidence": {
+          "page_count": 0,
+          "orientation": "UNKNOWN",
+          "color_mode": "CMYK_OR_UNSPECIFIED",
+          "ink_risk": "LOW",
+          "finishing_marks_risk": "LOW",
+          "standard_status": "VALIDATED"
+        }
+      },
+      "machine_match_required": false,
+      "incompatible_machine_reasons": [],
+      "warnings": [
+        "PAGE_COUNT_UNAVAILABLE",
+        "PAGE_SIZE_UNAVAILABLE"
+      ],
+      "pass": true,
+      "notes": "OK"
+    }
+  ]
+}
