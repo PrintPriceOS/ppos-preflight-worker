@@ -2265,6 +2265,106 @@ class AutofixProcessor {
             };
         }
 
+        // Phase 75A/75B: Recommendation Governance
+        // Aggregate per-finding recommendation_signals (Phase 75A, Engine) into
+        // recommended_next_actions / unsafe_auto_actions / human_review_actions.
+        // Signals and the actions derived from them are advisory only:
+        // recommendation_authority and auto_apply_authority are always false,
+        // and recommendation_governance never implies production or standards
+        // certification.
+        let recommendationGovernance = null;
+        try {
+            const { generateRecommendationSignals } = require('../../ppos-preflight-engine/interpretation/RecommendationSignals');
+            const recommendationMetadata = data?.metadata || result?.metadata || input?.metadata || {};
+            const recommendationSignals = result?.recommendation_signals
+                || generateRecommendationSignals(recommendationMetadata, sourceFindings || []);
+
+            const findingSignals = Array.isArray(recommendationSignals?.findings) ? recommendationSignals.findings : [];
+
+            const recommendedNextActions = [];
+            const unsafeAutoActions = [];
+            const humanReviewActions = [];
+
+            for (const signal of findingSignals) {
+                const isUnsafeAuto = signal.visual_sensitivity === true
+                    || signal.risk_level === 'HIGH' || signal.risk_level === 'CRITICAL'
+                    || signal.fixability === 'FIXABLE_REVIEW_REQUIRED';
+
+                if (signal.fixability === 'FIXABLE_AUTO') {
+                    recommendedNextActions.push({
+                        finding_id: signal.finding_id,
+                        finding_code: signal.finding_code,
+                        fix_id: signal.fix_id,
+                        action: 'SAFE_AUTO_FIX_AVAILABLE',
+                        risk_level: signal.risk_level,
+                        reason: signal.operator_review_reason
+                    });
+                } else if (signal.fixability === 'FIXABLE_REVIEW_REQUIRED') {
+                    recommendedNextActions.push({
+                        finding_id: signal.finding_id,
+                        finding_code: signal.finding_code,
+                        fix_id: signal.fix_id,
+                        action: 'REQUEST_HUMAN_REVIEW',
+                        risk_level: signal.risk_level,
+                        reason: signal.operator_review_reason
+                    });
+                }
+
+                if (isUnsafeAuto && signal.fix_id) {
+                    unsafeAutoActions.push({
+                        finding_id: signal.finding_id,
+                        finding_code: signal.finding_code,
+                        fix_id: signal.fix_id,
+                        risk_level: signal.risk_level,
+                        visual_sensitivity: signal.visual_sensitivity,
+                        reason: signal.operator_review_reason || 'DESTRUCTIVE_OR_VISUALLY_SENSITIVE'
+                    });
+                }
+
+                if (signal.operator_review_reason) {
+                    humanReviewActions.push({
+                        finding_id: signal.finding_id,
+                        finding_code: signal.finding_code,
+                        fix_id: signal.fix_id,
+                        operator_review_reason: signal.operator_review_reason
+                    });
+                }
+            }
+
+            recommendationGovernance = {
+                recommendation_signals_available: Array.isArray(recommendationSignals?.findings),
+                total_findings: findingSignals.length,
+                recommended_next_actions: recommendedNextActions,
+                unsafe_auto_actions: unsafeAutoActions,
+                human_review_actions: humanReviewActions,
+                recommendation_authority: false,
+                auto_apply_authority: false,
+                production_certified: false,
+                standard_certified: false,
+                warnings: [],
+                evidence: {
+                    summary: recommendationSignals?.summary || null,
+                    recommendation_signals_governance: recommendationSignals?.recommendation_signals_governance || null
+                }
+            };
+        } catch (recErr) {
+            // Non-fatal: recommendation governance is advisory. Do not block the job.
+            logger.warn({ jobId, error: recErr.message }, '[PREFLIGHT-WORKER][RECOMMENDATION-GOVERNANCE-ERR] Recommendation evaluation skipped');
+            recommendationGovernance = {
+                recommendation_signals_available: false,
+                total_findings: 0,
+                recommended_next_actions: [],
+                unsafe_auto_actions: [],
+                human_review_actions: [],
+                recommendation_authority: false,
+                auto_apply_authority: false,
+                production_certified: false,
+                standard_certified: false,
+                warnings: ['RECOMMENDATION_EVALUATION_SKIPPED: ' + (recErr.message || 'unknown error')],
+                evidence: {}
+            };
+        }
+
         // Materialize fix_audit.json
         logger.info({ jobId }, '[PREFLIGHT-WORKER][FIX_AUDIT_V2_WRITE_START]');
 
@@ -2331,6 +2431,7 @@ class AutofixProcessor {
             production_package_governance: productionPackageGovernance,
             policy_profile_governance: policyProfileGovernance,
             machine_readiness_governance: machineReadinessGovernance,
+            recommendation_governance: recommendationGovernance,
             toolchain: toolchain,
             created_at: new Date().toISOString()
         };
@@ -2426,6 +2527,7 @@ class AutofixProcessor {
             production_package_governance: productionPackageGovernance,
             policy_profile_governance: policyProfileGovernance,
             machine_readiness_governance: machineReadinessGovernance,
+            recommendation_governance: recommendationGovernance,
             artifact_trust: artifactTrust
         };
 

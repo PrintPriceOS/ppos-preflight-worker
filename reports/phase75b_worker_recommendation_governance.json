@@ -1,0 +1,514 @@
+{
+  "timestamp": "2026-06-15T18:26:56.907Z",
+  "phase": "75B",
+  "repo": "ppos-preflight-worker",
+  "smoke_passed": true,
+  "results": [
+    {
+      "scenario": "no findings -> empty recommendation action lists",
+      "status": "DEGRADED",
+      "recommendation_governance": {
+        "recommendation_signals_available": true,
+        "total_findings": 0,
+        "recommended_next_actions": [],
+        "unsafe_auto_actions": [],
+        "human_review_actions": [],
+        "recommendation_authority": false,
+        "auto_apply_authority": false,
+        "production_certified": false,
+        "standard_certified": false,
+        "warnings": [],
+        "evidence": {
+          "summary": {
+            "total_findings": 0,
+            "fixable_auto_count": 0,
+            "fixable_review_required_count": 0,
+            "not_implemented_count": 0,
+            "not_fixable_count": 0,
+            "visual_review_required_count": 0,
+            "validator_required_count": 0,
+            "missing_tool_count": 0
+          },
+          "recommendation_signals_governance": {
+            "signals_are_advisory_only": true,
+            "recommendation_authority": false,
+            "auto_apply_authority": false,
+            "production_certified": false,
+            "standard_certified": false,
+            "compliance_claim_allowed": false
+          }
+        }
+      },
+      "total_findings": 0,
+      "recommended_next_actions": [],
+      "unsafe_auto_actions": [],
+      "human_review_actions": [],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "TRIMBOX_MISSING -> SAFE_AUTO_FIX_AVAILABLE",
+      "status": "COMPLETED",
+      "recommendation_governance": {
+        "recommendation_signals_available": true,
+        "total_findings": 1,
+        "recommended_next_actions": [
+          {
+            "finding_id": "TRIMBOX_MISSING",
+            "finding_code": "IND_GEOM_003",
+            "fix_id": "REBUILD_TRIMBOX",
+            "action": "SAFE_AUTO_FIX_AVAILABLE",
+            "risk_level": "LOW",
+            "reason": null
+          }
+        ],
+        "unsafe_auto_actions": [],
+        "human_review_actions": [],
+        "recommendation_authority": false,
+        "auto_apply_authority": false,
+        "production_certified": false,
+        "standard_certified": false,
+        "warnings": [],
+        "evidence": {
+          "summary": {
+            "total_findings": 1,
+            "fixable_auto_count": 1,
+            "fixable_review_required_count": 0,
+            "not_implemented_count": 0,
+            "not_fixable_count": 0,
+            "visual_review_required_count": 0,
+            "validator_required_count": 0,
+            "missing_tool_count": 0
+          },
+          "recommendation_signals_governance": {
+            "signals_are_advisory_only": true,
+            "recommendation_authority": false,
+            "auto_apply_authority": false,
+            "production_certified": false,
+            "standard_certified": false,
+            "compliance_claim_allowed": false
+          }
+        }
+      },
+      "total_findings": 1,
+      "recommended_next_actions": [
+        {
+          "finding_id": "TRIMBOX_MISSING",
+          "finding_code": "IND_GEOM_003",
+          "fix_id": "REBUILD_TRIMBOX",
+          "action": "SAFE_AUTO_FIX_AVAILABLE",
+          "risk_level": "LOW",
+          "reason": null
+        }
+      ],
+      "unsafe_auto_actions": [],
+      "human_review_actions": [],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "BLEED_MISSING -> REQUEST_HUMAN_REVIEW + unsafe_auto + human_review",
+      "status": "COMPLETED",
+      "recommendation_governance": {
+        "recommendation_signals_available": true,
+        "total_findings": 1,
+        "recommended_next_actions": [
+          {
+            "finding_id": "BLEED_MISSING",
+            "finding_code": "IND_GEOM_002",
+            "fix_id": "APPLY_BLEED",
+            "action": "REQUEST_HUMAN_REVIEW",
+            "risk_level": "MEDIUM",
+            "reason": "HUMAN_REVIEW_REQUIRED"
+          }
+        ],
+        "unsafe_auto_actions": [
+          {
+            "finding_id": "BLEED_MISSING",
+            "finding_code": "IND_GEOM_002",
+            "fix_id": "APPLY_BLEED",
+            "risk_level": "MEDIUM",
+            "visual_sensitivity": false,
+            "reason": "HUMAN_REVIEW_REQUIRED"
+          }
+        ],
+        "human_review_actions": [
+          {
+            "finding_id": "BLEED_MISSING",
+            "finding_code": "IND_GEOM_002",
+            "fix_id": "APPLY_BLEED",
+            "operator_review_reason": "HUMAN_REVIEW_REQUIRED"
+          }
+        ],
+        "recommendation_authority": false,
+        "auto_apply_authority": false,
+        "production_certified": false,
+        "standard_certified": false,
+        "warnings": [],
+        "evidence": {
+          "summary": {
+            "total_findings": 1,
+            "fixable_auto_count": 0,
+            "fixable_review_required_count": 1,
+            "not_implemented_count": 0,
+            "not_fixable_count": 0,
+            "visual_review_required_count": 0,
+            "validator_required_count": 0,
+            "missing_tool_count": 0
+          },
+          "recommendation_signals_governance": {
+            "signals_are_advisory_only": true,
+            "recommendation_authority": false,
+            "auto_apply_authority": false,
+            "production_certified": false,
+            "standard_certified": false,
+            "compliance_claim_allowed": false
+          }
+        }
+      },
+      "total_findings": 1,
+      "recommended_next_actions": [
+        {
+          "finding_id": "BLEED_MISSING",
+          "finding_code": "IND_GEOM_002",
+          "fix_id": "APPLY_BLEED",
+          "action": "REQUEST_HUMAN_REVIEW",
+          "risk_level": "MEDIUM",
+          "reason": "HUMAN_REVIEW_REQUIRED"
+        }
+      ],
+      "unsafe_auto_actions": [
+        {
+          "finding_id": "BLEED_MISSING",
+          "finding_code": "IND_GEOM_002",
+          "fix_id": "APPLY_BLEED",
+          "risk_level": "MEDIUM",
+          "visual_sensitivity": false,
+          "reason": "HUMAN_REVIEW_REQUIRED"
+        }
+      ],
+      "human_review_actions": [
+        {
+          "finding_id": "BLEED_MISSING",
+          "finding_code": "IND_GEOM_002",
+          "fix_id": "APPLY_BLEED",
+          "operator_review_reason": "HUMAN_REVIEW_REQUIRED"
+        }
+      ],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "TRANSPARENCY_PRESENT -> not recommended, unsafe + human review (NOT_IMPLEMENTED)",
+      "status": "COMPLETED",
+      "recommendation_governance": {
+        "recommendation_signals_available": true,
+        "total_findings": 1,
+        "recommended_next_actions": [],
+        "unsafe_auto_actions": [
+          {
+            "finding_id": "TRANSPARENCY_PRESENT",
+            "finding_code": "IND_TRANS_001",
+            "fix_id": "FLATTEN_TRANSPARENCY",
+            "risk_level": "HIGH",
+            "visual_sensitivity": true,
+            "reason": "FIX_NOT_IMPLEMENTED"
+          }
+        ],
+        "human_review_actions": [
+          {
+            "finding_id": "TRANSPARENCY_PRESENT",
+            "finding_code": "IND_TRANS_001",
+            "fix_id": "FLATTEN_TRANSPARENCY",
+            "operator_review_reason": "FIX_NOT_IMPLEMENTED"
+          }
+        ],
+        "recommendation_authority": false,
+        "auto_apply_authority": false,
+        "production_certified": false,
+        "standard_certified": false,
+        "warnings": [],
+        "evidence": {
+          "summary": {
+            "total_findings": 1,
+            "fixable_auto_count": 0,
+            "fixable_review_required_count": 0,
+            "not_implemented_count": 1,
+            "not_fixable_count": 0,
+            "visual_review_required_count": 1,
+            "validator_required_count": 0,
+            "missing_tool_count": 0
+          },
+          "recommendation_signals_governance": {
+            "signals_are_advisory_only": true,
+            "recommendation_authority": false,
+            "auto_apply_authority": false,
+            "production_certified": false,
+            "standard_certified": false,
+            "compliance_claim_allowed": false
+          }
+        }
+      },
+      "total_findings": 1,
+      "recommended_next_actions": [],
+      "unsafe_auto_actions": [
+        {
+          "finding_id": "TRANSPARENCY_PRESENT",
+          "finding_code": "IND_TRANS_001",
+          "fix_id": "FLATTEN_TRANSPARENCY",
+          "risk_level": "HIGH",
+          "visual_sensitivity": true,
+          "reason": "FIX_NOT_IMPLEMENTED"
+        }
+      ],
+      "human_review_actions": [
+        {
+          "finding_id": "TRANSPARENCY_PRESENT",
+          "finding_code": "IND_TRANS_001",
+          "fix_id": "FLATTEN_TRANSPARENCY",
+          "operator_review_reason": "FIX_NOT_IMPLEMENTED"
+        }
+      ],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "PAGE_SIZE_INCONSISTENT -> absent from all action lists (NOT_FIXABLE)",
+      "status": "COMPLETED",
+      "recommendation_governance": {
+        "recommendation_signals_available": true,
+        "total_findings": 1,
+        "recommended_next_actions": [],
+        "unsafe_auto_actions": [],
+        "human_review_actions": [],
+        "recommendation_authority": false,
+        "auto_apply_authority": false,
+        "production_certified": false,
+        "standard_certified": false,
+        "warnings": [],
+        "evidence": {
+          "summary": {
+            "total_findings": 1,
+            "fixable_auto_count": 0,
+            "fixable_review_required_count": 0,
+            "not_implemented_count": 0,
+            "not_fixable_count": 1,
+            "visual_review_required_count": 0,
+            "validator_required_count": 0,
+            "missing_tool_count": 0
+          },
+          "recommendation_signals_governance": {
+            "signals_are_advisory_only": true,
+            "recommendation_authority": false,
+            "auto_apply_authority": false,
+            "production_certified": false,
+            "standard_certified": false,
+            "compliance_claim_allowed": false
+          }
+        }
+      },
+      "total_findings": 1,
+      "recommended_next_actions": [],
+      "unsafe_auto_actions": [],
+      "human_review_actions": [],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "multiple findings -> action lists accumulate",
+      "status": "COMPLETED",
+      "recommendation_governance": {
+        "recommendation_signals_available": true,
+        "total_findings": 3,
+        "recommended_next_actions": [
+          {
+            "finding_id": "TRIMBOX_MISSING",
+            "finding_code": "IND_GEOM_003",
+            "fix_id": "REBUILD_TRIMBOX",
+            "action": "SAFE_AUTO_FIX_AVAILABLE",
+            "risk_level": "LOW",
+            "reason": null
+          },
+          {
+            "finding_id": "BLEED_MISSING",
+            "finding_code": "IND_GEOM_002",
+            "fix_id": "APPLY_BLEED",
+            "action": "REQUEST_HUMAN_REVIEW",
+            "risk_level": "MEDIUM",
+            "reason": "HUMAN_REVIEW_REQUIRED"
+          }
+        ],
+        "unsafe_auto_actions": [
+          {
+            "finding_id": "BLEED_MISSING",
+            "finding_code": "IND_GEOM_002",
+            "fix_id": "APPLY_BLEED",
+            "risk_level": "MEDIUM",
+            "visual_sensitivity": false,
+            "reason": "HUMAN_REVIEW_REQUIRED"
+          },
+          {
+            "finding_id": "TRANSPARENCY_PRESENT",
+            "finding_code": "IND_TRANS_001",
+            "fix_id": "FLATTEN_TRANSPARENCY",
+            "risk_level": "HIGH",
+            "visual_sensitivity": true,
+            "reason": "FIX_NOT_IMPLEMENTED"
+          }
+        ],
+        "human_review_actions": [
+          {
+            "finding_id": "BLEED_MISSING",
+            "finding_code": "IND_GEOM_002",
+            "fix_id": "APPLY_BLEED",
+            "operator_review_reason": "HUMAN_REVIEW_REQUIRED"
+          },
+          {
+            "finding_id": "TRANSPARENCY_PRESENT",
+            "finding_code": "IND_TRANS_001",
+            "fix_id": "FLATTEN_TRANSPARENCY",
+            "operator_review_reason": "FIX_NOT_IMPLEMENTED"
+          }
+        ],
+        "recommendation_authority": false,
+        "auto_apply_authority": false,
+        "production_certified": false,
+        "standard_certified": false,
+        "warnings": [],
+        "evidence": {
+          "summary": {
+            "total_findings": 3,
+            "fixable_auto_count": 1,
+            "fixable_review_required_count": 1,
+            "not_implemented_count": 1,
+            "not_fixable_count": 0,
+            "visual_review_required_count": 1,
+            "validator_required_count": 0,
+            "missing_tool_count": 0
+          },
+          "recommendation_signals_governance": {
+            "signals_are_advisory_only": true,
+            "recommendation_authority": false,
+            "auto_apply_authority": false,
+            "production_certified": false,
+            "standard_certified": false,
+            "compliance_claim_allowed": false
+          }
+        }
+      },
+      "total_findings": 3,
+      "recommended_next_actions": [
+        {
+          "finding_id": "TRIMBOX_MISSING",
+          "finding_code": "IND_GEOM_003",
+          "fix_id": "REBUILD_TRIMBOX",
+          "action": "SAFE_AUTO_FIX_AVAILABLE",
+          "risk_level": "LOW",
+          "reason": null
+        },
+        {
+          "finding_id": "BLEED_MISSING",
+          "finding_code": "IND_GEOM_002",
+          "fix_id": "APPLY_BLEED",
+          "action": "REQUEST_HUMAN_REVIEW",
+          "risk_level": "MEDIUM",
+          "reason": "HUMAN_REVIEW_REQUIRED"
+        }
+      ],
+      "unsafe_auto_actions": [
+        {
+          "finding_id": "BLEED_MISSING",
+          "finding_code": "IND_GEOM_002",
+          "fix_id": "APPLY_BLEED",
+          "risk_level": "MEDIUM",
+          "visual_sensitivity": false,
+          "reason": "HUMAN_REVIEW_REQUIRED"
+        },
+        {
+          "finding_id": "TRANSPARENCY_PRESENT",
+          "finding_code": "IND_TRANS_001",
+          "fix_id": "FLATTEN_TRANSPARENCY",
+          "risk_level": "HIGH",
+          "visual_sensitivity": true,
+          "reason": "FIX_NOT_IMPLEMENTED"
+        }
+      ],
+      "human_review_actions": [
+        {
+          "finding_id": "BLEED_MISSING",
+          "finding_code": "IND_GEOM_002",
+          "fix_id": "APPLY_BLEED",
+          "operator_review_reason": "HUMAN_REVIEW_REQUIRED"
+        },
+        {
+          "finding_id": "TRANSPARENCY_PRESENT",
+          "finding_code": "IND_TRANS_001",
+          "fix_id": "FLATTEN_TRANSPARENCY",
+          "operator_review_reason": "FIX_NOT_IMPLEMENTED"
+        }
+      ],
+      "pass": true,
+      "notes": "OK"
+    },
+    {
+      "scenario": "REGRESSION: recommendation_governance present with required fields and invariants",
+      "status": "COMPLETED",
+      "recommendation_governance": {
+        "recommendation_signals_available": true,
+        "total_findings": 1,
+        "recommended_next_actions": [
+          {
+            "finding_id": "TRIMBOX_MISSING",
+            "finding_code": "IND_GEOM_003",
+            "fix_id": "REBUILD_TRIMBOX",
+            "action": "SAFE_AUTO_FIX_AVAILABLE",
+            "risk_level": "LOW",
+            "reason": null
+          }
+        ],
+        "unsafe_auto_actions": [],
+        "human_review_actions": [],
+        "recommendation_authority": false,
+        "auto_apply_authority": false,
+        "production_certified": false,
+        "standard_certified": false,
+        "warnings": [],
+        "evidence": {
+          "summary": {
+            "total_findings": 1,
+            "fixable_auto_count": 1,
+            "fixable_review_required_count": 0,
+            "not_implemented_count": 0,
+            "not_fixable_count": 0,
+            "visual_review_required_count": 0,
+            "validator_required_count": 0,
+            "missing_tool_count": 0
+          },
+          "recommendation_signals_governance": {
+            "signals_are_advisory_only": true,
+            "recommendation_authority": false,
+            "auto_apply_authority": false,
+            "production_certified": false,
+            "standard_certified": false,
+            "compliance_claim_allowed": false
+          }
+        }
+      },
+      "total_findings": 1,
+      "recommended_next_actions": [
+        {
+          "finding_id": "TRIMBOX_MISSING",
+          "finding_code": "IND_GEOM_003",
+          "fix_id": "REBUILD_TRIMBOX",
+          "action": "SAFE_AUTO_FIX_AVAILABLE",
+          "risk_level": "LOW",
+          "reason": null
+        }
+      ],
+      "unsafe_auto_actions": [],
+      "human_review_actions": [],
+      "pass": true,
+      "notes": "OK"
+    }
+  ]
+}
