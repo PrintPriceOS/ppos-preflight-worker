@@ -14,7 +14,7 @@ const util = require('util');
 const execPromise = util.promisify(exec);
 const ControlPlaneArtifacts = require('../utils/ControlPlaneArtifacts');
 const os = require('os');
-const { sha256File } = require('../utils/fileChecksum');
+const { sha256File, sha256JSON } = require('../utils/fileChecksum');
 
 // Canonical storage instance
 const storage = new StorageManager();
@@ -2334,40 +2334,10 @@ class AutofixProcessor {
             toolchain: toolchain,
             created_at: new Date().toISOString()
         };
-        await fs.writeJson(auditReportPath, auditData, { spaces: 2 });
-        logger.info({ jobId }, '[PREFLIGHT-WORKER][FIX_AUDIT_V2_WRITE_OK]');
-        
-        try {
-            const stats = await fs.stat(auditReportPath);
-            if (stats.size > 0) {
-                let auditChecksum = null;
-                try { auditChecksum = await sha256File(auditReportPath); } catch(e){}
-                
-                await artifactClient.register({
-                    jobId, tenantId, artifactType: 'fix_audit', filename: 'fix_audit.json',
-                    storageKey: auditReportPath, sizeBytes: stats.size, checksumSha256: auditChecksum,
-                    mimeType: 'application/json',
-                    metadata: { 
-                        processor: "AUTOFIX", artifact_type: 'fix_audit', filename: 'fix_audit.json',
-                        size_bytes: stats.size, checksum_sha256: auditChecksum, mime_type: 'application/json',
-                        downloadable: true, requires_review: false, production_certified: false,
-                        source_fix_ids: [], risk_level: 'LOW', customer_visible: false
-                    }, 
-                    downloadable: true
-                });
-                logger.info({ jobId, type: 'fix_audit', filePath: auditReportPath, sizeBytes: stats.size }, '[PREFLIGHT-WORKER][ARTIFACT_WRITE_OK]');
-                verifiedArtifacts.fix_audit = 'fix_audit.json';
-                downloadableArtifactCount++;
-            } else {
-                logger.warn({ jobId, type: 'fix_audit', filePath: auditReportPath, sizeBytes: stats.size }, '[PREFLIGHT-WORKER][ZERO_BYTE_ARTIFACT_BLOCKED]');
-                zeroByteArtifactCount++;
-            }
-        } catch (e) {
-            logger.warn({ error: e.message, type: 'fix_audit' }, '[PREFLIGHT-WORKER][ARTIFACT_WRITE_FAILED]');
-        }
 
-        // Materialize delta_report.json
-        const deltaReportPath = `${outputDir}/delta_report.json`;
+        // Materialize delta_report.json contents (constructed here so both fix_audit.json
+        // and delta_report.json can carry a consistent audit_bundle_governance section
+        // with stable content hashes of one another).
         const deltaData = {
             job_id: jobId,
             changes: appliedFixes.map(f => f.fix_id || f.code),
@@ -2458,6 +2428,77 @@ class AutofixProcessor {
             machine_readiness_governance: machineReadinessGovernance,
             artifact_trust: artifactTrust
         };
+
+        // --- Phase 74B: Audit Bundle Governance ---
+        // Compute stable content hashes of fix_audit.json and delta_report.json (prior to
+        // annotation with audit_bundle_governance itself) and enumerate the governance
+        // domains present in the bundle. This is a packaging/evidence index only — it
+        // never implies production or standards certification on its own.
+        const governanceDomains = Object.keys(auditData).filter(
+            key => key.endsWith('_governance') || key === 'artifact_trust'
+        );
+        const fixAuditContentHash = sha256JSON(auditData);
+        const deltaReportContentHash = sha256JSON(deltaData);
+        const auditBundleWarnings = [];
+        if (!physicalArtifactsReady) {
+            auditBundleWarnings.push('No physical artifact available; audit bundle reflects evidence only.');
+        }
+        if (artifactTrust.review_required) {
+            auditBundleWarnings.push('Audit bundle reflects an artifact pending human review.');
+        }
+        const auditBundleGovernance = {
+            fix_audit_hash: fixAuditContentHash,
+            delta_report_hash: deltaReportContentHash,
+            governance_domains: governanceDomains,
+            artifact_trust: artifactTrust,
+            bundle_complete: Boolean(fixAuditContentHash && deltaReportContentHash && governanceDomains.length > 0),
+            production_certified: false,
+            standard_certified: false,
+            generated_at: new Date().toISOString(),
+            warnings: auditBundleWarnings,
+            evidence: {
+                governance_domain_count: governanceDomains.length,
+                physical_artifacts_ready: physicalArtifactsReady,
+                review_required: artifactTrust.review_required
+            }
+        };
+        auditData.audit_bundle_governance = auditBundleGovernance;
+        deltaData.audit_bundle_governance = auditBundleGovernance;
+
+        await fs.writeJson(auditReportPath, auditData, { spaces: 2 });
+        logger.info({ jobId }, '[PREFLIGHT-WORKER][FIX_AUDIT_V2_WRITE_OK]');
+        
+        try {
+            const stats = await fs.stat(auditReportPath);
+            if (stats.size > 0) {
+                let auditChecksum = null;
+                try { auditChecksum = await sha256File(auditReportPath); } catch(e){}
+                
+                await artifactClient.register({
+                    jobId, tenantId, artifactType: 'fix_audit', filename: 'fix_audit.json',
+                    storageKey: auditReportPath, sizeBytes: stats.size, checksumSha256: auditChecksum,
+                    mimeType: 'application/json',
+                    metadata: { 
+                        processor: "AUTOFIX", artifact_type: 'fix_audit', filename: 'fix_audit.json',
+                        size_bytes: stats.size, checksum_sha256: auditChecksum, mime_type: 'application/json',
+                        downloadable: true, requires_review: false, production_certified: false,
+                        source_fix_ids: [], risk_level: 'LOW', customer_visible: false
+                    }, 
+                    downloadable: true
+                });
+                logger.info({ jobId, type: 'fix_audit', filePath: auditReportPath, sizeBytes: stats.size }, '[PREFLIGHT-WORKER][ARTIFACT_WRITE_OK]');
+                verifiedArtifacts.fix_audit = 'fix_audit.json';
+                downloadableArtifactCount++;
+            } else {
+                logger.warn({ jobId, type: 'fix_audit', filePath: auditReportPath, sizeBytes: stats.size }, '[PREFLIGHT-WORKER][ZERO_BYTE_ARTIFACT_BLOCKED]');
+                zeroByteArtifactCount++;
+            }
+        } catch (e) {
+            logger.warn({ error: e.message, type: 'fix_audit' }, '[PREFLIGHT-WORKER][ARTIFACT_WRITE_FAILED]');
+        }
+
+        // Materialize delta_report.json
+        const deltaReportPath = `${outputDir}/delta_report.json`;
         await fs.writeJson(deltaReportPath, deltaData, { spaces: 2 });
         try {
             const stats = await fs.stat(deltaReportPath);
